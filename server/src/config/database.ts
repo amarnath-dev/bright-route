@@ -3,10 +3,13 @@ import mongoose from "mongoose";
 
 const PORT = 5000;
 
-//establishing database connection to mongo db atlas hello
+//establishing db connection
 mongoose.connect("mongodb+srv://amarnathas:ChpaJ5TS9NRtWYvM@cluster0.u1pctnk.mongodb.net/?retryWrites=true&w=majority").then(() => {
     console.log("Connected to Database Successfully");
     app.listen(PORT, () => {
         console.log(`Server Running on the Port ${PORT}`);
     })
+}).catch((error) => {
+    console.log(error);
 })
+
