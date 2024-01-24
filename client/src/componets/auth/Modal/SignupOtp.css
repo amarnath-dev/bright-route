@@ -1,0 +1,6 @@
+/* SignupOtp */
+.otp-box input[type=number]::-webkit-inner-spin-button, 
+.otp-box input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
