@@ -87,7 +87,6 @@ const SignupForm: React.FC = () => {
               onSubmit={handleSubmit(submitData)}
               className="flex items-center justify-center"
             >
-              
               <div className="mt-5 flex items-center justify-center flex-col">
                 <label>
                   {/* <span className="absolute inset-y-0 left-0 flex items-center pl-2"></span> */}
@@ -154,7 +153,10 @@ const SignupForm: React.FC = () => {
                 </button>
               </div>
             </form>
-            <span className="flex justify-center items-center mt-3">Alredy have an account?<h6 className="text-blue-500 underline cursor-pointer">Log in</h6></span>
+            <span className="flex justify-center items-center mt-3">
+              Alredy have an account?
+              <h6 className="text-blue-500 underline cursor-pointer">Log in</h6>
+            </span>
           </div>
         </div>
       </div>
