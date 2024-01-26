@@ -6,7 +6,15 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'color-one': '#2b6777',
+        'color-two': '#c8d8e4',
+        'color-three': '#ffffff',
+        'color-four': '#f2f2f2',
+        'color-five': '#52ab98',
+      },
+    },
   },
   plugins: [import('flowbite/plugin')],
 }

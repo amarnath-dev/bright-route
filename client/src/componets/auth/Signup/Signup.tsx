@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SignupOtp from "../Modal/SignupOtp";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema } from "../../../validations/menteeSignupSchema";
+import GoogleAuth from "../GoogleAuth/GoogleAuth";
 import API from "../../../api";
 
 interface Credentials {
@@ -53,10 +54,6 @@ const SignupForm: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("state data", serverResponse);
-  }, [serverResponse]);
-
   return (
     <>
       <SignupOtp
@@ -81,7 +78,6 @@ const SignupForm: React.FC = () => {
                 Sign up as a Mentee
               </h2>
             </div>
-
             <form
               action=""
               onSubmit={handleSubmit(submitData)}
@@ -153,7 +149,13 @@ const SignupForm: React.FC = () => {
                 </button>
               </div>
             </form>
-            <span className="flex justify-center items-center mt-3">
+
+            {/* Google auth */}
+            <div className="flex justify-center items-center mt-5">
+              <GoogleAuth />
+            </div>
+
+            <span className="w-full flex justify-center items-center mt-3">
               Alredy have an account?
               <h6 className="text-blue-500 underline cursor-pointer">Log in</h6>
             </span>

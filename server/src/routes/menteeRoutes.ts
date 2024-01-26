@@ -9,6 +9,6 @@ router.post('/signup', menteeAuthController.signup);
 router.post('/login', menteeAuthController.signin);
 router.post('/verifyOTP', menteeAuthController.verifyOTP);
 router.post('/resendOTP', menteeAuthController.resendOTP);
-
+router.post('/google-auth', menteeAuthController.googleAuth);
 
 export default router;
