@@ -8,7 +8,6 @@ import { IMenteeProfile } from "../Interfaces/index";
 import sendEmailOtp from "../utils/sendEmail";
 import Otp from "../models/otpModel";
 
-
 /***
  * @dec Mentee Registration and Authentication
  * @route POST /api/signup
@@ -42,7 +41,7 @@ export class MenteeAuthController {
 
   async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email, password } = req.body;
+      const { email, password } = req.body.data;
       if (!email || !password) {
         res.status(400);
         return next(Error("Invalid Credentials"));
@@ -87,7 +86,7 @@ export class MenteeAuthController {
   ): Promise<void> {
     try {
       const { first_name, last_name, email, password, otp } =
-        req.body.serverResponse;
+        req.body.userData;
       if (!first_name || !last_name || !email || !password || !otp) {
         res.status(400);
         return next(Error("Invalid Credentials"));
@@ -146,9 +145,9 @@ export class MenteeAuthController {
   }
 
   async resendOTP(req: Request, res: Response, next: NextFunction) {
-    console.log("call reached at the server");
     try {
-      const { first_name, last_name, email, password } = req.body.serverResponse;
+      const { first_name, last_name, email, password } =
+        req.body.serverResponse;
       if (!first_name || !last_name || !email || !password) {
         res.status(400);
         return next(Error("Invalid Credentials"));
@@ -158,6 +157,17 @@ export class MenteeAuthController {
       res
         .status(200)
         .json({ status: "success", message: "Email Re Send Successfully" });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        return next(error);
+      }
+    }
+  }
+
+  async googleAuth(req: Request, res: Response, next: NextFunction) {
+    try {
+      console.log(req.body);
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);

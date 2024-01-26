@@ -1,7 +1,10 @@
 import { Button, Label, Modal } from "flowbite-react";
 import { Dispatch, SetStateAction, useRef } from "react";
-import "./SignupOtp.css";
+import { signup } from "../../../services/authServices";
+import { useAppDispatch } from "../../../app/hooks";
 import API from "../../../api";
+import "./SignupOtp.css";
+import { authActions } from "../../../redux/auth/authSlice";
 
 const SignupOtp = ({
   openModal,
@@ -18,6 +21,8 @@ const SignupOtp = ({
     otp: string;
   } | null;
 }) => {
+  const dispatch = useAppDispatch();
+
   const box1 = useRef<HTMLInputElement>(null);
   const box2 = useRef<HTMLInputElement>(null);
   const box3 = useRef<HTMLInputElement>(null);
@@ -39,13 +44,15 @@ const SignupOtp = ({
           const userOtp: string = b1 + b2 + b3 + b4;
           if (serverResponse) {
             serverResponse.otp = userOtp;
+
+            const response = dispatch(signup(serverResponse));
+            if (response) {
+              console.log("this is response after doing the sign up", response);
+              dispatch(authActions.setUser((await response).payload));
+            }
           } else {
             console.log("Server Response is Null");
           }
-          const response = await API.post("/verifyOTP", {
-            serverResponse,
-          });
-          console.log(response.data);
         } catch (error) {
           if (typeof error == "string") {
             console.log(error);
