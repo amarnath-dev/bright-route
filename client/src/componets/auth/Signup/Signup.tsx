@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import SignupOtp from "../Modal/SignupOtp";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema } from "../../../validations/menteeSignupSchema";
+import { Link } from "react-router-dom";
+import SignupOtp from "../Modal/SignupOtp";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
 import API from "../../../api";
 
@@ -85,7 +86,6 @@ const SignupForm: React.FC = () => {
             >
               <div className="mt-5 flex items-center justify-center flex-col">
                 <label>
-                  {/* <span className="absolute inset-y-0 left-0 flex items-center pl-2"></span> */}
                   <input
                     className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="First name"
@@ -99,7 +99,6 @@ const SignupForm: React.FC = () => {
                   )}
                 </label>
                 <label>
-                  {/* <span className="absolute inset-y-0 left-0 flex items-center pl-2"></span> */}
                   <input
                     className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Last name"
@@ -113,7 +112,6 @@ const SignupForm: React.FC = () => {
                   )}
                 </label>
                 <label>
-                  {/* <span className="absolute inset-y-0 left-0 flex items-center pl-2"></span> */}
                   <input
                     className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Email"
@@ -127,7 +125,6 @@ const SignupForm: React.FC = () => {
                   )}
                 </label>
                 <label>
-                  {/* <span className="absolute inset-y-0 left-0 flex items-center pl-2"></span> */}
                   <input
                     className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Password"
@@ -157,7 +154,9 @@ const SignupForm: React.FC = () => {
 
             <span className="w-full flex justify-center items-center mt-3">
               Alredy have an account?
-              <h6 className="text-blue-500 underline cursor-pointer">Log in</h6>
+              <Link to={"/signin"} className="ml-2 text-color-five font-bold">
+                Log in
+              </Link>
             </span>
           </div>
         </div>

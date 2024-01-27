@@ -7,6 +7,7 @@ import { IUser } from "../Interfaces";
 import { IMenteeProfile } from "../Interfaces/index";
 import sendEmailOtp from "../utils/sendEmail";
 import Otp from "../models/otpModel";
+import menteeProfileModel from "../models/menteeProfileModel";
 
 /***
  * @dec Mentee Registration and Authentication
@@ -41,7 +42,7 @@ export class MenteeAuthController {
 
   async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email, password } = req.body.data;
+      const { email, password } = req.body.userData;
       if (!email || !password) {
         res.status(400);
         return next(Error("Invalid Credentials"));
@@ -56,13 +57,19 @@ export class MenteeAuthController {
           "ecryptionkey"
         ).toString(cryptojs.enc.Utf8);
         if (password === dbPassword) {
+          //Getting users name because both stored in different
+          //collections user and menteeprofile
+          const userDataFromProfile = await menteeProfileModel.findOne({
+            mentee_id: userExists?._id,
+          });
           const token = generateJwt(userExists._id, email);
           res.status(200).json({
             status: "success",
             user: {
-              _id: userExists._id,
-              email: userExists.email,
-              role: userExists.role,
+              _id: userExists?._id,
+              first_name: userDataFromProfile?.first_name,
+              email: userExists?.email,
+              role: userExists?.role,
             },
             token,
           });
@@ -85,8 +92,7 @@ export class MenteeAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { first_name, last_name, email, password, otp } =
-        req.body.userData;
+      const { first_name, last_name, email, password, otp } = req.body.userData;
       if (!first_name || !last_name || !email || !password || !otp) {
         res.status(400);
         return next(Error("Invalid Credentials"));
@@ -113,20 +119,21 @@ export class MenteeAuthController {
         const user: IUser = await menteeDetails.save();
         if (user) {
           const userProfileDetails: IMenteeProfile = new MenteeProfile({
-            mentee_id: user._id,
+            mentee_id: user?._id,
             first_name,
             last_name,
           });
           const profileData: IMenteeProfile = await userProfileDetails.save();
           if (profileData) {
-            const token = generateJwt(user._id, email);
+            const token = generateJwt(user?._id, email);
             res.status(200).json({
               status: "success",
               message: "User Created Successfully",
               user: {
-                _id: user._id,
-                email: user.email,
-                role: user.role,
+                _id: user?._id,
+                first_name: profileData?.first_name,
+                email: user?.email,
+                role: user?.role,
               },
               token,
             });

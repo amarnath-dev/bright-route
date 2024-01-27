@@ -1,12 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { signinSchema } from "../../../validations/signinSchema";
-import API from "../../../api";
+import { useAppDispatch } from "../../../app/hooks";
+import { signin } from "../../../services/authServices";
+import { authActions } from "../../../redux/auth/authSlice";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Credentials {
   email: string;
   password: string;
 }
+
 const SigninForm: React.FC = () => {
   const {
     register,
@@ -16,13 +21,18 @@ const SigninForm: React.FC = () => {
     resolver: zodResolver(signinSchema),
   });
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const submitData = async (data: Credentials) => {
     try {
-      const response = await API.post("/login", {
-        data,
-      });
-      if (response.data.status === "success") {
-        console.log("Login Successfull");
+      const response = await dispatch(signin(data));
+      if (response) {
+        const payloadData = response.payload;
+        dispatch(authActions.setUser(payloadData));
+        if (payloadData.role === "mentee") {
+          navigate("/");
+        }
       }
     } catch (error) {
       if (typeof error == "string") {
@@ -41,8 +51,10 @@ const SigninForm: React.FC = () => {
             className="ml-28"
           />
         </div>
+
         <div className="col-span-full flex justify-center mt-36 md:col-span-8">
           <form action="" onSubmit={handleSubmit(submitData)}>
+            <h1 className="text-xl md:text-2xl font-bold mb-5">Log in</h1>
             <label>
               <input
                 className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
@@ -76,6 +88,14 @@ const SigninForm: React.FC = () => {
             >
               Signin
             </button>
+            <div>
+              <h1 className="mt-4">
+                Don’t have an account?
+                <Link to={"/signup"} className="ml-2 text-color-five font-bold">
+                  Signup
+                </Link>{" "}
+              </h1>
+            </div>
           </form>
         </div>
       </div>

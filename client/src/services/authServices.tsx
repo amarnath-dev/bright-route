@@ -32,3 +32,31 @@ export const signup = createAsyncThunk(
     }
   }
 );
+
+export type UserWithEmailAndPassword = {
+  email: string;
+  password: string;
+};
+
+export const signin = createAsyncThunk(
+  "auth/signin",
+  async (userData: UserWithEmailAndPassword, thunkAPI) => {
+    try {
+      const response = await API.post("/login", {
+        userData,
+      });
+      if (response.data) {
+        return response.data.user;
+      }
+    } catch (error) {
+      const err = error as AxiosError<{
+        message?: string;
+      }>;
+      const payload = {
+        message: err.response?.data?.message,
+        status: err.response?.status,
+      };
+      return thunkAPI.rejectWithValue(payload);
+    }
+  }
+);
