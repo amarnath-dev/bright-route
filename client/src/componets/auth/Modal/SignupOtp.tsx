@@ -2,9 +2,10 @@ import { Button, Label, Modal } from "flowbite-react";
 import { Dispatch, SetStateAction, useRef } from "react";
 import { signup } from "../../../services/authServices";
 import { useAppDispatch } from "../../../app/hooks";
+import { authActions } from "../../../redux/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 import API from "../../../api";
 import "./SignupOtp.css";
-import { authActions } from "../../../redux/auth/authSlice";
 
 const SignupOtp = ({
   openModal,
@@ -22,6 +23,7 @@ const SignupOtp = ({
   } | null;
 }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const box1 = useRef<HTMLInputElement>(null);
   const box2 = useRef<HTMLInputElement>(null);
@@ -45,10 +47,14 @@ const SignupOtp = ({
           if (serverResponse) {
             serverResponse.otp = userOtp;
 
-            const response = dispatch(signup(serverResponse));
+            // I changed the await here
+            const response = await dispatch(signup(serverResponse));
             if (response) {
-              console.log("this is response after doing the sign up", response);
-              dispatch(authActions.setUser((await response).payload));
+              const payloadData = response.payload;
+              dispatch(authActions.setUser(payloadData));
+              if (payloadData.role === "mentee") {
+                navigate("/");
+              }
             }
           } else {
             console.log("Server Response is Null");

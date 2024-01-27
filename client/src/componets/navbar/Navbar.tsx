@@ -3,7 +3,7 @@ const NavBar: React.FC = () => {
     <>
       <div className="grid grid-cols-12 w-screen items-center">
         <div className="col-span-4 bg-color-one h-14 flex items-center">
-          <h1 className="ml-12 font-mono text-2xl text-white">Bright Route</h1>
+          {/* <h1 className="ml-12 font-mono text-2xl text-white">Bright Route</h1> */}
         </div>
         <div className="col-span-8 bg-color-one h-14">
           <div className="flex justify-evenly items-center text-white">
