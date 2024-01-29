@@ -75,7 +75,7 @@ const SignupForm: React.FC = () => {
 
           <div className="col-span-full mx-5 md:col-span-8">
             <div className="flex items-center justify-center">
-              <h2 className="mt-24 text-2xl text-center font-bold">
+              <h2 className="mt-10 md:mt-20 text-2xl text-center font-bold">
                 Sign up as a Mentee
               </h2>
             </div>
@@ -140,7 +140,7 @@ const SignupForm: React.FC = () => {
                 <br />
                 <button
                   type="submit"
-                  className="border-2 border-slate-300 bg-emerald-400 px-1 py-1 mt-3 rounded-md text-base shadow-md font-bold w-72 md:w-96 sm:text-sm"
+                  className="border-2 border-slate-300 bg-emerald-400 px-1 py-1 mt-2 rounded-md text-base shadow-md font-bold w-72 md:w-96 sm:text-sm"
                 >
                   Sign up
                 </button>
@@ -158,6 +158,13 @@ const SignupForm: React.FC = () => {
                 Log in
               </Link>
             </span>
+
+            <div className="flex justify-center items-center mt-1 mb-5">
+              <span>
+                Apply as a mentor?
+                <Link to={"/mentor/apply1"} className="ml-2 text-color-five font-bold">Apply now</Link>
+              </span>
+            </div>
           </div>
         </div>
       </div>

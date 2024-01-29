@@ -3,12 +3,24 @@ import {
   CredentialResponse,
   GoogleOAuthProvider,
 } from "@react-oauth/google";
+import { useAppDispatch } from "../../../app/hooks";
+import { googleAuth } from "../../../services/authServices";
+import { useNavigate } from "react-router-dom";
+import { authActions } from "../../../redux/auth/authSlice";
 
 const GoogleAuth = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const responseGoogle = async (response: CredentialResponse) => {
-    console.log(response);
     if (response.credential) {
-      console.log(response.credential);
+      const responseData = await dispatch(googleAuth(response.credential));
+      const payloadData = responseData.payload;
+      console.log("this is new payload data", payloadData);
+      if (payloadData) {
+        dispatch(authActions.setUser(payloadData.user));
+        navigate("/");
+      }
     }
   };
 
