@@ -1,9 +1,5 @@
 import HeaderCard2 from "./HeaderCard2";
-
-type MentorExperianceData = {
-  why_mentor: string;
-  achievement: string;
-};
+import { MentorExperianceData } from "../../../datatypes/Datatypes";
 
 type ExperianceFormProps = MentorExperianceData & {
   updateFields: (fields: Partial<MentorExperianceData>) => void;

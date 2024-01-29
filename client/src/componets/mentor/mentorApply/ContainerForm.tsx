@@ -3,48 +3,8 @@ import { useMultistepForm } from "../../../app/useMultistepForm";
 import { AboutYou } from "./AboutYou";
 import { ExperianceDetails } from "./ExperianceDetails";
 import { ProfileDetails } from "./ProfileDetails";
-
-type FormData = {
-  profile_img: File | null;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  job_title: string;
-  company: string;
-  state: string;
-
-  job_category: string;
-  skills: string[];
-  bio_dec: string;
-  linkedIn_url: string;
-  twitter_url: string;
-  website_url: string;
-
-  why_mentor: string;
-  achievement: string;
-};
-
-const INITIAL_DATA: FormData = {
-  profile_img: null,
-  first_name: "",
-  last_name: "",
-  email: "",
-  password: "",
-  job_title: "",
-  company: "",
-  state: "",
-
-  job_category: "",
-  skills: [],
-  bio_dec: "",
-  linkedIn_url: "",
-  twitter_url: "",
-  website_url: "",
-
-  why_mentor: "",
-  achievement: "",
-};
+import { FormData } from "../../.../../../datatypes/Datatypes";
+import { INITIAL_DATA } from "../../.../../../datatypes/Datatypes";
 
 const ContainerForm: React.FC = () => {
   const [mentorData, setMentorData] = useState(INITIAL_DATA);

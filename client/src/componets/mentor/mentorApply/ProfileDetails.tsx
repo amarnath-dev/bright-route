@@ -1,11 +1,4 @@
-type MentorProfileData = {
-  job_category: string;
-  skills: string[];
-  bio_dec: string;
-  linkedIn_url: string;
-  twitter_url: string;
-  website_url: string;
-};
+import { MentorProfileData } from "../../../datatypes/Datatypes";
 
 type ProfileFormProps = MentorProfileData & {
   updateFields: (fields: Partial<MentorProfileData>) => void;
