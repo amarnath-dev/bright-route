@@ -1,15 +1,5 @@
 import HeaderCard from "./HeaderCard";
-
-export type MentorAboutData = {
-  profile_img: File | null;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  job_title: string;
-  company: string;
-  state: string;
-};
+import { MentorAboutData } from "../../../datatypes/Datatypes";
 
 type AboutFormProps = MentorAboutData & {
   updateFields: (
