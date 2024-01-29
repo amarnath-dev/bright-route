@@ -8,6 +8,13 @@ import { IMenteeProfile } from "../Interfaces/index";
 import sendEmailOtp from "../utils/sendEmail";
 import Otp from "../models/otpModel";
 import menteeProfileModel from "../models/menteeProfileModel";
+import { jwtDecode } from "jwt-decode";
+import generateUsername from "../utils/generateUsername";
+
+interface jwtPayload {
+  email: string;
+  given_name: string;
+}
 
 /***
  * @dec Mentee Registration and Authentication
@@ -173,8 +180,71 @@ export class MenteeAuthController {
   }
 
   async googleAuth(req: Request, res: Response, next: NextFunction) {
+    console.log("reached at google auth one");
     try {
-      console.log(req.body);
+      if (!req.body.userData) {
+        res.status(400);
+        return next(Error("Invalid credentials"));
+      }
+
+      const { email }: jwtPayload = jwtDecode(req.body.userData);
+      const existingUser = await User.findOne({ email: email });
+
+      if (existingUser) {
+        if (existingUser.password) {
+          return next(Error("Invalid Email"));
+        }
+        const token = generateJwt(existingUser._id, existingUser.email);
+
+        const userDataFromProfile = await menteeProfileModel.findOne({
+          mentee_id: existingUser?._id,
+        });
+        res.status(200).json({
+          status: "success",
+          message: "User loged in successfully",
+          user: {
+            _id: existingUser._id,
+            first_name: userDataFromProfile?.first_name,
+            email: existingUser.email,
+            role: existingUser.role,
+          },
+          token,
+        });
+      } else {
+        console.log("reached at google auth two");
+        const userName = await generateUsername();
+        const menteeDetails: IUser = new User({
+          email,
+          password: "",
+          role: "mentee",
+        });
+        const user: IUser = await menteeDetails.save();
+        if (user) {
+          console.log("reached at google auth three");
+          const userProfileDetails: IMenteeProfile = new MenteeProfile({
+            mentee_id: user?._id,
+            first_name: userName.toString(),
+            last_name: "",
+          });
+          const profileData: IMenteeProfile = await userProfileDetails.save();
+          console.log(profileData);
+          console.log("reached at google auth four");
+          if (profileData) {
+            const token = generateJwt(user?._id, email);
+            res.status(200).json({
+              status: "success",
+              message: "User Created Successfully",
+              user: {
+                _id: user?._id,
+                first_name: profileData?.first_name,
+                email: user?.email,
+                role: user?.role,
+              },
+              token,
+            });
+          }
+        }
+      }
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);

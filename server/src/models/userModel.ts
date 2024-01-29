@@ -9,7 +9,6 @@ const userSchema: Schema<IUser> = new mongoose.Schema<IUser>({
     },
     password: {
         type: String,
-        required: true,
     },
     role: {
         type: String,

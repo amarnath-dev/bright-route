@@ -6,6 +6,7 @@ import { signin } from "../../../services/authServices";
 import { authActions } from "../../../redux/auth/authSlice";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import GoogleAuth from "../GoogleAuth/GoogleAuth";
 
 interface Credentials {
   email: string;
@@ -52,7 +53,7 @@ const SigninForm: React.FC = () => {
           />
         </div>
 
-        <div className="col-span-full flex justify-center mt-36 md:col-span-8">
+        <div className="col-span-full flex justify-center mt-28 md:col-span-8">
           <form action="" onSubmit={handleSubmit(submitData)}>
             <h1 className="text-xl md:text-2xl font-bold mb-5">Log in</h1>
             <label>
@@ -88,6 +89,10 @@ const SigninForm: React.FC = () => {
             >
               Signin
             </button>
+            <div className="mt-5 flex justify-center items-center">
+              <GoogleAuth />
+            </div>
+
             <div>
               <h1 className="mt-4">
                 Don’t have an account?
