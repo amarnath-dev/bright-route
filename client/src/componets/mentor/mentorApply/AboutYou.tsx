@@ -23,7 +23,7 @@ export function AboutYou({
       <HeaderCard />
       <div className="w-screen mt-5 flex justify-center items-center">
         <div className="flex justify-start items-center md:w-3/5">
-          <form className="md:w-full">
+          <form className="md:w-full" encType="multipart/form-data">
             <span className="font-bold ml-16 md:ml-2">
               Choose a profile image
             </span>
@@ -31,7 +31,7 @@ export function AboutYou({
               <label>
                 <input
                   type="file"
-                  className="rounded mt-2"
+                  className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   // value={profile_img}
                   onChange={(e) => {
                     // const selectedFile = e.target.files && e.target.files[0];

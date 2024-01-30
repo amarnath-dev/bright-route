@@ -37,6 +37,6 @@ const menteeProfileSchema: Schema<IMenteeProfile> =
   );
 
 export default mongoose.model<IMenteeProfile>(
-  "MenteeProfile",
+  "Menteeprofile",
   menteeProfileSchema
 );

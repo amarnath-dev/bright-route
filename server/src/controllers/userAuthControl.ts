@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import cryptojs from "crypto-js";
 import User from "../models/userModel";
-import MenteeProfile from "../models/menteeProfileModel";
+import Mentorprofile from "../models/mentorProfileModel";
+import Menteeprofile from "../models/menteeProfileModel";
 import generateJwt from "../utils/generateJWT";
-import { IUser } from "../Interfaces";
+import { IMentorProfile, IUser } from "../Interfaces";
 import { IMenteeProfile } from "../Interfaces/index";
 import sendEmailOtp from "../utils/sendEmail";
 import Otp from "../models/otpModel";
-import menteeProfileModel from "../models/menteeProfileModel";
 import { jwtDecode } from "jwt-decode";
 import generateUsername from "../utils/generateUsername";
 
@@ -66,7 +66,7 @@ export class MenteeAuthController {
         if (password === dbPassword) {
           //Getting users name because both stored in different
           //collections user and menteeprofile
-          const userDataFromProfile = await menteeProfileModel.findOne({
+          const userDataFromProfile = await Menteeprofile.findOne({
             mentee_id: userExists?._id,
           });
           const token = generateJwt(userExists._id, email);
@@ -125,7 +125,7 @@ export class MenteeAuthController {
         });
         const user: IUser = await menteeDetails.save();
         if (user) {
-          const userProfileDetails: IMenteeProfile = new MenteeProfile({
+          const userProfileDetails: IMenteeProfile = new Menteeprofile({
             mentee_id: user?._id,
             first_name,
             last_name,
@@ -180,7 +180,6 @@ export class MenteeAuthController {
   }
 
   async googleAuth(req: Request, res: Response, next: NextFunction) {
-    console.log("reached at google auth one");
     try {
       if (!req.body.userData) {
         res.status(400);
@@ -196,7 +195,7 @@ export class MenteeAuthController {
         }
         const token = generateJwt(existingUser._id, existingUser.email);
 
-        const userDataFromProfile = await menteeProfileModel.findOne({
+        const userDataFromProfile = await Menteeprofile.findOne({
           mentee_id: existingUser?._id,
         });
         res.status(200).json({
@@ -221,7 +220,7 @@ export class MenteeAuthController {
         const user: IUser = await menteeDetails.save();
         if (user) {
           console.log("reached at google auth three");
-          const userProfileDetails: IMenteeProfile = new MenteeProfile({
+          const userProfileDetails: IMenteeProfile = new Menteeprofile({
             mentee_id: user?._id,
             first_name: userName.toString(),
             last_name: "",
@@ -243,6 +242,66 @@ export class MenteeAuthController {
               token,
             });
           }
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        return next(error);
+      }
+    }
+  }
+}
+
+export class MentorAuthController {
+  async apply(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.body.mentorData || !req.body.firebase_img_id) {
+        res.status(400);
+        return next(Error("Invalid credentials"));
+      }
+      const data = req.body.mentorData;
+      const img_str = req.body.firebase_img_id;
+      const mentorEmail = data.email;
+      const emailExists = await User.findOne({ mentorEmail });
+      if (emailExists) {
+        res.status(409);
+        return next(Error("Email Alredy Exists"));
+      }
+      const hashedPassword: any = cryptojs.AES.encrypt(
+        data.password,
+        "ecryptionkey"
+      ).toString();
+      const mentor: IUser = new User({
+        email: mentorEmail,
+        password: hashedPassword,
+        role: "mentor",
+      });
+      const saveMentor = await mentor.save();
+      if (saveMentor.email) {
+        const mentorProfileData: IMentorProfile = new Mentorprofile({
+          mentor_id: saveMentor?._id,
+          first_name: data?.first_name,
+          last_name: data?.last_name,
+          job_title: data?.job_title,
+          company: data?.company,
+          state: data?.state,
+          job_category: data?.state,
+          skills: data?.skills,
+          bio: data?.bio_dec,
+          linkedIn: data?.linkedIn_url,
+          twitter: data?.twitter_url,
+          web_url: data?.website_url,
+          why_mentor: data?.why_mentor,
+          achievement: data?.achievement,
+          profile_img: img_str,
+        });
+        const mentorProfileSave = await mentorProfileData.save();
+        if (mentorProfileSave._id) {
+          res.status(200).json({
+            status: "success",
+            message: "Mentor Applied Successfully",
+          });
         }
       }
     } catch (error) {

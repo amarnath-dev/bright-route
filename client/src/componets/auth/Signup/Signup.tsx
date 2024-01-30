@@ -162,7 +162,7 @@ const SignupForm: React.FC = () => {
             <div className="flex justify-center items-center mt-1 mb-5">
               <span>
                 Apply as a mentor?
-                <Link to={"/mentor/apply1"} className="ml-2 text-color-five font-bold">Apply now</Link>
+                <Link to={"/mentor/apply"} className="ml-2 text-color-five font-bold">Apply now</Link>
               </span>
             </div>
           </div>
