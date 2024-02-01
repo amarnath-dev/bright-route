@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signinSchema } from "../../../validations/signinSchema";
+import { loginSchema } from "../../../validations/loginSchema";
 import { useAppDispatch } from "../../../app/hooks";
 import { signin } from "../../../services/authServices";
 import { authActions } from "../../../redux/auth/authSlice";
@@ -19,7 +19,7 @@ const SigninForm: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<Credentials>({
-    resolver: zodResolver(signinSchema),
+    resolver: zodResolver(loginSchema),
   });
 
   const dispatch = useAppDispatch();

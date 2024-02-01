@@ -5,9 +5,15 @@ import { ExperianceDetails } from "./ExperianceDetails";
 import { ProfileDetails } from "./ProfileDetails";
 import { FormData } from "../../.../../../datatypes/Datatypes";
 import { INITIAL_DATA } from "../../.../../../datatypes/Datatypes";
+import { useAppDispatch } from "../../../app/hooks";
+import { apply } from "../../../services/authServices";
+import { useNavigate } from "react-router-dom";
 
-const ContainerForm: React.FC = () => {
+export function ContainerForm() {
   const [mentorData, setMentorData] = useState(INITIAL_DATA);
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const updateFields = (fields: Partial<FormData>) => {
     setMentorData((prev) => {
@@ -22,11 +28,21 @@ const ContainerForm: React.FC = () => {
       <ExperianceDetails {...mentorData} updateFields={updateFields} />,
     ]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("Form Submittted");
-    next();
+    if (!isLaststep) return next();
+    try {
+      const response = await dispatch(apply(mentorData));
+      if (response.payload.status == "success") {
+        navigate("/mentor/apply-success");
+      }
+    } catch (error) {
+      if (typeof error === "string") {
+        console.log(error);
+      }
+    }
   };
+
   return (
     <>
       <div>
@@ -61,5 +77,4 @@ const ContainerForm: React.FC = () => {
       </div>
     </>
   );
-};
-export default ContainerForm;
+}

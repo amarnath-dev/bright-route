@@ -1,11 +1,11 @@
 import { z, ZodType } from "zod";
 
-interface signinSchema {
+interface loginSchema {
     email: string,
     password: string,
 }
 
-export const signinSchema: ZodType<signinSchema> = z
+export const loginSchema: ZodType<loginSchema> = z
 .object({
     email: z.string().email().refine((value) => value.trim() !== "", {
         message: "Email should not be empty",
