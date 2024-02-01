@@ -5,12 +5,12 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import menteeRouter from "./routes/menteeRoutes";
 import mentorRouter from "./routes/mentorRoutes";
-
+import adminRouter from "./routes/adminRoutes";
 
 const app = express();
 dotenv.config();
 const corsConfig = {
-  origin: "http://localhost:5174",
+  origin: "http://localhost:5173",
   credentials: true,
 };
 
@@ -23,5 +23,6 @@ app.use(cors(corsConfig));
 //routes
 app.use("/api", menteeRouter);
 app.use("/api/mentor", mentorRouter);
+app.use("/api/admin", adminRouter);
 
 export default app;

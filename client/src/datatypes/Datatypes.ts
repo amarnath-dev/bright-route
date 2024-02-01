@@ -69,3 +69,37 @@ export type MentorExperianceData = {
   achievement: string;
 };
 
+//for admin table
+type values = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+export type cellValue = {
+  row: values;
+};
+
+//mentor
+export type ApplicationObj = {
+  id: number;
+  _id: string;
+  mentor_id: string;
+  profile_img: string;
+  first_name: string;
+  last_name: string;
+  job_title: string;
+  company: string;
+  state: string;
+  category: string;
+  bio: string;
+  linkedIn: string;
+  twitter: string;
+  web_url: string;
+  why_mentor: string;
+  achievement: string;
+  skills: [];
+  reports: Report[];
+  approved: boolean;
+};

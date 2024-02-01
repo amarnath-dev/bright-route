@@ -2,7 +2,6 @@ import { Router } from "express";
 import { MenteeAuthController } from "../controllers/userAuthControl";
 
 const router: Router = Router();
-//Mentee Auth Controller
 const menteeAuthController = new MenteeAuthController();
 
 router.post('/signup', menteeAuthController.signup);

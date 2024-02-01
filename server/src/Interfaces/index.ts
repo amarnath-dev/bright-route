@@ -46,3 +46,9 @@ export interface IMentorProfile extends Document {
   reports: Report[];
   approved: boolean;
 }
+
+export interface IAdmin extends Document {
+  email: string;
+  password: string;
+  role:string;
+}

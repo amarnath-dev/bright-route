@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import cryptojs from "crypto-js";
+import CryptoJS from "crypto-js";
 import User from "../models/userModel";
 import Mentorprofile from "../models/mentorProfileModel";
 import Menteeprofile from "../models/menteeProfileModel";
@@ -59,10 +59,10 @@ export class MenteeAuthController {
         res.status(401);
         return next(Error("Invalid Email"));
       } else {
-        const dbPassword = cryptojs.AES.decrypt(
+        const dbPassword = CryptoJS.AES.decrypt(
           userExists.password,
           "ecryptionkey"
-        ).toString(cryptojs.enc.Utf8);
+        ).toString(CryptoJS.enc.Utf8);
         if (password === dbPassword) {
           //Getting users name because both stored in different
           //collections user and menteeprofile
@@ -109,12 +109,12 @@ export class MenteeAuthController {
         res.status(404);
         return next(Error("Re-Send otp and Try Again"));
       }
-      const dbOTP: string = cryptojs.AES.decrypt(
+      const dbOTP: string = CryptoJS.AES.decrypt(
         otpData.otp,
         "ecryptionkey"
-      ).toString(cryptojs.enc.Utf8);
+      ).toString(CryptoJS.enc.Utf8);
       if (dbOTP === otp) {
-        const hashedPassword: any = cryptojs.AES.encrypt(
+        const hashedPassword: any = CryptoJS.AES.encrypt(
           password,
           "ecryptionkey"
         ).toString();
@@ -268,7 +268,7 @@ export class MentorAuthController {
         res.status(409);
         return next(Error("Email Alredy Exists"));
       }
-      const hashedPassword: any = cryptojs.AES.encrypt(
+      const hashedPassword: any = CryptoJS.AES.encrypt(
         data.password,
         "ecryptionkey"
       ).toString();

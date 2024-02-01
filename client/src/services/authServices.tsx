@@ -122,3 +122,25 @@ export const apply = createAsyncThunk(
     }
   }
 );
+
+//Admin Login
+export const adminLogin = createAsyncThunk(
+  "auth/adminLogin",
+  async (adminData: UserWithEmailAndPassword, thunkAPI) => {
+    try {
+      const response = await API.post("/admin/login", adminData);
+      if (response) {
+        if (response.data.status == "success") {
+          console.log("admin sign up successfull", response.data);
+        }
+      }
+    } catch (error) {
+      const err = error as AxiosError<{ status?: string; message?: string }>;
+      const payload = {
+        status: err.response?.status,
+        message: err.response?.data?.message,
+      };
+      return thunkAPI.rejectWithValue(payload);
+    }
+  }
+);

@@ -16,7 +16,6 @@ const GoogleAuth = () => {
     if (response.credential) {
       const responseData = await dispatch(googleAuth(response.credential));
       const payloadData = responseData.payload;
-      console.log("this is new payload data", payloadData);
       if (payloadData) {
         dispatch(authActions.setUser(payloadData.user));
         navigate("/");
