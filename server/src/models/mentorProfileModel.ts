@@ -55,6 +55,7 @@ const mentorProfileSchema: Schema<IMentorProfile> =
       },
       approved: {
         type: Boolean,
+        //enum: []
         default: false,
       },
     },

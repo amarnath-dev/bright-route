@@ -9,6 +9,7 @@ import "./App.css";
 import AdminLogin from "./pages/admin/AdminLogin";
 import { Dashboard } from "./pages/admin/Dashboard";
 import { MentorApplication } from "./pages/admin/MentorApplication";
+import { ApplicationReview } from "./pages/admin/ApplicationReview";
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
             <Route
               path="/admin/mentor-application"
               element={<MentorApplication />}
+            />
+            <Route
+              path="/admin/application-review/:mentor"
+              element={<ApplicationReview />}
             />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Routes>

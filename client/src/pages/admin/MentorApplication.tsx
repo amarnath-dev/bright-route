@@ -1,35 +1,29 @@
 import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { FormEvent, useEffect, useState } from "react";
-import { cellValue } from "../../datatypes/Datatypes";
+import { useEffect, useState } from "react";
 import { ApplicationObj } from "../../datatypes/Datatypes";
 import API from "../../api";
-
-const handleClick = (e: FormEvent, cellvalue: cellValue) => {
-  e.preventDefault();
-  console.log(cellvalue.row);
-};
+import { Link } from "react-router-dom";
 
 const columns: GridColDef[] = [
   { field: "first_name", headerName: "First name", width: 200 },
   { field: "last_name", headerName: "Last name", width: 180 },
   {
-    field: "job_title",
-    headerName: "Job Position",
+    field: "mentorEmail",
+    headerName: "Email",
     width: 320,
   },
   {
     field: "Check",
-    renderCell: (cellValues) => {
+    renderCell: (cellValue) => {
+      const id = cellValue.row._id;
       return (
-        <button
-          className="text-white border bg-color-five rounded-md py-1 px-1 w-20"
-          onClick={(e) => {
-            handleClick(e, cellValues);
-          }}
+        <Link
+          to={`/admin/application-review/${id}`}
+          className="text-white text-center border bg-color-five rounded-md py-1 w-20 h-8"
         >
           View
-        </button>
+        </Link>
       );
     },
   },
@@ -39,7 +33,7 @@ export const MentorApplication = () => {
   const [details, setDetails] = useState([]);
 
   useEffect(() => {
-    const applicationDeta = async () => {
+    const applicationData = async () => {
       try {
         const response = await API.get("admin/mentor-applications");
         if (response.status) {
@@ -47,20 +41,19 @@ export const MentorApplication = () => {
           data.forEach((item: ApplicationObj, index: number) => {
             item.id = index + 1;
           });
-          console.log("after adding the index", data);
           setDetails(data);
         }
       } catch (error) {
         throw new Error("Details fetch failed");
       }
     };
-    applicationDeta();
+    applicationData();
   }, []);
 
   return (
     <>
       <div className="grid grid-cols-12 w-screen h-screen">
-        <div className="col-span-3 ml-4 mt-4">
+        <div className="hidden md:block col-span-3">
           <AdminSidebar />
         </div>
 
@@ -70,15 +63,10 @@ export const MentorApplication = () => {
               Dashboard / <small>Applications</small>
             </h1>
           </div>
-          <div className="w-full mt-10 rounded-md">
+          <div className="w-screen ml-3 mr-3 md:w-full mt-10 rounded-md">
             <DataGrid
               rows={details}
               columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
               pageSizeOptions={[5, 10]}
             />
           </div>
