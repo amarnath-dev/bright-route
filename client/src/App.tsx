@@ -10,6 +10,9 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import { Dashboard } from "./pages/admin/Dashboard";
 import { MentorApplication } from "./pages/admin/MentorApplication";
 import { ApplicationReview } from "./pages/admin/ApplicationReview";
+import MentorHome from "./pages/mentor/MentorHome";
+import MentorProfile from "./pages/mentor/MentorProfile";
+import { SearchMentors } from "./pages/mentee/SearchMentors";
 
 function App() {
   return (
@@ -34,6 +37,9 @@ function App() {
               path="/admin/application-review/:mentor"
               element={<ApplicationReview />}
             />
+            <Route path="/mentor/home" element={<MentorHome />} />
+            <Route path="/mentor/profile" element={<MentorProfile />} />
+            <Route path="/mentor/browse" element={<SearchMentors />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Routes>
         </Router>

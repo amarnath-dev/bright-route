@@ -44,7 +44,7 @@ export const MentorApplication = () => {
           setDetails(data);
         }
       } catch (error) {
-        throw new Error("Details fetch failed");
+        console.log(error);
       }
     };
     applicationData();

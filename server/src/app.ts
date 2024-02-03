@@ -7,6 +7,7 @@ import menteeRouter from "./routes/menteeRoutes";
 import mentorRouter from "./routes/mentorRoutes";
 import adminRouter from "./routes/adminRoutes";
 
+
 const app = express();
 dotenv.config();
 const corsConfig = {

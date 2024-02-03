@@ -125,3 +125,23 @@ export interface singleApplicationObj {
   reports: Report[];
   approved: boolean;
 }
+
+export interface mentorProfileObj {
+  _id: string;
+  mentor_id: string;
+  mentorEmail: string;
+  profile_img: string;
+  first_name: string;
+  last_name: string;
+  job_title: string;
+  company: string;
+  state: string;
+  category: string;
+  bio: string;
+  linkedIn: string;
+  twitter: string;
+  web_url: string;
+  skills: [];
+  reports: Report[];
+  approved: boolean;
+}

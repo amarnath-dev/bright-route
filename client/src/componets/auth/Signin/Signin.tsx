@@ -29,10 +29,15 @@ const SigninForm: React.FC = () => {
     try {
       const response = await dispatch(signin(data));
       if (response) {
+        console.log("response after signin", response);
         const payloadData = response.payload;
         dispatch(authActions.setUser(payloadData));
         if (payloadData.role === "mentee") {
           navigate("/");
+        } else if (payloadData.role == "mentor") {
+          navigate("/mentor/home");
+        } else {
+          navigate("/admin/dashboard");
         }
       }
     } catch (error) {
@@ -93,12 +98,12 @@ const SigninForm: React.FC = () => {
               <GoogleAuth />
             </div>
 
-            <div>
+            <div className="flex justify-center">
               <h1 className="mt-4">
                 Don’t have an account?
                 <Link to={"/signup"} className="ml-2 text-color-five font-bold">
                   Signup
-                </Link>{" "}
+                </Link>
               </h1>
             </div>
           </form>

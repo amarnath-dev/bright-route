@@ -4,13 +4,14 @@ import { loginSchema } from "../../validations/loginSchema";
 import { useAppDispatch } from "../../app/hooks";
 import { adminLogin } from "../../services/authServices";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 interface Credentials {
   email: string;
   password: string;
 }
 
-const AdminLogin = () => {
+const AdminLogin: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -37,7 +38,7 @@ const AdminLogin = () => {
 
   return (
     <div className="w-screen h-screen flex justify-center">
-      <div className="mt-32 md:mt-36">
+      <div className="mt-40 md:mt-36">
         <form
           onSubmit={handleSubmit(submitData)}
           className="border-2 px-4 py-4 rounded-md shadow-lg"
