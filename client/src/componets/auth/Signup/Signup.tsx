@@ -22,6 +22,7 @@ const SignupForm: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [open, setOpen] = React.useState(false);
 
+  //snackbar handle function
   const handleClose = (
     _event: React.SyntheticEvent | Event,
     reason?: string
@@ -56,12 +57,10 @@ const SignupForm: React.FC = () => {
       if (response.data.status === "success") {
         if (response.data.user) {
           const serverRes = response.data.user;
-          console.log("server res", serverRes);
-          console.log("server response", serverRes.message);
-          setServerResponse(response.data.user);
-          setOpen(true);
+          setServerResponse(serverRes);
           setOpenModal(true);
-          toast("Successfull");
+          setOpen(true);
+          toast("Email Sent Successfull");
         }
       } else {
         console.log("something went wrong");

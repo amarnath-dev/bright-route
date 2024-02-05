@@ -35,7 +35,9 @@ export const MentorApplication = () => {
   useEffect(() => {
     const applicationData = async () => {
       try {
-        const response = await API.get("admin/mentor-applications");
+        const response = await API.get("/admin/mentor-applications", {
+          withCredentials: true,
+        });
         if (response.status) {
           const data = response.data.applications;
           data.forEach((item: ApplicationObj, index: number) => {

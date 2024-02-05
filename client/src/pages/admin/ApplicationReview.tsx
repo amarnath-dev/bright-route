@@ -18,7 +18,9 @@ export const ApplicationReview = () => {
   useEffect(() => {
     const application = async () => {
       try {
-        const response = await API.get(`admin/single-application/${mentor}`);
+        const response = await API.get(`admin/single-application/${mentor}`, {
+          withCredentials: true,
+        });
         if (response.status) {
           const application = response.data.applications[0];
           setApplicationData(application);
@@ -66,7 +68,7 @@ export const ApplicationReview = () => {
 
   return (
     <>
-      <div className="md:ml-52 h-full mt-16 bg-white rounded-md border-2 px-1 py-1 shadow-lg ml-2 mr-2 md:w-2/3">
+      <div className="md:ml-52 h-full mt-16 rounded-md border-2 px-1 py-1 shadow-lg ml-2 mr-2 md:w-2/3">
         <div className="md:flex relative">
           <div className="md:shrink-0 absolute right-0 md:right-2 md:mt-2">
             <img
@@ -86,7 +88,7 @@ export const ApplicationReview = () => {
               </p>
             </div>
             <span className="block mt-1 text-sm md:text-lg leading-tight font-medium text-gray-700">
-              {applicationData?.job_title}
+              Job Position: {applicationData?.job_title}
             </span>
             <p className="mt-2 text-gray-700 text-sm md:text-lg font-medium">
               Company: {applicationData?.company}
@@ -99,11 +101,11 @@ export const ApplicationReview = () => {
             <p className="mt-2 text-gray-700 text-sm md:text-lg font-medium">
               State: {applicationData?.state}
             </p>
-            <div className="mt-4">
+            <div className="mt-4 flex">
               <span className="text-sm md:text-lg mt-2">Skills:</span>
               {applicationData?.skills.map((skill) => {
                 return (
-                  <div className="px-1 py-1 w-full">
+                  <div className="px-1 py-1 w-full flex flex-row">
                     <h1 className="font-bold text-color-one mt-1 text-lg">
                       {skill}
                     </h1>

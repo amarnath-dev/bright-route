@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Label, Modal } from "flowbite-react";
 import { Dispatch, SetStateAction, useRef } from "react";
 import { signup } from "../../../services/authServices";
@@ -5,6 +6,9 @@ import { useAppDispatch } from "../../../app/hooks";
 import { authActions } from "../../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import API from "../../../api";
+import Snackbar from "@mui/material/Snackbar";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./SignupOtp.css";
 
 const SignupOtp = ({
@@ -24,6 +28,18 @@ const SignupOtp = ({
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  //Snack bar
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   const box1 = useRef<HTMLInputElement>(null);
   const box2 = useRef<HTMLInputElement>(null);
@@ -46,18 +62,28 @@ const SignupOtp = ({
           const userOtp: string = b1 + b2 + b3 + b4;
           if (serverResponse) {
             serverResponse.otp = userOtp;
-
-            // I changed the await here
             const response = await dispatch(signup(serverResponse));
             if (response) {
+              console.log(
+                "this is response after the verify otp verify",
+                response
+              );
               const payloadData = response.payload;
-              dispatch(authActions.setUser(payloadData));
-              if (payloadData.role === "mentee") {
-                navigate("/");
+
+              if (payloadData.status == 404) {
+                toast.error(payloadData.message);
+              } else if (payloadData.status == 400) {
+                toast.error(payloadData.message);
+              } else {
+                dispatch(authActions.setUser(payloadData));
+                if (payloadData.role === "mentee") {
+                  navigate("/");
+                }
               }
             }
           } else {
             console.log("Server Response is Null");
+            toast.error("Something went wrong");
           }
         } catch (error) {
           if (typeof error == "string") {
@@ -66,6 +92,7 @@ const SignupOtp = ({
         }
       } else {
         console.log("Invalid OTP");
+        toast.error("Invalid OTP");
       }
     }
   };
@@ -75,13 +102,13 @@ const SignupOtp = ({
       const response = await API.post("/resendOTP", {
         serverResponse,
       });
-      if (response.data.status) {
-        console.log(response);
+      if (response.data.status == "success") {
+        setOpen(true);
+      } else {
+        toast("Please Try Again");
       }
     } catch (error) {
-      if (typeof error == "string") {
-        console.log(error);
-      }
+      console.log(error);
     }
   };
 
@@ -89,6 +116,12 @@ const SignupOtp = ({
     <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
       <Modal.Header />
       <Modal.Body>
+        <Snackbar
+          open={open}
+          autoHideDuration={5000}
+          onClose={handleClose}
+          message="Email sent Successfully"
+        />
         <h3 className="text-xl font-medium text-gray-900 dark:text-white ml-2">
           Enter the OTP
         </h3>

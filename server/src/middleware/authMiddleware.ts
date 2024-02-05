@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import mongoose, { Document } from "mongoose";
-import User from "../models/userModel";
+import userModel from "../models/userModel";
 import Admin from "../models/adminModal";
 
 declare module "express" {
@@ -20,7 +20,8 @@ export const protect = async (
     try {
       const decode = Jwt.verify(token, "jwtsecrete") as JwtPayload;
       const userId = new mongoose.Types.ObjectId(decode.id);
-      const user = await User.findById(userId);
+      const user = await userModel.findById(userId);
+      console.log("this is user", user);
       if (!user) {
         res.status(401);
         next(Error("Unauthorized user"));
@@ -54,27 +55,26 @@ export const protectAdmin = async (
   next: NextFunction
 ) => {
   const token = req.cookies.token;
-  async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.cookies.token;
-    if (token) {
-      try {
-        const decoded = Jwt.verify(token, "jwtsecrete") as JwtPayload;
-        const adminId = new mongoose.Types.ObjectId(decoded.id);
-        const admin = await Admin.findById(adminId);
-        if (!admin || admin.role !== "admin") {
-          res.status(401);
-          throw new Error("Unauthorized Admin");
-        } else {
-          req.admin = admin;
-        }
-        next();
-      } catch (error) {
+  console.log("this is token", token);
+  if (token) {
+    try {
+      const decoded = Jwt.verify(token, "jwtsecrete") as JwtPayload;
+      const adminId = new mongoose.Types.ObjectId(decoded.id);
+      const admin = await Admin.findById(adminId);
+      if (!admin || admin.role !== "admin") {
         res.status(401);
-        throw new Error("Not authorized, token failed");
+        throw new Error("Unauthorized Admin");
+      } else {
+        req.admin = admin;
       }
-    } else {
+      console.log("all good to go");
+      next();
+    } catch (error) {
       res.status(401);
-      throw new Error("Not authorized,token does not exits");
+      throw new Error("Not authorized, token failed");
     }
-  };
+  } else {
+    res.status(401);
+    throw new Error("Not authorized,token does not exits");
+  }
 };

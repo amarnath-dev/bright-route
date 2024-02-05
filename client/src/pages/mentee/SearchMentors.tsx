@@ -2,13 +2,14 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { CiSearch } from "react-icons/ci";
 import { useEffect, useState } from "react";
-import API from "../../api";
 import { storage } from "../../app/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
+import API from "../../api";
 
 export const SearchMentors = () => {
   const [allMentors, setAllMentors] = useState<mentorProfileObj[]>([]);
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     const mentorProfile = async () => {
@@ -46,6 +47,22 @@ export const SearchMentors = () => {
     }
   };
 
+  // Search fetching
+  useEffect(() => {
+    try {
+      const fetchMentors = async () => {
+        const mentors = await API.get(`/mentor/browse/search?q=${filter}`);
+        console.log("search query result", mentors.data);
+        if (mentors.data.length > 0) {
+          console.log("search query result", mentors.data);
+        }
+      };
+      fetchMentors();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [filter]);
+
   return (
     <>
       <div className="w-screen h-full">
@@ -53,13 +70,14 @@ export const SearchMentors = () => {
           <div className="w-full h-full md:w-1/2 md:flex md:justify-center md:items-center md:flex-col">
             <label className="relative flex justify-center items-center">
               <div className="w-full flex justify-end absolute left-28 top-12 mr-4 md:top-12">
-                <CiSearch className="text-2xl w-full" />
+                <CiSearch className="text-2xl w-full ml-28" />
               </div>
-
               <input
                 className="block bg-white border border-slate-300 rounded-md mt-10 py-2 pl-9 pr-3 w-72 shadow-lg focus:outline-none focus:border-dark-500 placeholder:text-slate-400 placeholder:text-sm focus:ring-dark-500 focus:ring-1 md:w-96 sm:text-lg"
-                placeholder="Search by skill or job title"
+                placeholder="Search by Job title"
                 type="text"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
               />
             </label>
 
@@ -77,7 +95,7 @@ export const SearchMentors = () => {
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
-                options={topTechnicalSkills}
+                options={topTechnicalCompanys}
                 sx={{ width: 300, marginTop: 3, padding: 1 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Company" />
@@ -90,7 +108,6 @@ export const SearchMentors = () => {
         {/* Card Componenet  */}
         <div className="w-full h-full flex justify-center items-center flex-col px-4 py-4 mt-2 md:mt-10 md:py-0 md:px-0">
           {allMentors.map((mentor, index) => (
-            // fetchImg(mentor.profile_img),
             <div
               key={index}
               className="w-full mt-5 border-2 rounded-lg px-4 py-4 md:px-2 md:py-2 md:w-9/12 md:mt-10"
@@ -206,4 +223,39 @@ const topTechnicalSkills = [
   { label: "Kanban" },
   { label: "Jira" },
   { label: "Confluence" },
+];
+
+
+
+const topTechnicalCompanys = [
+  { label: "Google" },
+  { label: "Microsoft" },
+  { label: "Apple" },
+  { label: "Amazon" },
+  { label: "Facebook" },
+  { label: "Twitter" },
+  { label: "MongoDB, Inc." },
+  { label: "Adobe" },
+  { label: "IBM" },
+  { label: "Vue.js Corp" },
+  { label: "Pallets Projects" },
+  { label: "Oracle" },
+  { label: "VMware" },
+  { label: "Microsoft" },
+  { label: "Microsoft" },
+  { label: "Ruby" },
+  { label: "PHP" },
+  { label: "Taylor Otwell" },
+  { label: "Oracle" },
+  { label: "GitHub" },
+  { label: "GraphQL Foundation" },
+  { label: "Docker, Inc." },
+  { label: "Amazon Web Services" },
+  { label: "Microsoft Azure" },
+  { label: "Jenkins" },
+  { label: "Ruby" },
+  { label: "Agile Development" },
+  { label: "Scrum Alliance" },
+  { label: "Kanban" },
+  { label: "Atlassian" },
 ];

@@ -105,13 +105,13 @@ export class MenteeAuthController {
     try {
       const { first_name, last_name, email, password, otp } = req.body.userData;
       if (!first_name || !last_name || !email || !password || !otp) {
-        res.status(400);
+        res.status(400).json({ message: "Invalid Credentials" });
         return next(Error("Invalid Credentials"));
       }
       const otpData = await Otp.findOne({ email });
       if (!otpData) {
-        res.status(404);
-        return next(Error("Re-Send otp and Try Again"));
+        res.status(404).json({ message: "Resend otp and try Again" });
+        return next(Error("Re-send otp and Try Again"));
       }
       const dbOTP: string = CryptoJS.AES.decrypt(
         otpData.otp,
@@ -151,7 +151,7 @@ export class MenteeAuthController {
           }
         }
       } else {
-        res.status(400);
+        res.status(400).json({ message: "Invalid OTP" });
         return next(Error("Invalid OTP"));
       }
     } catch (error) {
@@ -290,6 +290,7 @@ export class MentorAuthController {
           job_title: data?.job_title,
           company: data?.company,
           state: data?.state,
+          category: data?.job_category,
           job_category: data?.state,
           skills: data?.skills,
           bio: data?.bio_dec,

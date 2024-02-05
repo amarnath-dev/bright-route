@@ -5,6 +5,8 @@ import { useAppDispatch } from "../../app/hooks";
 import { adminLogin } from "../../services/authServices";
 import { useNavigate } from "react-router-dom";
 import React from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Credentials {
   email: string;
@@ -27,7 +29,14 @@ const AdminLogin: React.FC = () => {
     try {
       const response = await dispatch(adminLogin(data));
       if (response.payload) {
-        navigate("/admin/dashboard");
+        const payload = response.payload;
+        if (payload.status === "success") {
+          console.log("------>", response.payload);
+          // navigate("/admin/dashboard");
+          navigate("/admin/mentor-application");
+        } else {
+          toast("Something went wrong");
+        }
       }
     } catch (error) {
       if (typeof error == "string") {

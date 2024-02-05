@@ -10,6 +10,7 @@ export class AdminControls {
   ): Promise<void> {
     try {
       //aggregation lookup to get single value from another collection
+      console.log("reached");
       const applicationData = await MentorProfile.aggregate([
         { $match: { approved: false } },
         {
@@ -46,7 +47,7 @@ export class AdminControls {
   ): Promise<void> {
     try {
       const applicationId = new ObjectId(req.params.applicationId);
-
+      console.log("this is aplication id", applicationId);
       const applicationData = await MentorProfile.aggregate([
         { $match: { _id: applicationId } },
         {

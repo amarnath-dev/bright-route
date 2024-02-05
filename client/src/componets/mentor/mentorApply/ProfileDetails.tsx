@@ -2,7 +2,6 @@ import { MentorProfileData } from "../../../datatypes/Datatypes";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import { topTechnicalSkills } from "../../../utils/appUtils";
 
 type ProfileFormProps = MentorProfileData & {
   updateFields: (fields: Partial<MentorProfileData>) => void;
@@ -21,9 +20,9 @@ export function ProfileDetails({
 
   const handleSkillsChange = (
     event: React.SyntheticEvent,
-    newSkills: { title: string }[]
+    newSkills: { title: string }[] 
   ) => {
-    updateFields({ skills: newSkills.map((skill) => skill.title) });
+    updateFields({ skills: newSkills.map((skill) => skill.title) }); 
   };
 
   return (
@@ -68,7 +67,7 @@ export function ProfileDetails({
                   <Autocomplete
                     multiple
                     id="tags-standard"
-                    options={topTechnicalSkills}
+                    options={topSkills}
                     getOptionLabel={(option) => option.title}
                     value={skillsOptions}
                     onChange={handleSkillsChange}
@@ -151,3 +150,16 @@ export function ProfileDetails({
     </>
   );
 }
+
+const topSkills = [
+  { title: "Node js" },
+  { title: "React" },
+  { title: "HTML" },
+  { title: "Typescript" },
+  { title: "Mongodb" },
+  { title: "Python" },
+  { title: "Java" },
+  {
+    title: "Javascript",
+  },
+];

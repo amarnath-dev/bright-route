@@ -8,7 +8,9 @@ export const approveApplication = createAsyncThunk(
     console.log("this is id of the user", id);
     try {
       const response = await API.patch(
-        `admin/single-application/approve/${id}`
+        `admin/single-application/approve/${id}`,
+        {},
+        { withCredentials: true }
       );
       if (response) {
         const result = response.data;

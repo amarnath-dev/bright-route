@@ -8,12 +8,14 @@ const router: Router = Router();
 const adminAuthControl = new AdminAuthControls();
 const adminControls = new AdminControls();
 
-router.post("/login", adminAuthControl.adminLogin);
+router.post("/admin-login", adminAuthControl.adminLogin);
+
 router.get(
   "/mentor-applications",
   protectAdmin,
   adminControls.mentorApplications
 );
+
 router.get(
   "/single-application/:applicationId",
   protectAdmin,

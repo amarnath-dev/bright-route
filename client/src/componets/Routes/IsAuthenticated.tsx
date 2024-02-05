@@ -5,11 +5,14 @@ import { useAppSelector } from "../../app/hooks";
 export default function IsAuthenticated() {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.userAuth);
-  console.log("this is user in Isauthenticated", user);
 
   useEffect(() => {
-    if (user) {
+    if (user?.role === "mentee") {
       navigate("/");
+    } else if (user?.role === "mentor") {
+      navigate("/mentor/home");
+    } else if (user?.role === "admin") {
+      navigate("/admin/dashboard");
     }
   }, [navigate, user]);
 

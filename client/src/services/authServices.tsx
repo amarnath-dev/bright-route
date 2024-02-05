@@ -152,11 +152,11 @@ export const adminLogin = createAsyncThunk(
   "auth/adminLogin",
   async (adminData: UserWithEmailAndPassword, thunkAPI) => {
     try {
-      const response = await API.post("/admin/login", adminData);
+      const response = await API.post("/admin/admin-login", { adminData });
       if (response) {
-        if (response.data.status == "success") {
-          console.log("admin sign up successfull", response.data);
-        }
+        const serverRes = response.data;
+        Cookies.set("token", serverRes.admin.token, { expires: 3 });
+        return serverRes;
       }
     } catch (error) {
       const err = error as AxiosError<{ status?: string; message?: string }>;
