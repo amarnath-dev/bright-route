@@ -47,6 +47,30 @@ export const signin = createAsyncThunk(
       const response = await API.post("/login", { userData });
       if (response.data) {
         Cookies.set("token", response.data.token, { expires: 3 });
+        console.log("this is response all right", response.data.user);
+        return response.data.user;
+      }
+    } catch (error) {
+      const err = error as AxiosError<{
+        message?: string;
+      }>;
+      const payload = {
+        message: err.response?.data?.message,
+        status: err.response?.status,
+      };
+      return thunkAPI.rejectWithValue(payload);
+    }
+  }
+);
+
+export const MentorLogin = createAsyncThunk(
+  "auth/mentor/signin",
+  async (mentorData: UserWithEmailAndPassword, thunkAPI) => {
+    try {
+      const response = await API.post("/mentor/mentor-login", { mentorData });
+      if (response.data) {
+        Cookies.set("token", response.data.token, { expires: 3 });
+        console.log("this is response all right", response.data.user);
         return response.data.user;
       }
     } catch (error) {
@@ -67,6 +91,7 @@ export const googleAuth = createAsyncThunk(
   async (userData: string, thunkAPI) => {
     try {
       const response = await API.post("/google-auth", { userData });
+      console.log("response from the client side", response);
       if (response) {
         if (response.data.status == "success") {
           return response.data;
@@ -87,12 +112,11 @@ export const googleAuth = createAsyncThunk(
 );
 
 //Mentor
-export const apply = createAsyncThunk(
+export const MultiFromApply = createAsyncThunk(
   "auth/mentor",
   async (mentorData: FormData, thunkAPI) => {
     try {
-      //Store the profile image in firebase
-      console.log("reached at auth service", mentorData);
+      console.log("reached at multiform thunk", mentorData);
       const fileObj = mentorData.profile_img;
       if (fileObj?.name) {
         const filename = new Date().getTime() + fileObj?.name;
@@ -128,11 +152,11 @@ export const adminLogin = createAsyncThunk(
   "auth/adminLogin",
   async (adminData: UserWithEmailAndPassword, thunkAPI) => {
     try {
-      const response = await API.post("/admin/login", adminData);
+      const response = await API.post("/admin/admin-login", { adminData });
       if (response) {
-        if (response.data.status == "success") {
-          console.log("admin sign up successfull", response.data);
-        }
+        const serverRes = response.data;
+        Cookies.set("token", serverRes.admin.token, { expires: 3 });
+        return serverRes;
       }
     } catch (error) {
       const err = error as AxiosError<{ status?: string; message?: string }>;

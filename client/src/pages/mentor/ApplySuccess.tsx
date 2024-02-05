@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const ApplySuccess = () => {
   return (
     <>
@@ -20,9 +22,15 @@ const ApplySuccess = () => {
             </h1>
           </div>
           <div className="flex justify-center">
-            <button className="border-2 py-1 px-3 bg-color-one text-white md:py-2 md:px-5 rounded-md md:mt-10">
+            {/* <button className="">
               Back to Home
-            </button>
+            </button> */}
+            <Link
+              to={"/mentor/login"}
+              className="border-2 py-1 px-3 bg-color-one text-white md:py-2 md:px-5 rounded-md md:mt-10"
+            >
+              Back to Home
+            </Link>
           </div>
         </div>
       </figure>

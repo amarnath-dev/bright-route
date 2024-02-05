@@ -6,7 +6,7 @@ import { ProfileDetails } from "./ProfileDetails";
 import { FormData } from "../../.../../../datatypes/Datatypes";
 import { INITIAL_DATA } from "../../.../../../datatypes/Datatypes";
 import { useAppDispatch } from "../../../app/hooks";
-import { apply } from "../../../services/authServices";
+import { MultiFromApply } from "../../../services/authServices";
 import { useNavigate } from "react-router-dom";
 
 export function ContainerForm() {
@@ -31,8 +31,10 @@ export function ContainerForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!isLaststep) return next();
+
     try {
-      const response = await dispatch(apply(mentorData));
+      console.log("this is mentor data", mentorData);
+      const response = await dispatch(MultiFromApply(mentorData));
       if (response.payload.status == "success") {
         navigate("/mentor/apply-success");
       }

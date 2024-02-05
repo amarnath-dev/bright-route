@@ -29,16 +29,20 @@ export class MenteeAuthController {
       const { first_name, last_name, email, password } = req.body.data;
       if (!first_name || !last_name || !email || !password) {
         res.status(400);
-        return next(Error("Invalid Credentials"));
+        return next(Error("Data Fields Missing"));
       }
       const emailExists = await User.findOne({ email });
       if (emailExists) {
-        res.status(409);
+        res.status(409).json({ message: "Email alredy exists" });
         return next(Error("Email Alredy Exists"));
       }
       //OTP Email Sending
       await sendEmailOtp(first_name, last_name, email);
-      res.status(200).json({ status: "success", user: req.body.data });
+      res.status(200).json({
+        status: "success",
+        message: "Successfull",
+        user: req.body.data,
+      });
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -51,12 +55,12 @@ export class MenteeAuthController {
     try {
       const { email, password } = req.body.userData;
       if (!email || !password) {
-        res.status(400);
+        res.status(400).json({ message: "Data fields missing" });
         return next(Error("Invalid Credentials"));
       }
       const userExists = await User.findOne({ email });
       if (!userExists) {
-        res.status(401);
+        res.status(401).json({ message: "Canno't Find Email" });
         return next(Error("Invalid Email"));
       } else {
         const dbPassword = CryptoJS.AES.decrypt(
@@ -81,7 +85,7 @@ export class MenteeAuthController {
             token,
           });
         } else {
-          res.status(401);
+          res.status(401).json({ message: "Invalid Password" });
           return next(Error("Invalid Password"));
         }
       }
@@ -101,13 +105,13 @@ export class MenteeAuthController {
     try {
       const { first_name, last_name, email, password, otp } = req.body.userData;
       if (!first_name || !last_name || !email || !password || !otp) {
-        res.status(400);
+        res.status(400).json({ message: "Invalid Credentials" });
         return next(Error("Invalid Credentials"));
       }
       const otpData = await Otp.findOne({ email });
       if (!otpData) {
-        res.status(404);
-        return next(Error("Re-Send otp and Try Again"));
+        res.status(404).json({ message: "Resend otp and try Again" });
+        return next(Error("Re-send otp and Try Again"));
       }
       const dbOTP: string = CryptoJS.AES.decrypt(
         otpData.otp,
@@ -147,7 +151,7 @@ export class MenteeAuthController {
           }
         }
       } else {
-        res.status(400);
+        res.status(400).json({ message: "Invalid OTP" });
         return next(Error("Invalid OTP"));
       }
     } catch (error) {
@@ -185,16 +189,16 @@ export class MenteeAuthController {
         res.status(400);
         return next(Error("Invalid credentials"));
       }
-
       const { email }: jwtPayload = jwtDecode(req.body.userData);
       const existingUser = await User.findOne({ email: email });
-
+      console.log("hello");
       if (existingUser) {
         if (existingUser.password) {
+          res.status(409).json({ message: "Invalid Email" });
           return next(Error("Invalid Email"));
         }
+        console.log("hello");
         const token = generateJwt(existingUser._id, existingUser.email);
-
         const userDataFromProfile = await Menteeprofile.findOne({
           mentee_id: existingUser?._id,
         });
@@ -286,6 +290,7 @@ export class MentorAuthController {
           job_title: data?.job_title,
           company: data?.company,
           state: data?.state,
+          category: data?.job_category,
           job_category: data?.state,
           skills: data?.skills,
           bio: data?.bio_dec,
@@ -302,6 +307,61 @@ export class MentorAuthController {
             status: "success",
             message: "Mentor Applied Successfully",
           });
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        return next(error);
+      }
+    }
+  }
+
+  async mentorLogin(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { email, password } = req.body.mentorData;
+      if (!email || !password) {
+        res.status(400).json({ message: "Data fields missing" });
+        return next(Error("Invalid Credentials"));
+      }
+      const userExists = await User.findOne({ email });
+      if (!userExists) {
+        res.status(401).json({ message: "Canno't Find Email" });
+        return next(Error("Invalid Email"));
+      } else {
+        if (userExists.role !== "mentor") {
+          res.status(400).json({ message: "Invalid Email" });
+          return next(Error("Incorect Email"));
+        }
+        const dbPassword = CryptoJS.AES.decrypt(
+          userExists.password,
+          "ecryptionkey"
+        ).toString(CryptoJS.enc.Utf8);
+
+        if (password === dbPassword) {
+          //Getting mentor name because both stored in different
+          //collections user and mentorprofile
+          const mentorDataFromProfile = await Mentorprofile.findOne({
+            mentor_id: userExists?._id,
+          });
+          const token = generateJwt(userExists._id, email);
+          res.status(200).json({
+            status: "success",
+            user: {
+              _id: userExists?._id,
+              first_name: mentorDataFromProfile?.first_name,
+              email: userExists?.email,
+              role: userExists?.role,
+            },
+            token,
+          });
+        } else {
+          res.status(401).json({ message: "Incorrect Password" });
+          return next(Error("Invalid Password"));
         }
       }
     } catch (error) {
