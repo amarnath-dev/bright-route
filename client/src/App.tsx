@@ -23,24 +23,23 @@ function App() {
       <div>
         <Router>
           <Routes>
-            <Route element={<IsAuthenticated />}>
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/signin" element={<SigninPage />} />
-              <Route path="/mentor/apply" element={<ContainerForm />} />
-              <Route path="/mentor/login" element={<MentorLoginForm />} />
-              <Route path="/mentor/apply-success" element={<ApplySuccess />} />
-            </Route>
+            <Route element={<IsAuthenticated />}></Route>
+            <Route path="/mentor/login" element={<MentorLoginForm />} />
+            <Route path="/mentor/apply-success" element={<ApplySuccess />} />
+            <Route path="/mentor/apply" element={<ContainerForm />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/signin" element={<SigninPage />} />
 
             {/* Mentee Route */}
             <Route element={<IsProtected allowedRole="mentee" />}>
               <Route path="/" element={<Home />} />
+              <Route path="/mentor/browse" element={<SearchMentors />} />
             </Route>
 
             {/* Mentor Specific routes  */}
             <Route element={<IsProtected allowedRole="mentor" />}>
               <Route path="/mentor/home" element={<MentorHome />} />
               <Route path="/mentor/profile" element={<MentorProfile />} />
-              <Route path="/mentor/browse" element={<SearchMentors />} />
             </Route>
 
             {/* Admin Routes  */}

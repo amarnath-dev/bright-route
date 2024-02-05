@@ -23,7 +23,7 @@ export type FormData = {
   job_category: string;
 
 
-  skills: string[];  //how should i solve this ??
+  skills: string[]; 
 
 
   bio_dec: string;
@@ -45,7 +45,7 @@ export const INITIAL_DATA: FormData = {
   state: "",
   job_category: "",
 
-  skills: [], //need skills as an array of values
+  skills: [],
 
   bio_dec: "",
   linkedIn_url: "",
@@ -129,6 +129,7 @@ export interface singleApplicationObj {
 }
 
 export interface mentorProfileObj {
+  imageUrl: string;
   _id: string;
   mentor_id: string;
   mentorEmail: string;

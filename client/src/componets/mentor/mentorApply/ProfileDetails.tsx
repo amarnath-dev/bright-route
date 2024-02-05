@@ -2,6 +2,7 @@ import { MentorProfileData } from "../../../datatypes/Datatypes";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
+import { topTechnicalSkills } from "../../../utils/appUtils";
 
 type ProfileFormProps = MentorProfileData & {
   updateFields: (fields: Partial<MentorProfileData>) => void;
@@ -16,6 +17,15 @@ export function ProfileDetails({
   website_url,
   updateFields,
 }: ProfileFormProps) {
+  const skillsOptions = skills.map((skill) => ({ title: skill }));
+
+  const handleSkillsChange = (
+    event: React.SyntheticEvent,
+    newSkills: { title: string }[]
+  ) => {
+    updateFields({ skills: newSkills.map((skill) => skill.title) });
+  };
+
   return (
     <>
       <div className="w-screen mt-5 flex justify-center items-center">
@@ -58,15 +68,16 @@ export function ProfileDetails({
                   <Autocomplete
                     multiple
                     id="tags-standard"
-                    options={top100Films}
+                    options={topTechnicalSkills}
                     getOptionLabel={(option) => option.title}
+                    value={skillsOptions}
+                    onChange={handleSkillsChange}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         variant="standard"
                         label="Skills"
                         placeholder="Add skills..."
-                        value={skills}
                       />
                     )}
                   />
@@ -140,21 +151,3 @@ export function ProfileDetails({
     </>
   );
 }
-
-const top100Films = [
-  { title: "The Shawshank Redemption" },
-  { title: "The Godfather" },
-  { title: "The Godfather: Part II" },
-  { title: "The Dark Knight" },
-  { title: "12 Angry Men" },
-  { title: "Schindler's List" },
-  { title: "Pulp Fiction" },
-  {
-    title: "The Lord of the Rings: The Return of the King",
-  },
-  { title: "The Good, the Bad and the Ugly" },
-  { title: "Fight Club" },
-  {
-    title: "The Lord of the Rings: The Fellowship of the Ring",
-  },
-];
