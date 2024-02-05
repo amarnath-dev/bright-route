@@ -13,6 +13,9 @@ import { ApplicationReview } from "./pages/admin/ApplicationReview";
 import MentorHome from "./pages/mentor/MentorHome";
 import MentorProfile from "./pages/mentor/MentorProfile";
 import { SearchMentors } from "./pages/mentee/SearchMentors";
+import MentorLoginForm from "./pages/mentor/MentorLogin";
+import IsAuthenticated from "./componets/Routes/IsAuthenticated";
+import IsProtected from "./componets/Routes/IsProtected";
 
 function App() {
   return (
@@ -20,26 +23,39 @@ function App() {
       <div>
         <Router>
           <Routes>
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/signin" element={<SigninPage />} />
-            <Route path="/" element={<Home />} />
+            <Route element={<IsAuthenticated />}>
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/signin" element={<SigninPage />} />
+              <Route path="/mentor/apply" element={<ContainerForm />} />
+              <Route path="/mentor/login" element={<MentorLoginForm />} />
+              <Route path="/mentor/apply-success" element={<ApplySuccess />} />
+            </Route>
+
+            {/* Mentee Route */}
+            <Route element={<IsProtected allowedRole="mentee" />}>
+              <Route path="/" element={<Home />} />
+            </Route>
 
             {/* Mentor Specific routes  */}
-            <Route path="/mentor/apply" element={<ContainerForm />} />
-            <Route path="/mentor/apply-success" element={<ApplySuccess />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={<Dashboard />} />
-            <Route
-              path="/admin/mentor-application"
-              element={<MentorApplication />}
-            />
-            <Route
-              path="/admin/application-review/:mentor"
-              element={<ApplicationReview />}
-            />
-            <Route path="/mentor/home" element={<MentorHome />} />
-            <Route path="/mentor/profile" element={<MentorProfile />} />
-            <Route path="/mentor/browse" element={<SearchMentors />} />
+            <Route element={<IsProtected allowedRole="mentor" />}>
+              <Route path="/mentor/home" element={<MentorHome />} />
+              <Route path="/mentor/profile" element={<MentorProfile />} />
+              <Route path="/mentor/browse" element={<SearchMentors />} />
+            </Route>
+
+            {/* Admin Routes  */}
+            <Route element={<IsProtected allowedRole="admin" />}>
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<Dashboard />} />
+              <Route
+                path="/admin/mentor-application"
+                element={<MentorApplication />}
+              />
+              <Route
+                path="/admin/application-review/:mentor"
+                element={<ApplicationReview />}
+              />
+            </Route>
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Routes>
         </Router>

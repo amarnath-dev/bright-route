@@ -8,6 +8,7 @@ const mentorAuthController = new MentorAuthController();
 const mentorController = new MentorController();
 
 router.post("/apply", mentorAuthController.apply);
+router.post("/mentor-login", mentorAuthController.mentorLogin);
 router.get("/profile", protect, mentorController.mentorprofileDetails);
 
 export default router;

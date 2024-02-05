@@ -1,4 +1,7 @@
 import { MentorProfileData } from "../../../datatypes/Datatypes";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 
 type ProfileFormProps = MentorProfileData & {
   updateFields: (fields: Partial<MentorProfileData>) => void;
@@ -51,20 +54,27 @@ export function ProfileDetails({
 
             <div className="w-screen flex flex-col justify-start items-center mt-4 md:w-full md:flex-col">
               <label className="md:w-full">
-                <textarea
-                  className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-2 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 h-20 text-sm md:w-full sm:text-md"
-                  placeholder="Add your skills..."
-                  value={skills.join("\n")}
-                  onChange={(e) => {
-                    const skillsArray = e.target.value.split("\n");
-                    updateFields({ skills: skillsArray });
-                  }}
-                />
+                <Stack spacing={3} sx={{ width: 750 }}>
+                  <Autocomplete
+                    multiple
+                    id="tags-standard"
+                    options={top100Films}
+                    getOptionLabel={(option) => option.title}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="standard"
+                        label="Skills"
+                        placeholder="Add skills..."
+                        value={skills}
+                      />
+                    )}
+                  />
+                </Stack>
               </label>
-              <span className="w-72 mt-2 text-sm md:w-full sm:text-md">
+              <span className="w-72 mt-4 text-sm md:w-full sm:text-md">
                 Describe your expertise to connect with mentees who have similar
-                interests. Comma-separated list of your skills (keep it below
-                10). Mentees will use this to find you.
+                interests.Mentees will use this to find you.
               </span>
             </div>
 
@@ -130,3 +140,21 @@ export function ProfileDetails({
     </>
   );
 }
+
+const top100Films = [
+  { title: "The Shawshank Redemption" },
+  { title: "The Godfather" },
+  { title: "The Godfather: Part II" },
+  { title: "The Dark Knight" },
+  { title: "12 Angry Men" },
+  { title: "Schindler's List" },
+  { title: "Pulp Fiction" },
+  {
+    title: "The Lord of the Rings: The Return of the King",
+  },
+  { title: "The Good, the Bad and the Ugly" },
+  { title: "Fight Club" },
+  {
+    title: "The Lord of the Rings: The Fellowship of the Ring",
+  },
+];

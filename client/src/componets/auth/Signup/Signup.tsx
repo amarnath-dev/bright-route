@@ -5,6 +5,10 @@ import { schema } from "../../../validations/menteeSignupSchema";
 import { Link } from "react-router-dom";
 import SignupOtp from "../Modal/SignupOtp";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
+import Snackbar from "@mui/material/Snackbar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { AxiosError } from "axios";
 import API from "../../../api";
 
 interface Credentials {
@@ -16,6 +20,17 @@ interface Credentials {
 
 const SignupForm: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   const [serverResponse, setServerResponse] = useState<{
     first_name: string;
@@ -40,17 +55,26 @@ const SignupForm: React.FC = () => {
       });
       if (response.data.status === "success") {
         if (response.data.user) {
+          const serverRes = response.data.user;
+          console.log("server res", serverRes);
+          console.log("server response", serverRes.message);
           setServerResponse(response.data.user);
+          setOpen(true);
           setOpenModal(true);
+          toast("Successfull");
         }
       } else {
         console.log("something went wrong");
       }
     } catch (error) {
-      if (typeof error == "string") {
-        console.log(error);
+      const err = error as AxiosError<{
+        message?: string;
+        status?: string;
+      }>;
+      if (err.response?.status === 409) {
+        toast.error("Email Alredy Exists");
       } else {
-        console.log("An unexpected error occured");
+        toast.error("Something went wrong");
       }
     }
   };
@@ -62,6 +86,13 @@ const SignupForm: React.FC = () => {
         setOpenModal={setOpenModal}
         serverResponse={serverResponse}
       />
+      <Snackbar
+        open={open}
+        autoHideDuration={5000}
+        onClose={handleClose}
+        message="Email sent Successfully"
+      />
+      <ToastContainer className="w-40 md:w-80" />
       <div>
         <div className="grid grid-cols-12 h-screen w-screen">
           <div className="hidden md:col-span-4 md:flex items-center justify-center">
@@ -162,7 +193,12 @@ const SignupForm: React.FC = () => {
             <div className="flex justify-center items-center mt-1 mb-5">
               <span>
                 Apply as a mentor?
-                <Link to={"/mentor/apply"} className="ml-2 text-color-five font-bold">Apply now</Link>
+                <Link
+                  to={"/mentor/apply"}
+                  className="ml-2 text-color-five font-bold"
+                >
+                  Apply now
+                </Link>
               </span>
             </div>
           </div>

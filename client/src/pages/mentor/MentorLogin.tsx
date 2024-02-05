@@ -1,17 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { loginSchema } from "../../../validations/loginSchema";
-import { useAppDispatch } from "../../../app/hooks";
-import { signin } from "../../../services/authServices";
-import { authActions } from "../../../redux/auth/authSlice";
+import { loginSchema } from "../../validations/loginSchema";
+import { useAppDispatch } from "../../app/hooks";
+import { MentorLogin } from "../../services/authServices";
+import { authActions } from "../../redux/auth/authSlice";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import GoogleAuth from "../GoogleAuth/GoogleAuth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { SigninCredential } from "../../../datatypes/Datatypes";
+import { SigninCredential } from "../../datatypes/Datatypes";
 
-const SigninForm: React.FC = () => {
+const MentorLoginForm: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -25,16 +24,12 @@ const SigninForm: React.FC = () => {
 
   const submitData = async (data: SigninCredential) => {
     try {
-      const response = await dispatch(signin(data));
+      const response = await dispatch(MentorLogin(data));
       if (response) {
         const payloadData = response.payload;
         dispatch(authActions.setUser(payloadData));
-        if (payloadData.role === "mentee") {
-          navigate("/");
-        } else if (payloadData.role == "mentor") {
+        if (payloadData.role === "mentor") {
           navigate("/mentor/home");
-        } else if (payloadData.role == "admin") {
-          navigate("/admin/dashboard");
         } else {
           toast.error(payloadData.message);
         }
@@ -52,7 +47,7 @@ const SigninForm: React.FC = () => {
       <div className="grid grid-cols-12 w-screen h-screen">
         <div className="hidden md:col-span-4 md:flex justify-center items-center">
           <img
-            src="https://st.depositphotos.com/18722762/51522/v/450/depositphotos_515228796-stock-illustration-online-registration-sign-login-account.jpg"
+            src="https://media.istockphoto.com/id/1281150061/vector/register-account-submit-access-login-password-username-internet-online-website-concept.jpg?s=612x612&w=0&k=20&c=9HWSuA9IaU4o-CK6fALBS5eaO1ubnsM08EOYwgbwGBo="
             alt="signin_img"
             className="ml-28"
           />
@@ -62,13 +57,13 @@ const SigninForm: React.FC = () => {
           <form onSubmit={handleSubmit(submitData)}>
             <div className="flex">
               <h1 className="text-md px-4 py-1 md:py-0 md:px-0 md:text-2xl font-bold mb-5">
-                Log in as mentee
+                Log in as mentor
               </h1>
               <Link
-                to={"/mentor/login"}
+                to={"/signin"}
                 className="text-md px-5 py-1 md:px-0 md:py-0 md:text-xl h-8 font-bold text-color-five md:ml-12 underline"
               >
-                I am a mentor
+                I am a mentee
               </Link>
             </div>
             <label className="flex justify-center">
@@ -110,11 +105,6 @@ const SigninForm: React.FC = () => {
                 Signin
               </button>
             </div>
-
-            <div className="mt-3 flex justify-center items-center">
-              <GoogleAuth />
-            </div>
-
             <div className="flex justify-center">
               <h1 className="mt-3">
                 Don’t have an account?
@@ -130,4 +120,4 @@ const SigninForm: React.FC = () => {
   );
 };
 
-export default SigninForm;
+export default MentorLoginForm;

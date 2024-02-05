@@ -20,14 +20,16 @@ export type FormData = {
   job_title: string;
   company: string;
   state: string;
-
   job_category: string;
-  skills: string[];
+
+
+  skills: string[];  //how should i solve this ??
+
+
   bio_dec: string;
   linkedIn_url: string;
   twitter_url: string;
   website_url: string;
-
   why_mentor: string;
   achievement: string;
 };
@@ -41,14 +43,14 @@ export const INITIAL_DATA: FormData = {
   job_title: "",
   company: "",
   state: "",
-
   job_category: "",
-  skills: [],
+
+  skills: [], //need skills as an array of values
+
   bio_dec: "",
   linkedIn_url: "",
   twitter_url: "",
   website_url: "",
-
   why_mentor: "",
   achievement: "",
 };
@@ -144,4 +146,10 @@ export interface mentorProfileObj {
   skills: [];
   reports: Report[];
   approved: boolean;
+}
+
+//Sign in form credential
+export interface SigninCredential {
+  email: string;
+  password: string;
 }
