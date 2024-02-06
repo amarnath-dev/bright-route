@@ -9,7 +9,11 @@ import API from "../../api";
 
 export const SearchMentors = () => {
   const [allMentors, setAllMentors] = useState<mentorProfileObj[]>([]);
+  const [imagesFetched, setImagesFetched] = useState(false);
+  const [apiFilter, setApifilter] = useState<mentorProfileObj[]>([]);
   const [filter, setFilter] = useState("");
+  const [skillFilter, setSkillFilter] = useState({});
+  const [companyFilter, setCompanyFilter] = useState({});
 
   useEffect(() => {
     const mentorProfile = async () => {
@@ -18,7 +22,6 @@ export const SearchMentors = () => {
       });
       if (response.data) {
         const mentorProfile = response.data;
-        console.log("response from the server", mentorProfile);
         setAllMentors(mentorProfile.allMentors);
       }
     };
@@ -26,10 +29,13 @@ export const SearchMentors = () => {
   }, []);
 
   useEffect(() => {
-    allMentors.forEach((mentor) => fetchImg(mentor.profile_img));
-  }, [allMentors]);
+    if (!imagesFetched) {
+      allMentors.forEach((mentor) => fetchImg(mentor.profile_img));
+      setImagesFetched(true);
+    }
+  }, [allMentors, imagesFetched]);
 
-  //fetching img from firebase
+  // fetching img from firebase
   const fetchImg = async (id: string) => {
     try {
       const imageId = id;
@@ -47,21 +53,25 @@ export const SearchMentors = () => {
     }
   };
 
-  // Search fetching
+  // Search Fetching
   useEffect(() => {
     try {
       const fetchMentors = async () => {
-        const mentors = await API.get(`/mentor/browse/search?q=${filter}`);
-        console.log("search query result", mentors.data);
+        const mentors = await API.get(
+          `/browse/filter?str=${filter}&company=${companyFilter.label}&skill=${skillFilter.label}`,
+          { withCredentials: true }
+        );
         if (mentors.data.length > 0) {
           console.log("search query result", mentors.data);
+          const mentorData = mentors.data;
+          setApifilter(mentorData.mentors);
         }
       };
       fetchMentors();
     } catch (error) {
       console.log(error);
     }
-  }, [filter]);
+  }, [filter, companyFilter, skillFilter]);
 
   return (
     <>
@@ -70,7 +80,7 @@ export const SearchMentors = () => {
           <div className="w-full h-full md:w-1/2 md:flex md:justify-center md:items-center md:flex-col">
             <label className="relative flex justify-center items-center">
               <div className="w-full flex justify-end absolute left-28 top-12 mr-4 md:top-12">
-                <CiSearch className="text-2xl w-full ml-28" />
+                <CiSearch className="text-2xl w-full md:ml-28" />
               </div>
               <input
                 className="block bg-white border border-slate-300 rounded-md mt-10 py-2 pl-9 pr-3 w-72 shadow-lg focus:outline-none focus:border-dark-500 placeholder:text-slate-400 placeholder:text-sm focus:ring-dark-500 focus:ring-1 md:w-96 sm:text-lg"
@@ -91,6 +101,7 @@ export const SearchMentors = () => {
                 renderInput={(params) => (
                   <TextField {...params} label="Skills" />
                 )}
+                onChange={(e, value) => setSkillFilter(value || "")}
               />
               <Autocomplete
                 disablePortal
@@ -100,6 +111,7 @@ export const SearchMentors = () => {
                 renderInput={(params) => (
                   <TextField {...params} label="Company" />
                 )}
+                onChange={(e, value) => setCompanyFilter(value || "")}
               />
             </div>
           </div>
@@ -161,7 +173,6 @@ export const SearchMentors = () => {
                       ))}
                     </div>
                     {/* Mentor payment setting is not done */}
-
                     <div className="w-full mt-6 flex justify-between items-center flex-col md:flex-row">
                       <div className="mb-2 w-full">
                         <h1 className="text-2xl md:text-3xl font-bold">
@@ -204,7 +215,6 @@ const topTechnicalSkills = [
   { label: "Spring Framework" },
   { label: "C#" },
   { label: ".NET" },
-  { label: "Ruby" },
   { label: "PHP" },
   { label: "Laravel" },
   { label: "MySQL" },
@@ -225,8 +235,6 @@ const topTechnicalSkills = [
   { label: "Confluence" },
 ];
 
-
-
 const topTechnicalCompanys = [
   { label: "Google" },
   { label: "Microsoft" },
@@ -241,21 +249,26 @@ const topTechnicalCompanys = [
   { label: "Pallets Projects" },
   { label: "Oracle" },
   { label: "VMware" },
-  { label: "Microsoft" },
-  { label: "Microsoft" },
   { label: "Ruby" },
   { label: "PHP" },
   { label: "Taylor Otwell" },
-  { label: "Oracle" },
   { label: "GitHub" },
   { label: "GraphQL Foundation" },
   { label: "Docker, Inc." },
-  { label: "Amazon Web Services" },
-  { label: "Microsoft Azure" },
   { label: "Jenkins" },
-  { label: "Ruby" },
   { label: "Agile Development" },
   { label: "Scrum Alliance" },
   { label: "Kanban" },
   { label: "Atlassian" },
 ];
+
+
+//string yo change sdf sjf jk
+//starig to hca fskdjs df sdf
+//strtig how sdkkkjafjsdjkg
+
+//g sdg oetijgdfgfdjsg
+
+//dfhglkfhddfhgeotigui
+
+//skadhlgfhsdg;

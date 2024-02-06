@@ -12,6 +12,6 @@ router.post("/verifyOTP", menteeAuthController.verifyOTP);
 router.post("/resendOTP", menteeAuthController.resendOTP);
 router.post("/google-auth", menteeAuthController.googleAuth);
 router.get("/browse-mentors", menteeController.mentorProfile);
-router.get("/browse/search", menteeController.mentorSearch);
+router.get("/browse/filter", menteeController.mentorSearch);
 
 export default router;

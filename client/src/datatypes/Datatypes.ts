@@ -22,9 +22,7 @@ export type FormData = {
   state: string;
   job_category: string;
 
-
-  skills: string[]; 
-
+  skills: string[];
 
   bio_dec: string;
   linkedIn_url: string;
