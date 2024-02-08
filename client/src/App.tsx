@@ -13,6 +13,7 @@ import { ApplicationReview } from "./pages/admin/ApplicationReview";
 import MentorHome from "./pages/mentor/MentorHome";
 import MentorProfile from "./pages/mentor/MentorProfile";
 import { SearchMentors } from "./pages/mentee/SearchMentors";
+import { SkillManagment } from "./pages/admin/SkillManagment";
 // import MentorLoginForm from "./pages/mentor/MentorLogin";
 // import IsAuthenticated from "./componets/Routes/IsAuthenticated";
 // import IsProtected from "./componets/Routes/IsProtected";
@@ -54,6 +55,7 @@ function App() {
               path="/admin/application-review/:mentor"
               element={<ApplicationReview />}
             />
+            <Route path="/admin/skill-managment" element={<SkillManagment />} />
             {/* </Route> */}
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Routes>

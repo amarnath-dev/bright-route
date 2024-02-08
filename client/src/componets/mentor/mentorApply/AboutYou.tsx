@@ -1,5 +1,6 @@
 import HeaderCard from "./HeaderCard";
 import { MentorAboutData } from "../../../datatypes/Datatypes";
+import { useState } from "react";
 
 type AboutFormProps = MentorAboutData & {
   updateFields: (
@@ -8,7 +9,6 @@ type AboutFormProps = MentorAboutData & {
 };
 
 export function AboutYou({
-  // profile_img, //this line is causing the error
   first_name,
   last_name,
   email,
@@ -18,25 +18,38 @@ export function AboutYou({
   state,
   updateFields,
 }: AboutFormProps) {
+  const [fileUrl, setFileUrl] = useState<string | undefined>();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFileUrl(URL.createObjectURL(selectedFile));
+      updateFields({ profile_img: selectedFile });
+    } else {
+      setFileUrl(undefined);
+      updateFields({ profile_img: undefined });
+    }
+  };
+
   return (
     <>
       <HeaderCard />
-      <div className="w-screen mt-5 flex justify-center items-center">
+      <div className="w-screen mt-1 flex justify-center items-center">
         <div className="flex justify-start items-center md:w-3/5">
           <form className="md:w-full" encType="multipart/form-data">
             <span className="font-bold ml-16 md:ml-2">
-              Choose a profile image
+              Choose a profile Image*
             </span>
-            <div className="flex justify-center md:w-full md:justify-start">
+            <div className="flex justify-center mt-3 md:w-full md:justify-start">
+              <span className="h-20 w-20 rounded-full overflow-hidden bg-gray-100">
+                <img src={fileUrl} alt="" />
+              </span>
               <label>
                 <input
                   type="file"
-                  className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
-                  // value={profile_img}
-                  onChange={(e) => {
-                    // const selectedFile = e.target.files && e.target.files[0];
-                    updateFields({ profile_img: e.target.files?.[0] || null });
-                  }}
+                  accept="image/*"
+                  className="placeholder:text-slate-400 ml-3 block bg-white mt-5 border border-slate-300 rounded-md py-2 pl-5 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-32 sm:text-sm"
+                  onChange={handleChange}
                 />
               </label>
             </div>

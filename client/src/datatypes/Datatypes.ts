@@ -142,7 +142,7 @@ export interface mentorProfileObj {
   linkedIn: string;
   twitter: string;
   web_url: string;
-  skills: [];
+  skills: string[];
   reports: Report[];
   approved: boolean;
 }
@@ -151,4 +151,8 @@ export interface mentorProfileObj {
 export interface SigninCredential {
   email: string;
   password: string;
+}
+
+export interface MentorSearchData {
+  label: string;
 }

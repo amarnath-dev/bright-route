@@ -17,9 +17,9 @@ export interface mentorProfileObj {
   linkedIn: string;
   twitter: string;
   web_url: string;
+  profile_state: string;
   skills: [];
   reports: Report[];
-  approved: boolean;
 }
 
 export class MenteeController {
@@ -30,7 +30,7 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const allMentors = await MentorModel.aggregate([
-        { $match: { approved: true } },
+        { $match: { profile_state: "approved" } },
         {
           $project: {
             why_mentor: 0,
@@ -57,27 +57,23 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const { str, company, skill } = req.query as {
-        str: string;
-        company: string;
-        skill: string;
+        str?: string;
+        company?: string;
+        skill?: string;
       };
-
-      console.log("->", str);
-      console.log("->", company);
-      console.log("->", skill);
 
       const query: any = {};
 
-      if (str !== "undefined" && str !== "") {
+      if (str) {
         query.job_title = { $regex: new RegExp(str, "i") };
       }
 
-      if (company !== "undefined" && company !== "") {
+      if (company) {
         query.company = { $regex: new RegExp(company, "i") };
       }
 
-      if (skill !== "undefined" && skill !== "") {
-        query.skills = { $in: [skill] };
+      if (skill) {
+        query.skills = skill;
       }
 
       console.log("Executing query:", query);
@@ -91,10 +87,8 @@ export class MenteeController {
           .json({ message: "Mentor filtered", mentors: mentorProfiles });
       }
     } catch (error) {
-      if (error instanceof Error) {
-        console.log(error);
-        return next(Error("Mentor filtering Failed"));
-      }
+      console.error(error);
+      return next(Error("Data fetch failed"));
     }
   }
 }

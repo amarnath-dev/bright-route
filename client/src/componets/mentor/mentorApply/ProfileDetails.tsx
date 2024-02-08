@@ -30,7 +30,7 @@ export function ProfileDetails({
       <div className="w-screen mt-5 flex justify-center items-center">
         <div className="flex justify-start items-center md:w-3/5">
           <form className="md:w-full">
-            <span className="font-bold ml-16 md:ml-2">
+            <span className="ml-16 md:ml-2">
               Choose your job Category*
             </span>
 
@@ -63,7 +63,8 @@ export function ProfileDetails({
 
             <div className="w-screen flex flex-col justify-start items-center mt-4 md:w-full md:flex-col">
               <label className="md:w-full">
-                <Stack spacing={3} sx={{ width: 750 }}>
+                <h1>Select your skills*</h1>
+                <Stack spacing={3} sx={{ width: 280 }}>
                   <Autocomplete
                     multiple
                     id="tags-standard"

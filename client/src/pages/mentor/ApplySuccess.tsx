@@ -22,9 +22,6 @@ const ApplySuccess = () => {
             </h1>
           </div>
           <div className="flex justify-center">
-            {/* <button className="">
-              Back to Home
-            </button> */}
             <Link
               to={"/mentor/login"}
               className="border-2 py-1 px-3 bg-color-one text-white md:py-2 md:px-5 rounded-md md:mt-10"

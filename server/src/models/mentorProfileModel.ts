@@ -47,16 +47,16 @@ const mentorProfileSchema: Schema<IMentorProfile> =
       achievement: {
         type: String,
       },
+      profile_state: {
+        type: String,
+        enum: ["pending", "approved", "rejected"],
+        default: "pending",
+      },
       skills: {
         type: [],
       },
       reports: {
         type: [],
-      },
-      approved: {
-        type: Boolean,
-        //enum: []
-        default: false,
       },
     },
     { timestamps: true }

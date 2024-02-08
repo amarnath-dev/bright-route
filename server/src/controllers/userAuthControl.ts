@@ -10,6 +10,7 @@ import sendEmailOtp from "../utils/sendEmail";
 import Otp from "../models/otpModel";
 import { jwtDecode } from "jwt-decode";
 import generateUsername from "../utils/generateUsername";
+import Company from "../models/companyModel";
 
 interface jwtPayload {
   email: string;
@@ -191,13 +192,11 @@ export class MenteeAuthController {
       }
       const { email }: jwtPayload = jwtDecode(req.body.userData);
       const existingUser = await User.findOne({ email: email });
-      console.log("hello");
       if (existingUser) {
         if (existingUser.password) {
           res.status(409).json({ message: "Invalid Email" });
           return next(Error("Invalid Email"));
         }
-        console.log("hello");
         const token = generateJwt(existingUser._id, existingUser.email);
         const userDataFromProfile = await Menteeprofile.findOne({
           mentee_id: existingUser?._id,
@@ -264,6 +263,7 @@ export class MentorAuthController {
         res.status(400);
         return next(Error("Invalid credentials"));
       }
+
       const data = req.body.mentorData;
       const img_str = req.body.firebase_img_id;
       const mentorEmail = data.email;
@@ -302,7 +302,7 @@ export class MentorAuthController {
           profile_img: img_str,
         });
         const mentorProfileSave = await mentorProfileData.save();
-        if (mentorProfileSave._id) {
+        if (mentorProfileSave) {
           res.status(200).json({
             status: "success",
             message: "Mentor Applied Successfully",

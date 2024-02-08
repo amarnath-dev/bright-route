@@ -23,18 +23,27 @@ import { getStorage } from "firebase/storage";
 // };
 
 
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDy84bD1v-MvFKAbbbUWqV3wr9tHgjdNWE",
+//   authDomain: "new3-468a7.firebaseapp.com",
+//   projectId: "new3-468a7",
+//   storageBucket: "new3-468a7.appspot.com",
+//   messagingSenderId: "305359932795",
+//   appId: "1:305359932795:web:76c59bca5f128115e241de",
+//   measurementId: "G-LSRG2KMPEN"
+// };
+
+
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDy84bD1v-MvFKAbbbUWqV3wr9tHgjdNWE",
-  authDomain: "new3-468a7.firebaseapp.com",
-  projectId: "new3-468a7",
-  storageBucket: "new3-468a7.appspot.com",
-  messagingSenderId: "305359932795",
-  appId: "1:305359932795:web:76c59bca5f128115e241de",
-  measurementId: "G-LSRG2KMPEN"
+  apiKey: "AIzaSyCYtyawKvQZEQB5VDVSziFnKMU8aUA9S9M",
+  authDomain: "new-4-759de.firebaseapp.com",
+  projectId: "new-4-759de",
+  storageBucket: "new-4-759de.appspot.com",
+  messagingSenderId: "459308759766",
+  appId: "1:459308759766:web:5b8b2df8c54576c66ee777",
+  measurementId: "G-0SG2FY50RN"
 };
-
-
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);

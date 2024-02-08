@@ -1,4 +1,5 @@
 import { FaUserTie } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export const AdminSidebar = () => {
   return (
@@ -9,25 +10,34 @@ export const AdminSidebar = () => {
         </div>
 
         <div className="flex justify-start items-start flex-col mx-3 my-3">
-          <button className="flex items-center px-4 py-2 rounded-md w-full mt-8 bg-color-two">
+          <button className="flex items-center px-4 py-2 rounded-md w-full mt-8">
             <FaUserTie className="text-gray-500" />
-            <span className="ml-4 font-bold text-gray-500">
-              Mentor Application
-            </span>
+            <Link
+              className="ml-4 font-bold text-gray-500"
+              to={"/admin/dashboard"}
+            >
+              Dash Board
+            </Link>
           </button>
 
           <button className="flex items-center px-4 py-2 rounded-md w-full mt-8">
             <FaUserTie className="text-gray-500" />
-            <span className="ml-4 font-bold text-gray-500">
+            <Link
+              className="ml-4 font-bold text-gray-500"
+              to={"/admin/mentor-application"}
+            >
               Mentor Application
-            </span>
+            </Link>
           </button>
 
           <button className="flex items-center px-4 py-2 rounded-md w-full mt-8">
             <FaUserTie className="text-gray-500" />
-            <span className="ml-4 font-bold text-gray-500">
-              Mentor Application
-            </span>
+            <Link
+              className="ml-4 font-bold text-gray-500"
+              to={"/admin/skill-managment"}
+            >
+              Skill Managment
+            </Link>
           </button>
         </div>
       </div>
