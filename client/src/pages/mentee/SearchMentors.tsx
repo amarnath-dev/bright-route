@@ -10,7 +10,6 @@ import { MentorListCard } from "../../componets/mentorListCard/MentorListCard";
 export const SearchMentors = () => {
   const [allMentors, setAllMentors] = useState<mentorProfileObj[]>([]);
   const [filtered, setFiltered] = useState<mentorProfileObj[]>([]);
-  const [imageFetched, setImageFetched] = useState(false);
 
   const [jobTitle, setJobTitle] = useState("");
   const [skill, setSkill] = useState("");
@@ -35,6 +34,7 @@ export const SearchMentors = () => {
   }, []);
 
   // fetching img from firebase
+  //Image fetching is not working, take a look at that
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -55,28 +55,12 @@ export const SearchMentors = () => {
           })
         );
       } catch (error) {
+        console.log("Image fetch Failed");
         console.error(error);
       }
     };
     fetchImages();
-  }, [filtered]);
-
-  // const fetchImg = async (id: string) => {
-  //   try {
-  //     const imageId = id;
-  //     if (imageId) {
-  //       const imageRef = ref(storage, imageId);
-  //       const url = await getDownloadURL(imageRef);
-  //       setAllMentors((prevMentors) => {
-  //         return prevMentors.map((mentor) =>
-  //           mentor.profile_img === id ? { ...mentor, imageUrl: url } : mentor
-  //         );
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  }, []);
 
   useEffect(() => {
     const filterMentors = () => {

@@ -1,5 +1,7 @@
 import { Response, Request, NextFunction } from "express";
 import MentorModel from "../models/mentorProfileModel";
+import MenteeModel from "../models/menteeProfileModel";
+import mongoose from "mongoose";
 
 export interface mentorProfileObj {
   imageUrl: string;
@@ -85,6 +87,38 @@ export class MenteeController {
         res
           .status(200)
           .json({ message: "Mentor filtered", mentors: mentorProfiles });
+      }
+    } catch (error) {
+      console.error(error);
+      return next(Error("Data fetch failed"));
+    }
+  }
+
+  async menteeProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const menteeId = new mongoose.Types.ObjectId(req.params.menteeId);
+      const mentorDetails = await MenteeModel.aggregate([
+        { $match: { mentee_id: menteeId } },
+        {
+          $lookup: {
+            from: "users",
+            foreignField: "_id",
+            localField: "mentee_id",
+            as: "mentorInfo",
+          },
+        },
+        {
+          $unwind: "$mentorInfo",
+        },
+      ]);
+
+      console.log("------>", mentorDetails);
+      if (mentorDetails) {
+        res.status(200).json({ status: "success", mentorDetails });
       }
     } catch (error) {
       console.error(error);
