@@ -8,13 +8,13 @@ const menteeProfileSchema: Schema<IMenteeProfile> =
         type: Schema.Types.ObjectId,
         ref: "User",
       },
+      profile_img: {
+        type: String,
+      },
       first_name: {
         type: String,
       },
       last_name: {
-        type: String,
-      },
-      profile_img: {
         type: String,
       },
       location: {

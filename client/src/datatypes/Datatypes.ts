@@ -22,9 +22,7 @@ export type FormData = {
   state: string;
   job_category: string;
 
-
-  skills: string[]; 
-
+  skills: string[];
 
   bio_dec: string;
   linkedIn_url: string;
@@ -144,7 +142,7 @@ export interface mentorProfileObj {
   linkedIn: string;
   twitter: string;
   web_url: string;
-  skills: [];
+  skills: string[];
   reports: Report[];
   approved: boolean;
 }
@@ -153,4 +151,8 @@ export interface mentorProfileObj {
 export interface SigninCredential {
   email: string;
   password: string;
+}
+
+export interface MentorSearchData {
+  label: string;
 }

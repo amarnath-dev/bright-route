@@ -1,67 +1,89 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { CiSearch } from "react-icons/ci";
 import { useEffect, useState } from "react";
 import { storage } from "../../app/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
 import API from "../../api";
+import { MentorListCard } from "../../componets/mentorListCard/MentorListCard";
 
 export const SearchMentors = () => {
   const [allMentors, setAllMentors] = useState<mentorProfileObj[]>([]);
-  const [filter, setFilter] = useState("");
+  const [filtered, setFiltered] = useState<mentorProfileObj[]>([]);
+
+  const [jobTitle, setJobTitle] = useState("");
+  const [skill, setSkill] = useState("");
+  const [company, setCompany] = useState("");
 
   useEffect(() => {
     const mentorProfile = async () => {
-      const response = await API.get("/browse-mentors", {
-        withCredentials: true,
-      });
-      if (response.data) {
-        const mentorProfile = response.data;
-        console.log("response from the server", mentorProfile);
-        setAllMentors(mentorProfile.allMentors);
+      try {
+        const response = await API.get("/browse-mentors", {
+          withCredentials: true,
+        });
+        if (response.data) {
+          const mentorProfile = response.data;
+          setAllMentors(mentorProfile.allMentors);
+          setFiltered(mentorProfile.allMentors);
+        }
+      } catch (error) {
+        console.error(error);
       }
     };
     mentorProfile();
   }, []);
 
+  // fetching img from firebase
+  //Image fetching is not working, take a look at that
   useEffect(() => {
-    allMentors.forEach((mentor) => fetchImg(mentor.profile_img));
-  }, [allMentors]);
-
-  //fetching img from firebase
-  const fetchImg = async (id: string) => {
-    try {
-      const imageId = id;
-      if (imageId) {
-        const imageRef = ref(storage, imageId);
-        const url = await getDownloadURL(imageRef);
-        setAllMentors((prevMentors) => {
-          return prevMentors.map((mentor) =>
-            mentor.profile_img === id ? { ...mentor, imageUrl: url } : mentor
-          );
-        });
+    const fetchImages = async () => {
+      try {
+        await Promise.all(
+          filtered.map(async (mentor) => {
+            const imageId = mentor.profile_img;
+            if (imageId) {
+              const imageRef = ref(storage, imageId);
+              const url = await getDownloadURL(imageRef);
+              setAllMentors((prevMentors) =>
+                prevMentors.map((prevMentor) =>
+                  prevMentor.profile_img === imageId
+                    ? { ...prevMentor, imageUrl: url }
+                    : prevMentor
+                )
+              );
+            }
+          })
+        );
+      } catch (error) {
+        console.log("Image fetch Failed");
+        console.error(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    };
+    fetchImages();
+  }, []);
 
-  // Search fetching
   useEffect(() => {
-    try {
-      const fetchMentors = async () => {
-        const mentors = await API.get(`/mentor/browse/search?q=${filter}`);
-        console.log("search query result", mentors.data);
-        if (mentors.data.length > 0) {
-          console.log("search query result", mentors.data);
-        }
-      };
-      fetchMentors();
-    } catch (error) {
-      console.log(error);
-    }
-  }, [filter]);
+    const filterMentors = () => {
+      let filteredMentors = allMentors;
+      if (jobTitle.trim() !== "") {
+        filteredMentors = filteredMentors.filter(
+          (mentor) => mentor.job_title.toLowerCase() === jobTitle.toLowerCase()
+        );
+      }
+      if (company.trim() !== "") {
+        filteredMentors = filteredMentors.filter(
+          (mentor) => mentor.company.toLowerCase() === company.toLowerCase()
+        );
+      }
+      if (skill.trim() !== "") {
+        filteredMentors = filteredMentors.filter((mentor) =>
+          mentor.skills.some((s) => s.includes(skill))
+        );
+      }
+      setFiltered(filteredMentors);
+    };
+    filterMentors();
+  }, [jobTitle, skill, company, allMentors]);
 
   return (
     <>
@@ -69,15 +91,15 @@ export const SearchMentors = () => {
         <div className="w-screen h-72 border-2 flex justify-center items-center px-3 py-3">
           <div className="w-full h-full md:w-1/2 md:flex md:justify-center md:items-center md:flex-col">
             <label className="relative flex justify-center items-center">
-              <div className="w-full flex justify-end absolute left-28 top-12 mr-4 md:top-12">
-                <CiSearch className="text-2xl w-full ml-28" />
-              </div>
-              <input
-                className="block bg-white border border-slate-300 rounded-md mt-10 py-2 pl-9 pr-3 w-72 shadow-lg focus:outline-none focus:border-dark-500 placeholder:text-slate-400 placeholder:text-sm focus:ring-dark-500 focus:ring-1 md:w-96 sm:text-lg"
-                placeholder="Search by Job title"
-                type="text"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={topTechnicalJobPositions}
+                sx={{ width: 350, marginTop: 3, padding: 1 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Search by Job title" />
+                )}
+                onChange={(event, value) => setJobTitle(value?.label || "")}
               />
             </label>
 
@@ -89,173 +111,119 @@ export const SearchMentors = () => {
                 options={topTechnicalSkills}
                 sx={{ width: 300, marginTop: 3, padding: 1 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Skills" />
+                  <TextField {...params} label="Search by Skills" />
                 )}
+                onChange={(event, value) => setSkill(value?.label || "")}
               />
+
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
-                options={topTechnicalCompanys}
+                options={topTechnicalCompanies}
                 sx={{ width: 300, marginTop: 3, padding: 1 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Company" />
+                  <TextField {...params} label="Search by Company" />
                 )}
+                onChange={(event, value) => setCompany(value?.label || "")}
               />
             </div>
           </div>
         </div>
-
-        {/* Card Componenet  */}
-        <div className="w-full h-full flex justify-center items-center flex-col px-4 py-4 mt-2 md:mt-10 md:py-0 md:px-0">
-          {allMentors.map((mentor, index) => (
-            <div
-              key={index}
-              className="w-full mt-5 border-2 rounded-lg px-4 py-4 md:px-2 md:py-2 md:w-9/12 md:mt-10"
-            >
-              <div className="flex flex-col px-4 py-4 md:flex-row">
-                <div className="relative flex justify-center h-full">
-                  <img
-                    alt="mentor_img"
-                    className="rounded-lg shadow-md md:w-60 md:h-80"
-                    id="mentor_img"
-                    src={mentor.imageUrl || "default_image_url"}
-                  />
-                  <div className="bg-gradient-to-t from-gray-600 to-transparent w-full h-full px-5 py-5 rounded-lg absolute top-0 md:w-60 md:h-80">
-                    <div className="md:hidden mt-36 absolute bottom-5">
-                      <h1 className="text-xl font-semibold text-white md:text-gray-800 md:text-3xl md:px-5 md:py-2">
-                        {mentor.first_name} {mentor.last_name}
-                      </h1>
-                      <h1 className="md:px-5 mt-2 md:mt-0 text-sm md:text-xl md:text-gray-800 text-white">
-                        {mentor.job_title}
-                        <strong className="md:text-gray-800 text-white ml-1">
-                          {mentor.company}
-                        </strong>
-                      </h1>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="px-5 md:px-0">
-                  <div className="hidden md:block">
-                    <h1 className="text-xl mt-2 font-semibold text-gray-800 md:text-3xl md:px-5 md:py-2">
-                      {mentor.first_name} {mentor.last_name}
-                    </h1>
-                    <h1 className="md:px-5 mt-2 md:mt-0 text-md md:text-xl">
-                      {mentor.job_title}
-                      <strong className="text-gray-800 ml-1">
-                        {mentor.company}
-                      </strong>
-                    </h1>
-                  </div>
-
-                  <div className="w-full md:max-w-2xl md:ml-4 mt-6 text-gray-800 md:px-3 md:py-3 text-md">
-                    <p className="text-md w-full">{mentor.bio}</p>
-                    <div className="w-full mt-5">
-                      {mentor.skills.map((skill, index) => (
-                        <button
-                          key={index}
-                          className="border-2 rounded-full px-3 bg-slate-200 mt-2 ml-2"
-                        >
-                          {skill}
-                        </button>
-                      ))}
-                    </div>
-                    {/* Mentor payment setting is not done */}
-
-                    <div className="w-full mt-6 flex justify-between items-center flex-col md:flex-row">
-                      <div className="mb-2 w-full">
-                        <h1 className="text-2xl md:text-3xl font-bold">
-                          $350 <small>/month</small>
-                        </h1>
-                      </div>
-
-                      <div className="w-full">
-                        <button className="w-full border-2 rounded-md px-1 py-1 text-white bg-color-one text-lg font-bold md:h-10 md:w-96">
-                          View Profile
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <MentorListCard filtered={filtered} />
       </div>
     </>
   );
 };
 
 const topTechnicalSkills = [
-  { label: "Node.js" },
-  { label: "React" },
-  { label: "JavaScript" },
-  { label: "TypeScript" },
-  { label: "HTML" },
-  { label: "CSS" },
-  { label: "MongoDB" },
-  { label: "Express.js" },
-  { label: "Angular" },
-  { label: "Vue.js" },
-  { label: "Python" },
-  { label: "Django" },
-  { label: "Flask" },
-  { label: "Java" },
-  { label: "Spring Framework" },
-  { label: "C#" },
-  { label: ".NET" },
-  { label: "Ruby" },
-  { label: "PHP" },
-  { label: "Laravel" },
-  { label: "MySQL" },
-  { label: "PostgreSQL" },
-  { label: "Git" },
-  { label: "RESTful API Design" },
-  { label: "GraphQL" },
-  { label: "Docker" },
-  { label: "Kubernetes" },
-  { label: "AWS" },
-  { label: "Azure" },
-  { label: "Jenkins" },
-  { label: "Ruby" },
-  { label: "Agile Development" },
-  { label: "Scrum" },
-  { label: "Kanban" },
-  { label: "Jira" },
-  { label: "Confluence" },
+  { id: 1, label: "Node js" },
+  { id: 2, label: "React" },
+  { id: 3, label: "JavaScript" },
+  { id: 4, label: "TypeScript" },
+  { id: 5, label: "HTML" },
+  { id: 6, label: "CSS" },
+  { id: 7, label: "MongoDB" },
+  { id: 8, label: "Express.js" },
+  { id: 9, label: "Angular" },
+  { id: 10, label: "Vue js" },
+  { id: 11, label: "Python" },
+  { id: 12, label: "Django" },
+  { id: 13, label: "Flask" },
+  { id: 14, label: "Java" },
+  { id: 15, label: "Spring Framework" },
+  { id: 16, label: "C#" },
+  { id: 17, label: ".NET" },
+  { id: 18, label: "PHP" },
+  { id: 19, label: "Laravel" },
+  { id: 20, label: "MySQL" },
+  { id: 21, label: "PostgreSQL" },
+  { id: 22, label: "Git" },
+  { id: 23, label: "RESTful API Design" },
+  { id: 24, label: "GraphQL" },
+  { id: 25, label: "Docker" },
+  { id: 26, label: "Kubernetes" },
+  { id: 27, label: "AWS" },
+  { id: 28, label: "Azure" },
+  { id: 29, label: "Jenkins" },
+  { id: 30, label: "Ruby" },
+  { id: 31, label: "Agile Development" },
+  { id: 32, label: "Scrum" },
+  { id: 33, label: "Kanban" },
+  { id: 34, label: "Jira" },
 ];
 
+const topTechnicalCompanies = [
+  { id: 1, label: "Google" },
+  { id: 2, label: "Microsoft" },
+  { id: 3, label: "Apple" },
+  { id: 4, label: "Amazon" },
+  { id: 5, label: "Facebook" },
+  { id: 6, label: "Twitter" },
+  { id: 7, label: "MongoDB, Inc." },
+  { id: 8, label: "Adobe" },
+  { id: 9, label: "IBM" },
+  { id: 10, label: "Vue js Corp" },
+  { id: 11, label: "Pallets Projects" },
+  { id: 12, label: "Oracle" },
+  { id: 13, label: "VMware" },
+  { id: 14, label: "Ruby" },
+  { id: 15, label: "PHP" },
+  { id: 16, label: "Taylor Otwell" },
+  { id: 17, label: "GitHub" },
+  { id: 18, label: "GraphQL Foundation" },
+  { id: 19, label: "Docker Inc" },
+  { id: 20, label: "Jenkins" },
+  { id: 21, label: "Agile Development" },
+  { id: 22, label: "Scrum Alliance" },
+  { id: 23, label: "Kanban" },
+  { id: 24, label: "Atlassian" },
+];
 
-
-const topTechnicalCompanys = [
-  { label: "Google" },
-  { label: "Microsoft" },
-  { label: "Apple" },
-  { label: "Amazon" },
-  { label: "Facebook" },
-  { label: "Twitter" },
-  { label: "MongoDB, Inc." },
-  { label: "Adobe" },
-  { label: "IBM" },
-  { label: "Vue.js Corp" },
-  { label: "Pallets Projects" },
-  { label: "Oracle" },
-  { label: "VMware" },
-  { label: "Microsoft" },
-  { label: "Microsoft" },
-  { label: "Ruby" },
-  { label: "PHP" },
-  { label: "Taylor Otwell" },
-  { label: "Oracle" },
-  { label: "GitHub" },
-  { label: "GraphQL Foundation" },
-  { label: "Docker, Inc." },
-  { label: "Amazon Web Services" },
-  { label: "Microsoft Azure" },
-  { label: "Jenkins" },
-  { label: "Ruby" },
-  { label: "Agile Development" },
-  { label: "Scrum Alliance" },
-  { label: "Kanban" },
-  { label: "Atlassian" },
+const topTechnicalJobPositions = [
+  { id: 1, label: "Software Developer" },
+  { id: 2, label: "Machine Learning Engineer" },
+  { id: 3, label: "Frontend Developer" },
+  { id: 4, label: "Backend Developer" },
+  { id: 5, label: "Data Scientist" },
+  { id: 6, label: "DevOps Engineer" },
+  { id: 7, label: "UI/UX Designer" },
+  { id: 8, label: "Database Administrator" },
+  { id: 9, label: "System Architect" },
+  { id: 10, label: "Security Engineer" },
+  { id: 11, label: "Network Engineer" },
+  { id: 12, label: "Full Stack Developer" },
+  { id: 13, label: "Mobile App Developer" },
+  { id: 14, label: "Cloud Solutions Architect" },
+  { id: 15, label: "QA Engineer" },
+  { id: 16, label: "Product Manager" },
+  { id: 17, label: "Project Manager" },
+  { id: 18, label: "Business Analyst" },
+  { id: 19, label: "AI Researcher" },
+  { id: 20, label: "Data Engineer" },
+  { id: 21, label: "IT Support Specialist" },
+  { id: 22, label: "Software Development Manager" },
+  { id: 23, label: "Technical Writer" },
+  { id: 24, label: "Scrum Master" },
+  { id: 25, label: "Agile Coach" },
+  { id: 26, label: "ML Engineer" },
 ];

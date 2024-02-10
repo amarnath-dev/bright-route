@@ -8,7 +8,6 @@ const HeaderCard: React.FC = () => {
           more about your background and the ins-and-outs of why you'd like to
           become a mentor. Keep things personal and talk directly to us and your
           mentees. <br></br>
-          <br></br>
           We don't need jargon and polished cover letters here! You agree to our
           code of conduct and the mentor agreement by sending the form, so be
           sure to have a look at those.

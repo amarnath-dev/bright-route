@@ -91,7 +91,6 @@ export const googleAuth = createAsyncThunk(
   async (userData: string, thunkAPI) => {
     try {
       const response = await API.post("/google-auth", { userData });
-      console.log("response from the client side", response);
       if (response) {
         if (response.data.status == "success") {
           return response.data;
@@ -116,7 +115,6 @@ export const MultiFromApply = createAsyncThunk(
   "auth/mentor",
   async (mentorData: FormData, thunkAPI) => {
     try {
-      console.log("reached at multiform thunk", mentorData);
       const fileObj = mentorData.profile_img;
       if (fileObj?.name) {
         const filename = new Date().getTime() + fileObj?.name;

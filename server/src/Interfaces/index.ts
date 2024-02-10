@@ -27,6 +27,14 @@ export interface IOtp extends Document {
   createdAt: Date;
 }
 
+export interface ISkill extends Document {
+  topTechnicalSkills: Array<{ label: string }>;
+}
+
+export interface ICompany extends Document {
+  topTechnicalSkills: [{}];
+}
+
 export interface IMentorProfile extends Document {
   mentor_id: ObjectId;
   profile_img: string;
@@ -42,13 +50,13 @@ export interface IMentorProfile extends Document {
   web_url: string;
   why_mentor: string;
   achievement: string;
+  profile_state: string;
   skills: [];
   reports: Report[];
-  approved: boolean;
 }
 
 export interface IAdmin extends Document {
   email: string;
   password: string;
-  role:string;
+  role: string;
 }

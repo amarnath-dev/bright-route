@@ -1,6 +1,5 @@
 import nodemailer from "nodemailer";
 import Otp from "../models/otpModel";
-import { IOtp } from "../Interfaces";
 import cryptojs from "crypto-js";
 
 function generateOTP(): number {
@@ -32,7 +31,7 @@ const sendEmailOtp = async (
       "ecryptionkey"
     ).toString();
 
-    const otpData = await Otp.updateOne(
+    await Otp.updateOne(
       { email: email },
       { $set: { email: email, otp: hashedOTP } },
       { upsert: true }
@@ -41,14 +40,8 @@ const sendEmailOtp = async (
     const mailOptions = {
       from: "amarmanikavu@gmail.com",
       to: email,
-      subject: "BrightRoute",
-      html:
-        "<p> Hy  " +
-        first_name +
-        last_name +
-        "," +
-        otpnum +
-        " is youre OTP Number",
+      subject: "BrightRoute OTP",
+      html: `<p> Hy  ${first_name || ""} ${last_name || ""}, ${otpnum} is your OTP Number</p>`,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {

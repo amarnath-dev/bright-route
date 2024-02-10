@@ -6,7 +6,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="w-screen h-96 bg-slate-300 shadow-2xl">
+      <div className="w-screen h-96 bg-color-one shadow-2xl">
         <div className="h-96 flex justify-center items-center flex-col">
           <h1 className="font-bold text-4xl ml-5">
             Welcome, {user?.first_name}

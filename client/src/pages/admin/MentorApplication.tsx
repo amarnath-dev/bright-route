@@ -66,11 +66,19 @@ export const MentorApplication = () => {
             </h1>
           </div>
           <div className="w-screen ml-3 mr-3 md:w-full mt-10 rounded-md">
-            <DataGrid
-              rows={details}
-              columns={columns}
-              pageSizeOptions={[5, 10]}
-            />
+            {details.length > 0 ? (
+              <DataGrid
+                rows={details}
+                columns={columns}
+                pageSizeOptions={[5, 10]}
+              />
+            ) : (
+              <div>
+                <h1 className="text-xl md:text-2xl font-bold">
+                  No Applications are Pending
+                </h1>
+              </div>
+            )}
           </div>
         </div>
       </div>

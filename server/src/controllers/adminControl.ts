@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import MentorProfile from "../models/mentorProfileModel";
+import Skill from "../models/skillModel";
 import { ObjectId } from "mongodb";
 
 export class AdminControls {
@@ -10,9 +11,8 @@ export class AdminControls {
   ): Promise<void> {
     try {
       //aggregation lookup to get single value from another collection
-      console.log("reached");
       const applicationData = await MentorProfile.aggregate([
-        { $match: { approved: false } },
+        { $match: { profile_state: "pending" } },
         {
           $lookup: {
             from: "users",
@@ -86,10 +86,12 @@ export class AdminControls {
     try {
       const applicationId = req.params.applicationId;
       const result = await MentorProfile.findByIdAndUpdate(applicationId, {
-        approved: true,
+        profile_state: "approved",
       });
       if (result) {
-        res.status(200).json({ status: "success" });
+        res
+          .status(200)
+          .json({ status: "success", message: "Application Approved" });
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -107,11 +109,31 @@ export class AdminControls {
     try {
       const applicationId = req.params.applicationId;
       const result = await MentorProfile.findByIdAndUpdate(applicationId, {
-        approved: false,
+        profile_state: "rejected",
       });
       if (result) {
-        res.status(200).json({ status: "success" });
+        res
+          .status(200)
+          .json({ status: "success", message: "Application Rejected" });
       }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+        return next(error);
+      }
+    }
+  }
+
+  async addNewSkill(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { skill } = req.body;
+      console.log(skill);
+      const result = await Skill.find();
+      console.log(result);
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);

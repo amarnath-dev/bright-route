@@ -31,17 +31,13 @@ export function ContainerForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!isLaststep) return next();
-
     try {
-      console.log("this is mentor data", mentorData);
       const response = await dispatch(MultiFromApply(mentorData));
       if (response.payload.status == "success") {
         navigate("/mentor/apply-success");
       }
     } catch (error) {
-      if (typeof error === "string") {
-        console.log(error);
-      }
+      console.log(error);
     }
   };
 
@@ -49,7 +45,7 @@ export function ContainerForm() {
     <>
       <div>
         <form onSubmit={handleSubmit}>
-          <div className="flex justify-center items-center mt-1">
+          <div className="flex justify-center items-center">
             <h1 className="font-bold text-lg">
               {currentStepIndex + 1} / {steps.length}
             </h1>
@@ -57,11 +53,11 @@ export function ContainerForm() {
           {/* this is a component  */}
           {step}
 
-          <div className="flex justify-center items-center md:absolute md:bottom-0 md:right-60 mb-10">
+          <div className="flex justify-center items-center md:absolute md:bottom-8 md:right-60 mb-18">
             {!isFirststep && (
               <button
                 type="button"
-                className="border-2 border-color-two bg-color-four px-1 py-1 rounded-md my-5 w-20 mr-5 md:w-20 md:my-0 md:mr-0"
+                className="border-2 border-color-two bg-color-five text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
                 onClick={back}
               >
                 Back
