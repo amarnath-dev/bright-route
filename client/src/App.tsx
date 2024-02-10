@@ -15,6 +15,7 @@ import MentorProfile from "./pages/mentor/MentorProfile";
 import { SearchMentors } from "./pages/mentee/SearchMentors";
 import { SkillManagment } from "./pages/admin/SkillManagment";
 import { MenteeProfile } from "./pages/mentee/MenteeProfile";
+import { ChangePassword } from "../src/componets/mentee/ChangePassword";
 // import MentorLoginForm from "./pages/mentor/MentorLogin";
 // import IsAuthenticated from "./componets/Routes/IsAuthenticated";
 // import IsProtected from "./componets/Routes/IsProtected";
@@ -34,6 +35,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/mentor/browse" element={<SearchMentors />} />
             <Route path="/managment" element={<MenteeProfile />} />
+            <Route path="/managment/password" element={<ChangePassword />} />
             {/* </Route> */}
             {/* Mentor Specific routes  */}
             {/* <Route element={<IsProtected allowedRole="mentor" />}> */}

@@ -16,6 +16,7 @@ export const protect = async (
   next: NextFunction
 ) => {
   const token = req.cookies.token;
+  console.log("this is token from the user", token);
   if (token) {
     try {
       const decode = Jwt.verify(token, "jwtsecrete") as JwtPayload;
@@ -28,7 +29,7 @@ export const protect = async (
         res.status(401);
         next(new Error("Account has been blocked"));
       } else {
-        req.user = user;
+        req.body.user = user;
       }
       next();
     } catch (error) {

@@ -24,10 +24,20 @@ export const MenteeProfile = () => {
   const [mentee, setMentee] = useState();
   const [stateChange, setStateChange] = useState(false);
   const { user } = useAppSelector((state) => state.userAuth);
+  // const [formData, setFormdata] = useState({
+  //   profile_img: "",
+  //   first_name: "",
+  //   last_name: "",
+  //   email: "",
+  //   location: "",
+  //   job_title: "",
+  //   linkedIn: "",
+  //   twitter: "",
+  //   goal: "",
+  // });
 
   const changeState = () => {
     setStateChange(true);
-    document.getElementById("img_btn").removeAttribute("disabled");
     document.getElementById("first_name").removeAttribute("disabled");
     document.getElementById("last_name").removeAttribute("disabled");
     document.getElementById("email").removeAttribute("disabled");
@@ -53,11 +63,10 @@ export const MenteeProfile = () => {
     fetchDetails();
   }, []);
 
-  useEffect(() => {
-    if (mentee) {
-      console.log("this is mentee details--------->", mentee);
-    }
-  }, []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("form submitted", e);
+  };
 
   return (
     <>
@@ -72,7 +81,12 @@ export const MenteeProfile = () => {
 
           <div className="flex justify-between px-2">
             <div className="flex justify-center px-4 items-center">
-              <Link className="text-blue-500 underline">Change Password</Link>
+              <Link
+                to={"/managment/password"}
+                className="text-blue-500 underline"
+              >
+                Change Password
+              </Link>
             </div>
             <div className="px-1">
               <button
@@ -90,11 +104,22 @@ export const MenteeProfile = () => {
             </div>
           </div>
 
+          {mentee?.profile_img ? (
+            ""
+          ) : (
+            <div className="flex flex-col ml-6">
+              <h1 className="font-bold">Add a profile Image</h1>
+            </div>
+          )}
           <div className="px-2 md:px-5 md:py-2 flex items-center">
             <div className="flex w-full flex-row items-center">
               <span className="flex items-center h-36 w-36 rounded-full overflow-hidden md:ml-4">
                 <img
-                  src="https://lenstax.com/auth/app-assets/images/profile/user-uploads/user-04.jpg"
+                  src={
+                    mentee?.profile_img
+                      ? ""
+                      : "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
+                  }
                   alt="profile_img"
                   className="md:h-20 md:w-20 rounded-full"
                 />
@@ -123,16 +148,15 @@ export const MenteeProfile = () => {
             </div>
           </div>
 
-          <form action="" className="w-full px-3 md:px-0">
+          <form onSubmit={handleSubmit} className="w-full px-3 md:px-0">
             <div className="flex flex-col w-full md:flex-row justify-center">
               <label>
                 First name
                 <input
                   id="first_name"
-                  className="field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
                   placeholder={mentee?.first_name}
-                  // value={mentee?.first_name}
                   disabled
                 />
               </label>
@@ -141,9 +165,9 @@ export const MenteeProfile = () => {
                 Last name
                 <input
                   id="last_name"
-                  className="field  mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
                   type="text"
-                  value={mentee?.last_name}
+                  placeholder={mentee?.last_name}
                   disabled
                 />
               </label>
@@ -153,9 +177,9 @@ export const MenteeProfile = () => {
                 Email
                 <input
                   id="email"
-                  className="field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
-                  value={mentee?.mentorInfo?.email}
+                  placeholder={mentee?.mentorInfo?.email}
                   disabled
                 />
                 <h1>Only visible to you</h1>
@@ -164,9 +188,9 @@ export const MenteeProfile = () => {
                 Location
                 <input
                   id="location"
-                  className="field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
                   type="text"
-                  value={mentee?.profile ? mentee?.profile : "---------"}
+                  placeholder={mentee?.profile ? mentee?.profile : "---------"}
                   disabled
                 />
               </label>
@@ -176,9 +200,11 @@ export const MenteeProfile = () => {
               <h1>Job Title</h1>
               <input
                 id="job_title"
-                className="field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-full sm:text-sm"
+                className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-full sm:text-sm"
                 type="text"
-                value={mentee?.job_title ? mentee?.job_title : "---------"}
+                placeholder={
+                  mentee?.job_title ? mentee?.job_title : "---------"
+                }
                 disabled
               />
             </div>
@@ -188,9 +214,11 @@ export const MenteeProfile = () => {
                 LinkedIn
                 <input
                   id="linkedIn"
-                  className="field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
-                  value={mentee?.linkedIn ? mentee?.linkedIn : "---------"}
+                  placeholder={
+                    mentee?.linkedIn ? mentee?.linkedIn : "---------"
+                  }
                   disabled
                 />
               </label>
@@ -198,9 +226,9 @@ export const MenteeProfile = () => {
                 Twitter
                 <input
                   id="twitter"
-                  className="field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
                   type="text"
-                  value={mentee?.twitter ? mentee?.twitter : "---------"}
+                  placeholder={mentee?.twitter ? mentee?.twitter : "---------"}
                   disabled
                 />
               </label>
@@ -215,13 +243,13 @@ export const MenteeProfile = () => {
               <textarea
                 id="goal"
                 rows="4"
-                value={
+                placeholder={
                   mentee?.goal
                     ? mentee?.goal
                     : "<----------- Please add your Goal -------------->"
                 }
                 disabled
-                className="field block mt-1 p-3 w-full text-sm bg-gray-50 rounded-lg border-2 focus:outline-none focus:ring-dark-500 focus:ring-1"
+                className="placeholder:text-black field block mt-1 p-3 w-full text-sm bg-gray-50 rounded-lg border-2 focus:outline-none focus:ring-dark-500 focus:ring-1"
               ></textarea>
               <h1 className="mt-2 text-sm">
                 It's good practice to build mentorship around a long-term goal
@@ -232,9 +260,9 @@ export const MenteeProfile = () => {
             <div className="mt-5 flex md:justify-end justify-center md:px-9">
               {stateChange == true ? (
                 <button
-                  type="button"
+                  type="submit"
                   id="saveBtn"
-                  disabled
+                  // disabled
                   className="border-2 px-1 py-1 md:px-2 md:py-2 rounded-md bg-color-one text-white mb-4"
                 >
                   Save Changes

@@ -10,7 +10,6 @@ import sendEmailOtp from "../utils/sendEmail";
 import Otp from "../models/otpModel";
 import { jwtDecode } from "jwt-decode";
 import generateUsername from "../utils/generateUsername";
-import Company from "../models/companyModel";
 
 interface jwtPayload {
   email: string;
