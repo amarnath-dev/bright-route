@@ -196,6 +196,38 @@ export class MenteeController {
     }
   }
 
+  async updateProfileImage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.body.user;
+      const { img_firebase_id } = req.body;
+      if (user) {
+        if (!img_firebase_id) {
+          res.status(400).json({ status: "error", message: "ID not found" });
+        } else {
+          const updateMentee = await MenteeModel.findOneAndUpdate(
+            {
+              mentee_id: user._id,
+            },
+            { $set: { profile_img: img_firebase_id } },
+            { new: true }
+          );
+          if (updateMentee?._id) {
+            res
+              .status(200)
+              .json({ status: "success", message: "Profile Image Updated" });
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Email send failed"));
+    }
+  }
+
   async changePassword(
     req: Request,
     res: Response,

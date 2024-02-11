@@ -4,12 +4,25 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { MenteeProfileCard } from "../../componets/mentee/MenteeProfileCard";
 import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import API from "../../api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../app/firebase";
+
+import ReactCrop, {
+  centerCrop,
+  makeAspectCrop,
+  Crop,
+  PixelCrop,
+  convertToPixelCrop,
+} from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
+import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -33,6 +46,15 @@ export const MenteeProfile = () => {
   const [radioDefault, setRadioDefault] = useState("");
   const [defaultCountry, setDefaultCountry] = useState("");
   const [defaultRegion, setdefaultRegion] = useState("");
+
+  const [imgSrc, setImgSrc] = useState("");
+  const [aspect, setAspect] = useState<number | undefined>(16 / 9);
+  const [crop, setCrop] = useState<Crop>();
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+  const blobUrlRef = useRef("");
+  const hiddenAnchorRef = useRef<HTMLAnchorElement>(null);
 
   const [formData, setFormdata] = useState({
     profile_img: "",
@@ -110,6 +132,145 @@ export const MenteeProfile = () => {
     }
   };
 
+  //------------------> Image Crop ------------------------------>//
+
+  function centerAspectCrop(
+    mediaWidth: number,
+    mediaHeight: number,
+    aspect: number
+  ) {
+    return centerCrop(
+      makeAspectCrop(
+        {
+          unit: "%",
+          width: 90,
+        },
+        aspect,
+        mediaWidth,
+        mediaHeight
+      ),
+      mediaWidth,
+      mediaHeight
+    );
+  }
+
+  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setCrop(undefined);
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        setImgSrc(reader.result?.toString() || "");
+      });
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    if (aspect) {
+      const { width, height } = e.currentTarget;
+      setCrop(centerAspectCrop(width, height, aspect));
+    }
+  };
+
+  function handleToggleAspectClick() {
+    if (aspect) {
+      setAspect(undefined);
+    } else {
+      setAspect(15 / 8);
+
+      if (imgRef.current) {
+        const { width, height } = imgRef.current;
+        const newCrop = centerAspectCrop(width, height, 16 / 9);
+        setCrop(newCrop);
+        setCompletedCrop(convertToPixelCrop(newCrop, width, height));
+      }
+    }
+  }
+
+  async function onDownloadCropClick() {
+    const image = imgRef.current;
+    const previewCanvas = previewCanvasRef.current;
+    if (!image || !previewCanvas || !completedCrop) {
+      throw new Error("Crop canvas does not exist");
+    }
+
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+
+    const offscreen = new OffscreenCanvas(
+      completedCrop.width * scaleX,
+      completedCrop.height * scaleY
+    );
+    const ctx = offscreen.getContext("2d");
+    if (!ctx) {
+      throw new Error("No 2d context");
+    }
+
+    ctx.drawImage(
+      previewCanvas,
+      0,
+      0,
+      previewCanvas.width,
+      previewCanvas.height,
+      0,
+      0,
+      offscreen.width,
+      offscreen.height
+    );
+
+    const blob = await offscreen.convertToBlob({
+      type: "image/png",
+    });
+
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+    }
+
+    blobUrlRef.current = URL.createObjectURL(blob);
+
+    if (hiddenAnchorRef.current) {
+      hiddenAnchorRef.current.href = blobUrlRef.current;
+      // hiddenAnchorRef.current.click(); //this one downloads the image
+
+      //Now upload it to the firebase
+      const imgId =
+        Math.random().toString(16).slice(2) +
+        (new Date().getTime() / 1000).toString();
+      const reference = ref(storage, imgId);
+      const snapshot = await uploadBytes(reference, blob);
+
+      if (snapshot.metadata) {
+        const img_firebase_id: string = snapshot.metadata.fullPath;
+        const response = await API.post(
+          "/managment/profieImage-update",
+          { img_firebase_id },
+          { withCredentials: true }
+        );
+        if (response?.data?.status === "success") {
+          toast(response?.data?.message);
+          setStateChange(false);
+        } else {
+          toast.error("Image Updation Failed");
+        }
+      }
+    }
+  }
+
+  useDebounceEffect(
+    async () => {
+      if (
+        completedCrop?.width &&
+        completedCrop?.height &&
+        imgRef.current &&
+        previewCanvasRef.current
+      ) {
+        canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
+      }
+    },
+    100,
+    [completedCrop]
+  );
+
   return (
     <>
       <ToastContainer className="w-40 md:w-80" />
@@ -170,20 +331,88 @@ export const MenteeProfile = () => {
 
               <div className="px-6 md:px-0 w-full">
                 {stateChange === true ? (
-                  <Button
-                    id="img_btn"
-                    style={{
-                      background: "white",
-                      color: "black",
-                      border: "1px solid black",
-                    }}
-                    component="label"
-                    variant="contained"
-                    startIcon={<CloudUploadIcon />}
-                  >
-                    Upload Photo
-                    <VisuallyHiddenInput type="file" />
-                  </Button>
+                  <>
+                    <Button
+                      id="img_btn"
+                      style={{
+                        background: "white",
+                        color: "black",
+                        border: "1px solid black",
+                      }}
+                      component="label"
+                      variant="contained"
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      Upload Photo
+                      <VisuallyHiddenInput
+                        type="file"
+                        accept="image/*"
+                        onChange={onSelectFile}
+                        onClick={handleToggleAspectClick}
+                      />
+                    </Button>
+                    {!!imgSrc && (
+                      <div className="w-full">
+                        <ReactCrop
+                          crop={crop}
+                          onChange={(_, percentCrop) => setCrop(percentCrop)}
+                          onComplete={(c) => setCompletedCrop(c)}
+                          aspect={aspect}
+                          minWidth={100}
+                          minHeight={100}
+                        >
+                          <img
+                            width={300}
+                            ref={imgRef}
+                            alt="Crop Me"
+                            src={imgSrc}
+                            onLoad={onImageLoad}
+                          />
+                        </ReactCrop>
+                      </div>
+                    )}
+                    {!!completedCrop && (
+                      <>
+                        <div>
+                          <canvas
+                            ref={previewCanvasRef}
+                            style={{
+                              border: "1px solid black",
+                              objectFit: "contain",
+                              width: completedCrop.width,
+                              height: completedCrop.height,
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <button
+                            onClick={onDownloadCropClick}
+                            className="border-2 px-1 py-1 bg-color-one text-white rounded-md"
+                          >
+                            Save Image
+                          </button>
+                          <button
+                            className="border-2 py-1 px-1 rounded-md bg-color-five"
+                            onClick={() => setStateChange(false)}
+                          >
+                            Discard
+                          </button>
+                          <a
+                            href="#hidden"
+                            ref={hiddenAnchorRef}
+                            download
+                            style={{
+                              position: "absolute",
+                              top: "-200vh",
+                              visibility: "hidden",
+                            }}
+                          >
+                            Hidden download
+                          </a>
+                        </div>
+                      </>
+                    )}
+                  </>
                 ) : (
                   ""
                 )}
@@ -455,3 +684,9 @@ export const MenteeProfile = () => {
     </>
   );
 };
+
+//making the changes sdkhdlfg
+//sdfsdaf
+//sdfhsaldkfhsd
+//sdfsadffsadfsdf/\
+//sdfsdafsadf
