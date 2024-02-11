@@ -17,9 +17,6 @@ const menteeProfileSchema: Schema<IMenteeProfile> =
       last_name: {
         type: String,
       },
-      location: {
-        type: String,
-      },
       job_title: {
         type: String,
       },
@@ -30,6 +27,15 @@ const menteeProfileSchema: Schema<IMenteeProfile> =
         type: String,
       },
       goal: {
+        type: String,
+      },
+      available_time: {
+        type: String,
+      },
+      country: {
+        type: String,
+      },
+      region: {
         type: String,
       },
     },

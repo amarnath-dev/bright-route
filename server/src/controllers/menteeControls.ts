@@ -105,27 +105,94 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const menteeId = new mongoose.Types.ObjectId(req.params.menteeId);
-      const mentorDetails = await MenteeModel.aggregate([
+      const mentee = await MenteeModel.aggregate([
         { $match: { mentee_id: menteeId } },
         {
           $lookup: {
             from: "users",
             foreignField: "_id",
             localField: "mentee_id",
-            as: "mentorInfo",
+            as: "menteeInfo",
           },
         },
         {
-          $unwind: "$mentorInfo",
+          $unwind: "$menteeInfo",
         },
       ]);
+      const menteeData = mentee[0];
+      const menteeEmail = menteeData.menteeInfo;
+      const menteeDetails = {
+        mentee_id: menteeData.mentee_id,
+        profile_img: menteeData.profile_img ? menteeData.profile_img : "",
+        first_name: menteeData.first_name,
+        last_name: menteeData.last_name,
+        email: menteeEmail.email,
+        job_title: menteeData.job_title ? menteeData.job_title : "",
+        linkedIn: menteeData.linkedIn ? menteeData.linkedIn : "",
+        twitter: menteeData.twitter ? menteeData.twitter : "",
+        goal: menteeData.goal ? menteeData.goal : "",
+        available_time: menteeData.available_time
+          ? menteeData.available_time
+          : "",
+        country: menteeData.country ? menteeData.country : "",
+        region: menteeData.region ? menteeData.region : "",
+        role: menteeEmail.role,
+      };
 
-      if (mentorDetails) {
-        res.status(200).json({ status: "success", mentorDetails });
+      if (menteeDetails) {
+        res.status(200).json({ status: "success", menteeDetails });
       }
     } catch (error) {
       console.error(error);
       return next(Error("Data fetch failed"));
+    }
+  }
+
+  async updateProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.body.user;
+      if (user) {
+        const newMenteeData = {
+          profile_img: req.body.profile_img,
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          email: req.body.email,
+          job_title: req.body.job_title,
+          linkedIn: req.body.linkedIn,
+          twitter: req.body.twitter,
+          goal: req.body.goal,
+          available_time: req.body.radio,
+          country: req.body.country,
+          region: req.body.region,
+        };
+
+        const updateMentor = await MenteeModel.findOneAndUpdate(
+          {
+            mentee_id: user._id,
+          },
+          { $set: newMenteeData },
+          { new: true }
+        );
+        if (updateMentor) {
+          console.log("Mentee profile updated successfully:", updateMentor);
+          res.status(200).json({
+            status: "success",
+            message: "Updated Successfully",
+            updateMentor,
+          });
+        } else {
+          res
+            .status(404)
+            .json({ status: "success", message: "Profile not found" });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Email send failed"));
     }
   }
 

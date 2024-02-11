@@ -10,14 +10,16 @@ export const ChangePassword = () => {
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
+    otpNumber: "",
   });
   const [otpSend, setOtpSend] = useState(false);
   const [otpNumber, setOtpNumber] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     formData.oldPassword = e.target[0].value;
     formData.newPassword = e.target[1].value;
     formData.confirmPassword = e.target[2].value;
@@ -26,12 +28,10 @@ export const ChangePassword = () => {
       setError(true);
       return;
     }
-
     if (otpNumber !== "") {
       formData.otpNumber = otpNumber;
       formData.oldPassword = "";
     }
-
     try {
       const response = await API.post("/change-password", formData, {
         withCredentials: true,
@@ -41,7 +41,7 @@ export const ChangePassword = () => {
         toast(result.message);
         setTimeout(() => {
           navigate("/managment");
-        }, "1000");
+        }, 1000);
       } else {
         toast.error("Incorrect Password");
       }
@@ -87,7 +87,7 @@ export const ChangePassword = () => {
       <ToastContainer />
       <div
         id="authentication-modal"
-        tabIndex="-1"
+        tabIndex={-1}
         aria-hidden="true"
         className="mt-12 overflow-y-auto overflow-x-hidden flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
       >
