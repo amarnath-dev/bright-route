@@ -685,8 +685,3 @@ export const MenteeProfile = () => {
   );
 };
 
-//making the changes sdkhdlfg
-//sdfsdaf
-//sdfhsaldkfhsd
-//sdfsadffsadfsdf/\
-//sdfsdafsadf
