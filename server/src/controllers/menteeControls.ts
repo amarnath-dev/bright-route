@@ -250,12 +250,12 @@ export class MenteeController {
           if (dbOtp?.email) {
             const dbOtpDecrypt = CryptoJS.AES.decrypt(
               dbOtp.otp,
-              "ecryptionkey"
+              process.env.HASH_KEY as string
             ).toString(CryptoJS.enc.Utf8);
             if (dbOtpDecrypt === otpNumber) {
               const hashNewPass = CryptoJS.AES.encrypt(
                 confirmPassword,
-                "ecryptionkey"
+                process.env.HASH_KEY as string
               ).toString();
               await User.findByIdAndUpdate(user._id, {
                 password: hashNewPass,
@@ -275,7 +275,7 @@ export class MenteeController {
           console.log("<------------------without otp-------------->");
           const passwordDecrypt = CryptoJS.AES.decrypt(
             userDB?.password,
-            "ecryptionkey"
+            process.env.HASH_KEY as string
           ).toString(CryptoJS.enc.Utf8);
           console.log("decrypted pass", passwordDecrypt);
           if (passwordDecrypt !== oldPassword) {
@@ -284,7 +284,7 @@ export class MenteeController {
           }
           const hashNewPass = CryptoJS.AES.encrypt(
             confirmPassword,
-            "ecryptionkey"
+            process.env.HASH_KEY as string
           ).toString();
           await User.findByIdAndUpdate(user._id, {
             password: hashNewPass,

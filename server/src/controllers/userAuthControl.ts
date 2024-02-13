@@ -65,7 +65,7 @@ export class MenteeAuthController {
       } else {
         const dbPassword = CryptoJS.AES.decrypt(
           userExists.password,
-          "ecryptionkey"
+          process.env.HASH_KEY as string
         ).toString(CryptoJS.enc.Utf8);
         if (password === dbPassword) {
           //Getting users name because both stored in different
@@ -115,12 +115,12 @@ export class MenteeAuthController {
       }
       const dbOTP: string = CryptoJS.AES.decrypt(
         otpData.otp,
-        "ecryptionkey"
+        process.env.HASH_KEY as string
       ).toString(CryptoJS.enc.Utf8);
       if (dbOTP === otp) {
         const hashedPassword: any = CryptoJS.AES.encrypt(
           password,
-          "ecryptionkey"
+          process.env.HASH_KEY as string
         ).toString();
         const menteeDetails: IUser = new User({
           email,
@@ -273,7 +273,7 @@ export class MentorAuthController {
       }
       const hashedPassword: any = CryptoJS.AES.encrypt(
         data.password,
-        "ecryptionkey"
+        process.env.HASH_KEY as string
       ).toString();
       const mentor: IUser = new User({
         email: mentorEmail,
@@ -338,7 +338,7 @@ export class MentorAuthController {
         }
         const dbPassword = CryptoJS.AES.decrypt(
           userExists.password,
-          "ecryptionkey"
+          process.env.HASH_KEY as string
         ).toString(CryptoJS.enc.Utf8);
 
         if (password === dbPassword) {

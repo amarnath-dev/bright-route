@@ -10,7 +10,6 @@ export class AdminControls {
     next: NextFunction
   ): Promise<void> {
     try {
-      //aggregation lookup to get single value from another collection
       const applicationData = await MentorProfile.aggregate([
         { $match: { profile_state: "pending" } },
         {
