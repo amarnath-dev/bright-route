@@ -10,8 +10,21 @@ import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import API from "../../api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../app/firebase";
+
+//styled component error solution
+// interface StyledCompOne {
+//   o?: {
+//     padding: string;
+//     marginTop: number;
+//     width: number;
+//     height: number;
+//     border: string;
+//     borderRadius: string;
+//     boxShadow: string;
+//   };
+// }
 
 import ReactCrop, {
   centerCrop,
@@ -46,6 +59,7 @@ export const MenteeProfile = () => {
   const [radioDefault, setRadioDefault] = useState("");
   const [defaultCountry, setDefaultCountry] = useState("");
   const [defaultRegion, setdefaultRegion] = useState("");
+  const [profileImg, setProfileImg] = useState("");
 
   const [imgSrc, setImgSrc] = useState("");
   const [aspect, setAspect] = useState<number | undefined>(16 / 9);
@@ -97,10 +111,10 @@ export const MenteeProfile = () => {
           withCredentials: true,
         });
         const details = response.data;
-        console.log("this is details from the server", details);
         setRadioDefault(details.menteeDetails.available_time);
         setDefaultCountry(details.menteeDetails.country);
         setdefaultRegion(details.menteeDetails.region);
+        setProfileImg(details.menteeDetails.profile_img);
         setFormdata(details.menteeDetails);
       } catch (error) {
         toast.error("Something went wrong");
@@ -109,6 +123,28 @@ export const MenteeProfile = () => {
     };
     fetchDetails();
   }, []);
+
+  if (formData.profile_img) {
+    const fetchImg = async () => {
+      const imageId = formData.profile_img;
+      //if check for avoiding root error
+      if (imageId) {
+        const imageRef = ref(storage, imageId);
+        getDownloadURL(imageRef)
+          .then((url) => {
+            const img = document.getElementById(
+              "profile-image"
+            ) as HTMLImageElement;
+            img.src = url;
+          })
+          .catch((error) => {
+            console.log(error);
+            toast.error("Image fetch failed");
+          });
+      }
+    };
+    fetchImg();
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -326,6 +362,7 @@ export const MenteeProfile = () => {
                   }
                   alt="profile_img"
                   className="md:h-20 md:w-20 rounded-full"
+                  id="profile-image"
                 />
               </span>
 
@@ -457,7 +494,6 @@ export const MenteeProfile = () => {
                   name="email"
                   value={formData.email}
                   onChange={onchange}
-                  disabled
                 />
                 <h1 className="font-bold">Only visible to you</h1>
               </label>
@@ -570,7 +606,7 @@ export const MenteeProfile = () => {
                   id="default-radio-1"
                   type="radio"
                   className="w-4 h-4"
-                  name="radio"
+                  name="radio1"
                   value="Early mornings (before 9am)"
                   onChange={onchange}
                   checked={radioDefault === "Early mornings (before 9am)"}
@@ -588,7 +624,7 @@ export const MenteeProfile = () => {
                   id="default-radio-2"
                   type="radio"
                   className="w-4 h-4"
-                  name="radio"
+                  name="radio2"
                   value="During the day (between 9am and 5pm)"
                   onChange={onchange}
                   checked={
@@ -633,7 +669,7 @@ export const MenteeProfile = () => {
                   htmlFor="default-radio-4"
                   className="ms-2 text-md font-medium text-gray-900"
                 >
-                  I'm flexible
+                  I'm Flexible
                 </label>
               </div>
               <div className="flex items-center mt-2" onClick={changeState}>
@@ -684,4 +720,3 @@ export const MenteeProfile = () => {
     </>
   );
 };
-

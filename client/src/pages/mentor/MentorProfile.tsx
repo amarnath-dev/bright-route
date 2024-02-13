@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from "react";
+import PublicIcon from "@mui/icons-material/Public";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import XIcon from "@mui/icons-material/X";
+import { useEffect, useState } from "react";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
 import API from "../../api";
-import { ref, getDownloadURL } from "firebase/storage";
+import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
+import { useNavigate } from "react-router-dom";
 
-const MentorProfil: React.FC = () => {
+export const MentorProfile = () => {
   const [mentor, setMentor] = useState<mentorProfileObj>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMentorData = async () => {
@@ -14,9 +19,7 @@ const MentorProfil: React.FC = () => {
           withCredentials: true,
         });
         if (response.data) {
-          const mentor = response.data;
-          console.log("this is mentor datails", mentor.mentorDetails);
-          setMentor(mentor.mentorDetails[0]);
+          setMentor(response.data.mentorDetails);
         }
       } catch (error) {
         console.log(error);
@@ -25,10 +28,8 @@ const MentorProfil: React.FC = () => {
     fetchMentorData();
   }, []);
 
-  //fetching img from firebase
   useEffect(() => {
     const imageId = mentor?.profile_img;
-    //if check for avoiding root error
     if (imageId) {
       const imageRef = ref(storage, imageId);
       getDownloadURL(imageRef)
@@ -46,153 +47,92 @@ const MentorProfil: React.FC = () => {
 
   return (
     <>
-      <div className="w-screen h-screen flex-row md:flex md:items-center md:flex-col">
-        <div className="w-full ml-1 mr-1 md:ml-0 md:mr-0 md:w-1/2 md:h-40 mt-10 rounded-lg flex flex-row border-2">
-          <div className="w-40 h-full flex justify-center items-center shadow-lg flex-col px-2 py-2">
-            <img
-              alt="profile_img"
-              className="mt-2 w-16 h-16 border-2 md:mt-0 md:w-24 md:h-24 rounded-full ml-2"
-              id="profile_img"
-            />
-            <button className="w-14 h-6 ml-2 mb-4 md:mb-0 md:w-full text-sm rounded-md md:h-8 mt-2 md:ml-1 bg-slate-200 md:px-1 md:py-1">
-              Change
-            </button>
-          </div>
-
-          <div className="w-full mt-2 md:px-10 md:py-4">
-            <h1 className="text-md md:text-xl font-bold mt-3 md:mt-0">
-              {mentor?.first_name} {mentor?.last_name}
-            </h1>
-            <h2 className="md:mt-2 md:font-bold">{mentor?.job_title}</h2>
-            <h2 className="md:mt-2 md:font-bold">{mentor?.mentorEmail}</h2>
-          </div>
-        </div>
-
-        <div className="w-full md:w-2/3 h-screen mt-2 rounded-lg border-2">
-          <div className="flex flex-col items-center md:flex-row md:justify-between px-2 py-2">
-            <label>
-              <h1>First name</h1>
-              <input
-                type="text"
-                id="disabled-input"
-                aria-label="disabled input"
-                className="md:mb-6 bg-gray-100 border border-gray-300 text-sm rounded-lg block md:mt-1 w-80 md:w-64 p-2.5 cursor-not-allowed"
-                value={mentor?.first_name}
-                disabled
+      <div className="h-full grid grid-cols-12 bg-slate-200">
+        <div className="col-span-12  md:col-span-4 px-10 py-10">
+          <div className="rounded-md shadow-lg border-2 bg-white">
+            <div className="flex justify-center">
+              <img
+                alt="mentor_image"
+                id="profile_img"
+                className="w-32 md:w-40 h-auto rounded-full px-2 py-2 mt-2 border-2"
               />
-            </label>
-            <label>
-              <h1>Last name</h1>
-              <input
-                type="text"
-                id="disabled-input"
-                aria-label="disabled input"
-                className="md:mb-6 bg-gray-100 border border-gray-300 text-sm rounded-lg block md:mt-1 w-80 md:w-64 p-2.5 cursor-not-allowed"
-                value={mentor?.last_name}
-                disabled
-              />
-            </label>
-            <label>
-              <h1>Email</h1>
-              <input
-                type="text"
-                id="disabled-input"
-                aria-label="disabled input"
-                className="md:mb-6 bg-gray-100 border border-gray-300 text-sm rounded-lg block mt-1 w-80 md:w-64 p-2.5 cursor-not-allowed"
-                value={mentor?.mentorEmail}
-                disabled
-              />
-            </label>
-          </div>
-
-          <div className="flex flex-col md:flex-row px-2 py-2 items-center md:justify-between">
-            <label>
-              <h1>Company Name</h1>
-              <input
-                type="text"
-                id="disabled-input"
-                aria-label="disabled input"
-                className="mb-6 bg-gray-100 border border-gray-300 text-sm rounded-lg block mt-1 w-80 md:w-64 p-2.5 cursor-not-allowed"
-                value={mentor?.company}
-                disabled
-              />
-            </label>
-            <label>
-              <h1>LinkedIn</h1>
-              <input
-                type="text"
-                id="disabled-input"
-                aria-label="disabled input"
-                className="mb-6 bg-gray-100 border border-gray-300 text-sm rounded-lg block mt-1  w-80 md:w-64 p-2.5 cursor-not-allowed"
-                value={mentor?.linkedIn}
-                disabled
-              />
-            </label>
-            <label>
-              <h1>Twitter</h1>
-              <input
-                type="text"
-                id="disabled-input"
-                aria-label="disabled input"
-                className="mb-6 bg-gray-100 border border-gray-300 text-sm rounded-lg block mt-1  w-80 md:w-64 p-2.5 cursor-not-allowed"
-                value={mentor?.twitter}
-                disabled
-              />
-            </label>
-          </div>
-
-          <div className="flex flex-row px-2 py-2 justify-between">
-            <label>
-              <h1>Personal Website</h1>
-              <input
-                type="text"
-                id="disabled-input"
-                aria-label="disabled input"
-                className="mb-6 bg-gray-100 border border-gray-300 text-sm rounded-lg block mt-1 w-80 md:w-96 p-2.5 cursor-not-allowed"
-                value={mentor?.web_url}
-                disabled
-              />
-            </label>
-          </div>
-          <div className="flex justify-end mt-5 md:mt-0">
-            <button
-              type="button"
-              className="text-gray-90 border border-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 bg-color-one text-white"
-            >
-              Update
-            </button>
+            </div>
+            <div className="flex justify-center">
+              <h1 className="font-bold text-xl py-2">
+                {mentor?.first_name} {mentor?.last_name}
+              </h1>
+            </div>
+            <div className="flex justify-center">
+              <h1 className="text-md font-bold">{mentor?.job_title}</h1>
+            </div>
+            <div className="flex justify-center">
+              <h1 className="text-md py-2">{mentor?.mentorEmail[0]?.email}</h1>
+            </div>
+            <div className="text-center">
+              <h1 className="underline">{mentor?.company}</h1>
+            </div>
+            <div className="text-center">
+              <h1 className="mt-3 text-sm">
+                <PublicIcon className="font-sm" />
+                {mentor?.state}
+              </h1>
+            </div>
+            <div className="text-center mt-4 md:mt-8 mb-5 md:mb-0">
+              <a href={mentor?.twitter} target="_blank">
+                <XIcon className="cursor-pointer" />
+              </a>
+              <a className="ml-10" href={mentor?.linkedIn}>
+                <LinkedInIcon className="cursor-pointer" />
+              </a>
+            </div>
+            <div className="text-center mt-5 mb-5 md:mb-0 md:mt-9">
+              {/* <button className="md:mb-10">Log Out</button> */}
+              <button
+                className="ml-4 mb-8"
+                onClick={() => navigate("/mentor/profile/update")}
+              >
+                Update
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 md:w-2/3 h-screen md:mt-2 rounded-lg border-2 px-3 py-3">
-          <h1>Bio</h1>
-          <p
-            id="disabled-input"
-            aria-label="disabled input"
-            className="mb-6 bg-gray-100 border border-gray-300 text-sm rounded-lg block mt-1 w-full p-2.5 cursor-not-allowed h-auto"
-          >
-            {mentor?.bio}
-          </p>
-          <h1>Skills</h1>
-          <p
-            id="disabled-input"
-            aria-label="disabled input"
-            className="mb-6 bg-gray-100 border border-gray-300 text-sm rounded-lg block mt-1 w-full p-2.5 cursor-not-allowed h-auto"
-          >
-            {mentor?.skills}
-          </p>
-          <div className="flex justify-end">
-            <button
-              type="button"
-              className="text-gray-90 border border-gray-300 font-medium rounded-md text-sm px-2 py-1 md:px-5 md:py-2.5 md:me-2 md:mb-2 bg-color-one text-white"
-            >
-              Change
-            </button>
+        <div className="col-span-12 md:col-span-8 md:px-10 md:py-10">
+          <div className="md:h-full py-5 md:px-8 md:py-8 rounded-md">
+            <div className="px-2 md:px-0">
+              <label
+                htmlFor="message"
+                className="block mb-2 text-sm font-medium"
+              >
+                ABOUT ME
+              </label>
+              <textarea
+                id="bio"
+                rows={12}
+                disabled
+                defaultValue={mentor?.bio}
+                className="block p-2.5 w-full text-lg rounded-lg focus:border-gray text-black bg-white"
+              ></textarea>
+            </div>
+
+            <div className="mt-5 rounded-md px-2 py-2 border-2">
+              <h1 className="block mb-2 text-lg font-medium">Skills</h1>
+              <div className="mt-3 h-full flex-wrap">
+                {mentor?.skills.map((skill, index) => {
+                  return (
+                    <span
+                      key={index}
+                      className="rounded-full bg-blue-200 px-6 py-1 ml-2"
+                    >
+                      {skill}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </>
   );
 };
-
-export default MentorProfil;

@@ -16,7 +16,6 @@ export const protect = async (
   next: NextFunction
 ) => {
   const token = req.cookies.token;
-  console.log("this is token from the user", token);
   if (token) {
     try {
       const decode = Jwt.verify(token, "jwtsecrete") as JwtPayload;
