@@ -19,9 +19,8 @@ export class AdminAuthControls {
       if (emailExists?._id) {
         const dbPassword = CryptoJS.AES.decrypt(
           emailExists?.password,
-          "ecryptionkey"
+          process.env.HASH_KEY as string
         ).toString(CryptoJS.enc.Utf8);
-        console.log(dbPassword);
         if (password == dbPassword) {
           const token = generateJWT(emailExists?._id, emailExists?.email);
           console.log("tokene", token);

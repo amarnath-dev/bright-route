@@ -1,7 +1,8 @@
 import express from "express";
 import morgan from "morgan";
-import cors from "cors";
 import dotenv from "dotenv";
+dotenv.config()
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import menteeRouter from "./routes/menteeRoutes";
 import mentorRouter from "./routes/mentorRoutes";
