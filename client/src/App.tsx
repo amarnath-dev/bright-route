@@ -11,11 +11,12 @@ import { Dashboard } from "./pages/admin/Dashboard";
 import { MentorApplication } from "./pages/admin/MentorApplication";
 import { ApplicationReview } from "./pages/admin/ApplicationReview";
 import MentorHome from "./pages/mentor/MentorHome";
-import MentorProfile from "./pages/mentor/MentorProfile";
+import { MentorProfile } from "./pages/mentor/MentorProfile";
 import { SearchMentors } from "./pages/mentee/SearchMentors";
 import { SkillManagment } from "./pages/admin/SkillManagment";
 import { MenteeProfile } from "./pages/mentee/MenteeProfile";
 import { ChangePassword } from "../src/componets/mentee/ChangePassword";
+import { MentorProfileEdit } from "./pages/mentor/MentorProfileEdit";
 // import MentorLoginForm from "./pages/mentor/MentorLogin";
 // import IsAuthenticated from "./componets/Routes/IsAuthenticated";
 // import IsProtected from "./componets/Routes/IsProtected";
@@ -41,6 +42,10 @@ function App() {
             {/* <Route element={<IsProtected allowedRole="mentor" />}> */}
             <Route path="/mentor/home" element={<MentorHome />} />
             <Route path="/mentor/profile" element={<MentorProfile />} />
+            <Route
+              path="/mentor/profile/update"
+              element={<MentorProfileEdit />}
+            />
             <Route path="/mentor/apply" element={<ContainerForm />} />
             <Route path="/mentor/login" element={<SigninPage />} />
             <Route path="/mentor/apply-success" element={<ApplySuccess />} />

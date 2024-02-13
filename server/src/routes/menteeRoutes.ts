@@ -16,6 +16,8 @@ router.get("/browse-mentors", menteeController.mentorProfile);
 router.get("/browse/filter", menteeController.mentorSearch);
 // router.get("/browse/filter", menteeController.mentorSearch);
 router.get("/managment/:menteeId", protect, menteeController.menteeProfile);
+router.post("/managment/profie-update", protect, menteeController.updateProfile);
+router.post("/managment/profieImage-update", protect, menteeController.updateProfileImage);
 router.post("/change-password", protect, menteeController.changePassword);
 router.post("/managment/password/sentotp", protect, menteeController.sendOtp);
 

@@ -12,11 +12,13 @@ export interface IMenteeProfile extends Document {
   first_name: string;
   last_name: string;
   profile_img: string;
-  location: string;
+  country: string;
+  region: string;
   job_title: string;
   linkedIn: string;
   twitter: string;
   goal: string;
+  available_time: string;
   reports: Report[];
 }
 

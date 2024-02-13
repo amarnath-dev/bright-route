@@ -147,6 +147,19 @@ export interface mentorProfileObj {
   approved: boolean;
 }
 
+export interface MentorProfileEdit {
+  first_name: string;
+  last_name: string;
+  mentorEmail: string;
+  company: string;
+  linkedIn: string;
+  twitter: string;
+  web_url: string;
+  job_title: string;
+  bio: string;
+  skills: string[];
+}
+
 //Sign in form credential
 export interface SigninCredential {
   email: string;
