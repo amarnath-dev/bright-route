@@ -89,7 +89,7 @@ export function ProfileDetails({
               </span>
             </div>
 
-            <div className="w-screen flex flex-col justify-start items-center mt-2 md:w-full md:flex-col">
+            <div className="w-screen flex flex-col justify-start items-center mt-1 md:w-full md:flex-col">
               <label className="md:w-full">
                 <textarea
                   name=""

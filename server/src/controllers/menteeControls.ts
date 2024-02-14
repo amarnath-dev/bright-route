@@ -120,6 +120,7 @@ export class MenteeController {
         },
       ]);
       const menteeData = mentee[0];
+      console.log("this is the goal===>", menteeData);
       const menteeEmail = menteeData.menteeInfo;
       const menteeDetails = {
         mentee_id: menteeData.mentee_id,
@@ -286,12 +287,15 @@ export class MenteeController {
             confirmPassword,
             process.env.HASH_KEY as string
           ).toString();
-          await User.findByIdAndUpdate(user._id, {
+          const resetingUser = await User.findByIdAndUpdate(user._id, {
             password: hashNewPass,
           });
-          res
-            .status(200)
-            .json({ status: "success", message: "Password Updated" });
+          console.log("this is the user", resetingUser?.role);
+          res.status(200).json({
+            status: "success",
+            message: "Password Updated",
+            role: resetingUser?.role,
+          });
         }
       }
     } catch (error) {

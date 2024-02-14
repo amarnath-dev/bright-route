@@ -8,16 +8,16 @@ const Header: React.FC = () => {
     <>
       <div className="w-screen h-96 bg-color-one shadow-2xl">
         <div className="h-96 flex justify-center items-center flex-col">
-          <h1 className="font-bold text-4xl ml-5">
+          <h1 className="font-bold text-4xl ml-5 text-white">
             Welcome, {user?.first_name}
           </h1>
-          <h3 className="mt-5 font-bold text-xl ml-5">
+          <h3 className="mt-5 font-bold text-xl ml-5 text-white ">
             Start connecting with mentors and get ready to take your career to
             the next level!
           </h3>
           <div>
             <button
-              className="border-2 mt-5 py-2 px-3 rounded-lg bg-color-one text-white font-medium"
+              className="border-2 mt-5 py-2 px-3 rounded-lg bg-color-five text-white font-medium"
               onClick={() => {
                 navigate("/mentor/browse");
               }}

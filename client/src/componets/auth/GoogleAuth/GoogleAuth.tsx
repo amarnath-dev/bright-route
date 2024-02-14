@@ -31,8 +31,7 @@ const GoogleAuth = () => {
     console.log("Error Occured");
   };
 
-  const clientId =
-    "830991888272-l40hjhbivufur9m6aamom5rs0qkl8e0u.apps.googleusercontent.com";
+  const clientId = import.meta.env.VITE_CLIENT_ID;
 
   return (
     <>

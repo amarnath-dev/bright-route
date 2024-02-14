@@ -50,8 +50,7 @@ export function ContainerForm() {
               {currentStepIndex + 1} / {steps.length}
             </h1>
           </div>
-          {/* this is a component  */}
-          {step}
+          <div>{step}</div>
 
           <div className="flex justify-center items-center md:absolute md:bottom-8 md:right-60 mb-18">
             {!isFirststep && (
