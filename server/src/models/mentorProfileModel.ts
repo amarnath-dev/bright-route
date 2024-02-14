@@ -58,6 +58,15 @@ const mentorProfileSchema: Schema<IMentorProfile> =
       reports: {
         type: [],
       },
+      isPaymentDetails: {
+        type: Boolean,
+        default: false,
+      },
+      isBlocked: {
+        type: Boolean,
+        default: false,
+      },
+      mentorPlans: [{}],
     },
     { timestamps: true }
   );

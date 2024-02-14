@@ -40,7 +40,12 @@ export const ChangePassword = () => {
       if (result.status === "success") {
         toast(result.message);
         setTimeout(() => {
-          navigate("/managment");
+          if (result.role === "mentee") {
+            navigate("/managment");
+          }
+          if (result.role === "mentor") {
+            navigate("/mentor/profile");
+          }
         }, 1000);
       } else {
         toast.error("Incorrect Password");

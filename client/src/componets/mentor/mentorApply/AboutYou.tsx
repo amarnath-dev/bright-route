@@ -19,7 +19,7 @@ export function AboutYou({
   updateFields,
 }: AboutFormProps) {
   const [fileUrl, setFileUrl] = useState<string | undefined>();
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {

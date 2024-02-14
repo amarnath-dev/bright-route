@@ -7,6 +7,7 @@ import API from "../../api";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import { useNavigate } from "react-router-dom";
+import { ProfileNav } from "../../componets/mentor/ProfileNavbar/ProfileNav";
 
 export const MentorProfile = () => {
   const [mentor, setMentor] = useState<mentorProfileObj>();
@@ -47,6 +48,7 @@ export const MentorProfile = () => {
 
   return (
     <>
+      <ProfileNav />
       <div className="h-full grid grid-cols-12 bg-slate-200">
         <div className="col-span-12  md:col-span-4 px-10 py-10">
           <div className="rounded-md shadow-lg border-2 bg-white">

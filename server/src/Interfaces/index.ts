@@ -55,6 +55,9 @@ export interface IMentorProfile extends Document {
   profile_state: string;
   skills: [];
   reports: Report[];
+  isPaymentDetails: boolean;
+  isBlocked: boolean;
+  mentorPlans: [{}];
 }
 
 export interface IAdmin extends Document {

@@ -14,7 +14,6 @@ router.post("/resendOTP", menteeAuthController.resendOTP);
 router.post("/google-auth", menteeAuthController.googleAuth);
 router.get("/browse-mentors", menteeController.mentorProfile);
 router.get("/browse/filter", menteeController.mentorSearch);
-// router.get("/browse/filter", menteeController.mentorSearch);
 router.get("/managment/:menteeId", protect, menteeController.menteeProfile);
 router.post("/managment/profie-update", protect, menteeController.updateProfile);
 router.post("/managment/profieImage-update", protect, menteeController.updateProfileImage);

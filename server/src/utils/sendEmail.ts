@@ -20,15 +20,16 @@ const sendEmailOtp = async (
       requireTLS: true,
       auth: {
         user: "amarmanikavu@gmail.com",
-        pass: "brwbmdkueueoqmdp",
+        pass: process.env.NODEMAILER_PASS as string,
       },
     });
 
     //Getting the otp number and saving it to the new model
     const otpnum: number = generateOTP();
+    console.log("this is otp number", otpnum);
     const hashedOTP: string = cryptojs.AES.encrypt(
       otpnum.toString(),
-      "ecryptionkey"
+      process.env.HASH_KEY as string
     ).toString();
 
     await Otp.updateOne(

@@ -13,19 +13,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../app/firebase";
 
-//styled component error solution
-// interface StyledCompOne {
-//   o?: {
-//     padding: string;
-//     marginTop: number;
-//     width: number;
-//     height: number;
-//     border: string;
-//     borderRadius: string;
-//     boxShadow: string;
-//   };
-// }
-
 import ReactCrop, {
   centerCrop,
   makeAspectCrop,
@@ -111,14 +98,18 @@ export const MenteeProfile = () => {
           withCredentials: true,
         });
         const details = response.data;
+        console.log("details", details);
         setRadioDefault(details.menteeDetails.available_time);
+        console.log("---------->", details.menteeDetails.goal);
+        setGoal(details.menteeDetails.goal);
+        console.log("---------->", details.menteeDetails.region);
         setDefaultCountry(details.menteeDetails.country);
         setdefaultRegion(details.menteeDetails.region);
         setProfileImg(details.menteeDetails.profile_img);
         setFormdata(details.menteeDetails);
       } catch (error) {
-        toast.error("Something went wrong");
-        console.log(error);
+        // toast.error("Something went wrong");
+        console.log("this is the error", error);
       }
     };
     fetchDetails();
@@ -159,6 +150,7 @@ export const MenteeProfile = () => {
       if (response) {
         const reqRes = response.data;
         if (reqRes.status == "success") {
+          setStateChange(false);
           toast(reqRes.message);
         }
       }
@@ -310,7 +302,7 @@ export const MenteeProfile = () => {
   return (
     <>
       <ToastContainer className="w-40 md:w-80" />
-      <div className="w-screen h-full flex justify-center mb-28">
+      <div className="w-full h-full flex justify-center mb-28">
         <div className="w-full md:w-2/3 h-full border-2 mt-10 rounded-md">
           <div className="w-full h-full flex justify-center flex-col">
             <h1 className="text-center mt-4 text-md md:text-lg font-bold">
@@ -361,7 +353,7 @@ export const MenteeProfile = () => {
                       : "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
                   }
                   alt="profile_img"
-                  className="md:h-20 md:w-20 rounded-full"
+                  className="md:h-28 md:w-28 rounded-full"
                   id="profile-image"
                 />
               </span>
@@ -495,7 +487,7 @@ export const MenteeProfile = () => {
                   value={formData.email}
                   onChange={onchange}
                 />
-                <h1 className="font-bold">Only visible to you</h1>
+                <h1>(Email only visible to you)</h1>
               </label>
               <label className="mt-2">
                 Country & Region
@@ -586,7 +578,7 @@ export const MenteeProfile = () => {
                 id="goal"
                 rows={4}
                 name="goal"
-                value={goal || formData.goal}
+                value={goal}
                 onChange={(e) => setGoal(e.target.value)}
                 disabled
                 className="placeholder:text-black field block mt-1 p-3 w-full text-sm bg-gray-50 rounded-lg border-2 focus:outline-none focus:ring-dark-500 focus:ring-1"
