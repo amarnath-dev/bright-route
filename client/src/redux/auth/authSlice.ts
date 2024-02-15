@@ -5,6 +5,7 @@ import {
   MentorLogin,
   MultiFromApply,
 } from "../../services/authServices";
+import { changePassword } from "../../services/profileService";
 import Cookies from "js-cookie";
 
 export type user = {
@@ -100,6 +101,23 @@ export const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(MultiFromApply.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        const error = action.payload as {
+          message: string;
+          status: number;
+        };
+        state.errorMessage = error?.message;
+        state.status = error?.status;
+      })
+      //Change Password mentee -> profile -> changePassword
+      .addCase(changePassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(changePassword.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         const error = action.payload as {
