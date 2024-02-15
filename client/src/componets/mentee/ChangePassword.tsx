@@ -1,8 +1,10 @@
-import { useState } from "react";
-import API from "../../api";
+import { FormEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../app/hooks";
+import { changePassword, sendOTP } from "../../services/profileService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import API from "../../api";
 
 export const ChangePassword = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -16,39 +18,52 @@ export const ChangePassword = () => {
   const [otpNumber, setOtpNumber] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const [minutes, setMinutes] = useState(1);
+  const [seconds, setSeconds] = useState(59);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     formData.oldPassword = e.target[0].value;
-    formData.newPassword = e.target[1].value;
-    formData.confirmPassword = e.target[2].value;
-
-    if (e.target[1].value !== e.target[2].value) {
-      setError(true);
-      return;
-    }
-    if (otpNumber !== "") {
-      formData.otpNumber = otpNumber;
-      formData.oldPassword = "";
+    const isBtn = e.target[1].value;
+    if (!isBtn) {
+      formData.newPassword = e.target[2].value;
+      formData.confirmPassword = e.target[3].value;
+      if (e.target[2].value !== e.target[3].value) {
+        setError(true);
+        return;
+      }
+      if (otpNumber !== "") {
+        formData.otpNumber = otpNumber;
+        formData.oldPassword = "";
+      }
+    } else {
+      formData.newPassword = e.target[1].value;
+      formData.confirmPassword = e.target[2].value;
+      if (e.target[1].value !== e.target[2].value) {
+        setError(true);
+        return;
+      }
+      if (otpNumber !== "") {
+        formData.otpNumber = otpNumber;
+        formData.oldPassword = "";
+      }
     }
     try {
-      const response = await API.post("/change-password", formData, {
-        withCredentials: true,
-      });
-      const result = response.data;
-      if (result.status === "success") {
-        toast(result.message);
+      const response = await dispatch(changePassword(formData));
+      if (response.payload.status === "success") {
+        toast(response.payload.message);
         setTimeout(() => {
-          if (result.role === "mentee") {
+          if (response.payload.role === "mentee") {
             navigate("/managment");
           }
-          if (result.role === "mentor") {
+          if (response.payload.role === "mentor") {
             navigate("/mentor/profile");
           }
         }, 1000);
       } else {
-        toast.error("Incorrect Password");
+        toast.error(response.payload.message);
       }
     } catch (error) {
       const errorRes = error.response;
@@ -62,23 +77,22 @@ export const ChangePassword = () => {
 
   const forgotPassword = async () => {
     try {
-      const response = await API.post(
-        "/managment/password/sentotp",
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.status === 200) {
+      const response = await dispatch(sendOTP("no value"));
+      if (response.payload.status === "success") {
         setOtpSend(true);
-        toast(response?.data?.message);
+        setMinutes(0);
+        setSeconds(30);
+        toast(response.payload.message);
+      } else {
+        toast.error(response.payload.message);
       }
     } catch (error) {
+      console.log(error);
       const errRes = error?.response;
       if (errRes?.status === 404) {
         toast.error(errRes?.data?.message);
       } else {
-        toast.error("Somehing went wrong");
+        toast.error("Somehing went Wrong");
       }
     }
   };
@@ -86,6 +100,25 @@ export const ChangePassword = () => {
   const removeError = () => {
     setError(false);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(interval);
+        } else {
+          setSeconds(59);
+          setMinutes(minutes - 1);
+        }
+      }
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [seconds]);
 
   return (
     <>
@@ -135,20 +168,36 @@ export const ChangePassword = () => {
                       value={otpNumber}
                       onChange={(e) => setOtpNumber(e.target.value)}
                     />
-                    <div className="flex justify-between mt-2">
-                      <a
-                        className="text-sm text-blue-700 hover:underline dark:text-blue-500"
+
+                    <div className="countdown-text">
+                      {seconds > 0 || minutes > 0 ? (
+                        <p>
+                          Time Remaining:{" "}
+                          <span style={{ fontWeight: 600 }}>
+                            {minutes < 10 ? `0${minutes}` : minutes}:
+                            {seconds < 10 ? `0${seconds}` : seconds}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>Didn't receive code?</p>
+                      )}
+                      {/* Button to resend OTP */}
+                      <button
+                        disabled={seconds > 0 || minutes > 0}
+                        style={{
+                          color:
+                            seconds > 0 || minutes > 0 ? "#DFE3E8" : "#FF5630",
+                        }}
                         onClick={forgotPassword}
                       >
                         Resend OTP
-                      </a>
+                      </button>
                     </div>
                     <hr className="mt-4" />
                   </div>
                 )}
-
                 <div>
-                  {error == true ? (
+                  {error === true ? (
                     <h1 className="text-red-600 text-sm">
                       Password is not matching
                     </h1>

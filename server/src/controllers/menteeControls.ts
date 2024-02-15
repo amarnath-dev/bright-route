@@ -237,16 +237,13 @@ export class MenteeController {
     try {
       const user = req.body.user;
       const { oldPassword, newPassword, confirmPassword, otpNumber } = req.body;
-
       if (!newPassword || !confirmPassword) {
         res.status(400).json({ message: "Data fields missing" });
         return next(Error("Data fields missing"));
       }
       const userDB = await User.findById(user._id);
-
       if (userDB) {
         if (oldPassword === "") {
-          console.log("<----------with otp---------->");
           const dbOtp = await OTP.findOne({ email: user.email });
           if (dbOtp?.email) {
             const dbOtpDecrypt = CryptoJS.AES.decrypt(
@@ -258,12 +255,16 @@ export class MenteeController {
                 confirmPassword,
                 process.env.HASH_KEY as string
               ).toString();
-              await User.findByIdAndUpdate(user._id, {
+              const resetingUser = await User.findByIdAndUpdate(user._id, {
                 password: hashNewPass,
               });
               res
                 .status(200)
-                .json({ status: "success", message: "Password Updated" });
+                .json({
+                  status: "success",
+                  message: "Password Updated",
+                  role: resetingUser?.role,
+                });
             } else {
               console.log("Invalid OTP");
               res.status(400).json({ message: "Invalid OTP Number" });
@@ -273,7 +274,6 @@ export class MenteeController {
             res.status(404).json({ message: "Resend OTP and Try Again" });
           }
         } else {
-          console.log("<------------------without otp-------------->");
           const passwordDecrypt = CryptoJS.AES.decrypt(
             userDB?.password,
             process.env.HASH_KEY as string
@@ -290,7 +290,6 @@ export class MenteeController {
           const resetingUser = await User.findByIdAndUpdate(user._id, {
             password: hashNewPass,
           });
-          console.log("this is the user", resetingUser?.role);
           res.status(200).json({
             status: "success",
             message: "Password Updated",

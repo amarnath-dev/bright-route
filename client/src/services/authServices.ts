@@ -5,7 +5,9 @@ import { FormData } from "../datatypes/Datatypes";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../app/firebase";
 import Cookies from "js-cookie";
+import { Credentials } from "../componets/auth/Signup/Signup";
 
+//Mentee Services
 export type UserWithIdAndRoles = {
   first_name: string;
   last_name: string;
@@ -14,13 +16,34 @@ export type UserWithIdAndRoles = {
   otp: string;
 };
 
+export const signupOtpSend = createAsyncThunk(
+  "auth/sendOTP",
+  async (data: Credentials, thunkAPI) => {
+    try {
+      const response = await API.post("/signup", data);
+      if (response.data) {
+        return response.data;
+      }
+    } catch (error) {
+      const err = error as AxiosError<{
+        message?: string;
+      }>;
+      const payload = {
+        message: err.response?.data?.message,
+        status: err.response?.status,
+      };
+      return thunkAPI.rejectWithValue(payload);
+    }
+  }
+);
+
 export const signup = createAsyncThunk(
   "auth/verifyOTP",
   async (userData: UserWithIdAndRoles, thunkAPI) => {
     try {
       const response = await API.post("/verifyOTP", { userData });
       if (response.data) {
-        return response.data.user;
+        return response.data;
       }
     } catch (error) {
       const err = error as AxiosError<{
@@ -45,11 +68,7 @@ export const signin = createAsyncThunk(
   async (userData: UserWithEmailAndPassword, thunkAPI) => {
     try {
       const response = await API.post("/login", { userData });
-      if (response.data) {
-        Cookies.set("token", response.data.token, { expires: 3 });
-        console.log("this is response all right", response.data.user);
-        return response.data.user;
-      }
+      return response.data;
     } catch (error) {
       const err = error as AxiosError<{
         message?: string;
@@ -68,11 +87,8 @@ export const MentorLogin = createAsyncThunk(
   async (mentorData: UserWithEmailAndPassword, thunkAPI) => {
     try {
       const response = await API.post("/mentor/mentor-login", { mentorData });
-      if (response.data) {
-        Cookies.set("token", response.data.token, { expires: 3 });
-        console.log("this is response all right", response.data.user);
-        return response.data.user;
-      }
+      console.log("response in thunk", response.data);
+      return response.data;
     } catch (error) {
       const err = error as AxiosError<{
         message?: string;
@@ -112,7 +128,7 @@ export const googleAuth = createAsyncThunk(
 
 //Mentor
 export const MultiFromApply = createAsyncThunk(
-  "auth/mentor",
+  "auth/mentor/apply",
   async (mentorData: FormData, thunkAPI) => {
     try {
       const fileObj = mentorData.profile_img;

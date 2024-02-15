@@ -26,7 +26,7 @@ interface jwtPayload {
 export class MenteeAuthController {
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { first_name, last_name, email, password } = req.body.data;
+      const { first_name, last_name, email, password } = req.body;
       if (!first_name || !last_name || !email || !password) {
         res.status(400);
         return next(Error("Data Fields Missing"));
@@ -41,7 +41,7 @@ export class MenteeAuthController {
       res.status(200).json({
         status: "success",
         message: "Successfull",
-        user: req.body.data,
+        user: req.body,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -53,6 +53,7 @@ export class MenteeAuthController {
 
   async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      console.log("reached at the server", req.body);
       const { email, password } = req.body.userData;
       if (!email || !password) {
         res.status(400).json({ message: "Data fields missing" });
