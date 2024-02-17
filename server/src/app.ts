@@ -1,12 +1,13 @@
 import express from "express";
 import morgan from "morgan";
 import dotenv from "dotenv";
-dotenv.config()
+dotenv.config();
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import menteeRouter from "./routes/menteeRoutes";
 import mentorRouter from "./routes/mentorRoutes";
 import adminRouter from "./routes/adminRoutes";
+import { limiter } from "./middleware/authLimit";
 
 const app = express();
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsConfig));
+app.use(limiter);
 
 //routes
 app.use("/api", menteeRouter);

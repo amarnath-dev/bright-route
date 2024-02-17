@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { storage } from "../../app/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
-import API from "../../api";
 import { MentorListCard } from "../../componets/mentorListCard/MentorListCard";
+import useAxiosPrivate from "../../app/useAxiosPrivate";
 
 export const SearchMentors = () => {
   const [allMentors, setAllMentors] = useState<mentorProfileObj[]>([]);
@@ -15,12 +15,12 @@ export const SearchMentors = () => {
   const [skill, setSkill] = useState("");
   const [company, setCompany] = useState("");
 
+  const axiosPrivate = useAxiosPrivate();
+
   useEffect(() => {
     const mentorProfile = async () => {
       try {
-        const response = await API.get("/browse-mentors", {
-          withCredentials: true,
-        });
+        const response = await axiosPrivate.get("/browse-mentors");
         if (response.data) {
           const mentorProfile = response.data;
           setAllMentors(mentorProfile.allMentors);
@@ -87,8 +87,8 @@ export const SearchMentors = () => {
 
   return (
     <>
-      <div className="w-screen h-full">
-        <div className="w-screen h-72 border-2 flex justify-center items-center px-3 py-3">
+      <div className="w-full h-full">
+        <div className="w-full h-72 border-2 flex justify-center items-center px-3 py-3">
           <div className="w-full h-full md:w-1/2 md:flex md:justify-center md:items-center md:flex-col">
             <label className="relative flex justify-center items-center">
               <Autocomplete
