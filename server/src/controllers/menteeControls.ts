@@ -55,7 +55,7 @@ export class MenteeController {
     }
   }
 
-  // search mentors
+
   async mentorSearch(
     req: Request,
     res: Response,
@@ -82,10 +82,7 @@ export class MenteeController {
         query.skills = skill;
       }
 
-      console.log("Executing query:", query);
-
       const mentorProfiles = await MentorModel.find(query);
-      console.log("mentor profile", mentorProfiles);
 
       if (mentorProfiles) {
         res
@@ -120,7 +117,6 @@ export class MenteeController {
         },
       ]);
       const menteeData = mentee[0];
-      console.log("this is the goal===>", menteeData);
       const menteeEmail = menteeData.menteeInfo;
       const menteeDetails = {
         mentee_id: menteeData.mentee_id,

@@ -18,7 +18,7 @@ router.post("/verifyOTP", menteeAuthController.verifyOTP);
 router.post("/resendOTP", menteeAuthController.resendOTP);
 router.post("/google-auth", menteeAuthController.googleAuth);
 
-router.get("/browse-mentors", verifyJWT, menteeController.mentorProfile);
+router.get("/browse-mentors", menteeController.mentorProfile);
 router.get("/browse/filter", menteeController.mentorSearch);
 
 router.get("/managment/:menteeId", menteeController.menteeProfile);

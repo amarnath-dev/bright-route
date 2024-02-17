@@ -7,7 +7,7 @@ import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { MentorListCard } from "../../componets/mentorListCard/MentorListCard";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 
-export const SearchMentors = () => {
+const SearchMentors = () => {
   const [allMentors, setAllMentors] = useState<mentorProfileObj[]>([]);
   const [filtered, setFiltered] = useState<mentorProfileObj[]>([]);
 
@@ -134,6 +134,8 @@ export const SearchMentors = () => {
     </>
   );
 };
+
+export default SearchMentors;
 
 const topTechnicalSkills = [
   { id: 1, label: "Node js" },
