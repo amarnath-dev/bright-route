@@ -103,7 +103,6 @@ const SearchMentors = () => {
               />
             </label>
 
-            {/* Material ui component */}
             <div className="flex items-center flex-col md:flex-row">
               <Autocomplete
                 disablePortal

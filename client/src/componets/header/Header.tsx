@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Header: React.FC = () => {
   const { user } = useAppSelector((state) => state.userAuth);
   const navigate = useNavigate();
+
   return (
     <>
       <div className="w-screen h-96 bg-color-one shadow-2xl">

@@ -17,13 +17,6 @@ interface jwtPayload {
   given_name: string;
 }
 
-/***
- * @dec Mentee Registration and Authentication
- * @route POST /api/signup
- * @access Public
- * @type Class
- */
-
 export class MenteeAuthController {
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -73,31 +66,29 @@ export class MenteeAuthController {
           const accessToken = Jwt.sign(
             {
               UserInfo: {
+                id: userExists._id,
                 email: userExists.email,
                 roles: userExists.role,
               },
             },
             process.env.ACCESS_TOKEN_SECRETE as string,
-            { expiresIn: "1m" }
+            { expiresIn: "10m" }
           );
+
           const refreshToken = Jwt.sign(
             { email: userExists.email },
             process.env.REFRESH_TOKEN_SECRETE as string,
             { expiresIn: "7d" }
           );
-
-          res.cookie("jwt", refreshToken, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "none",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: "/",
-          });
-
           const userDataFromProfile = await Menteeprofile.findOne({
             mentee_id: userExists?._id,
           });
-          // const token = generateJwt(userExists._id, email);
+          res.cookie("jwt", refreshToken, {
+            httpOnly: true,
+            secure: false,
+            // sameSite: "none",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+          });
           res.status(200).json({
             status: "success",
             user: {
@@ -128,8 +119,9 @@ export class MenteeAuthController {
   ): Promise<void> {
     try {
       const cookies = req.cookies;
-      console.log("this cookies", req.cookies.jwt);
-      if (!cookies?.jwt) {
+      console.log("this is jwt token", cookies);
+      console.log("test--->", cookies.testCookie);
+      if (!cookies?.testCookie) {
         console.log("Refresh toke not exists....why??");
         res.status(401).json({ message: "Refresh token not exists" });
         return;
@@ -153,12 +145,13 @@ export class MenteeAuthController {
         const accessToken = Jwt.sign(
           {
             UserInfo: {
+              id: foundUser._id,
               email: foundUser.email,
               roles: foundUser.role,
             },
           },
           process.env.ACCESS_TOKEN_SECRETE as string,
-          { expiresIn: "1m" }
+          { expiresIn: "2d" }
         );
         res.json({ accessToken });
       } catch (err) {
@@ -178,14 +171,17 @@ export class MenteeAuthController {
 
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      console.log("logout controller");
       const cookies = req.cookies;
-      if (!cookies?.jwt) res.sendStatus(204);
+      if (!cookies?.jwt) {
+        res.sendStatus(204);
+      }
       res.clearCookie("jwt", {
         httpOnly: true,
         sameSite: "none",
-        secure: true,
+        secure: false,
       });
-      res.json({ message: "Cookie cleared log out successfull" });
+      res.json({ message: "Cookie cleared, log out successfull" });
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);

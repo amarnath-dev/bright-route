@@ -10,7 +10,6 @@ export class MentorController {
     try {
       const user = req.body.user;
       console.log(user._id);
-
       if (user) {
         const mentorProfile = await MentorModel.aggregate([
           { $match: { mentor_id: user._id } },

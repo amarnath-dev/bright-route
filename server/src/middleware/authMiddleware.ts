@@ -18,9 +18,12 @@ export const protect = async (
   const token = req.cookies.token;
   if (token) {
     try {
-      const decode = Jwt.verify(token, "jwtsecrete") as JwtPayload;
-      const userId = new mongoose.Types.ObjectId(decode.id);
-      const user = await userModel.findById(userId);
+      const decode = Jwt.verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRETE as string
+      ) as JwtPayload;
+      // const userId = new mongoose.Types.ObjectId(decode.id);
+      const user = await userModel.findOne({ email: decode.UserInfo.email });
       if (!user) {
         res.status(401);
         next(Error("Unauthorized user"));

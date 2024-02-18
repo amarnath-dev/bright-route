@@ -150,6 +150,7 @@ export const MenteeProfile = () => {
       if (response) {
         const reqRes = response.data;
         if (reqRes.status == "success") {
+          console.log("updated success");
           setStateChange(false);
           toast(reqRes.message);
         }

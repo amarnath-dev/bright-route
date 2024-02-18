@@ -152,6 +152,7 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.body.user;
+      // console.log("reached at the server", )
       if (user) {
         const newMenteeData = {
           profile_img: req.body.profile_img,
