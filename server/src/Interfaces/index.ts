@@ -29,6 +29,10 @@ export interface IOtp extends Document {
   createdAt: Date;
 }
 
+export interface IRefreshToken extends Document {
+  refreshToken: string;
+}
+
 export interface ISkill extends Document {
   topTechnicalSkills: Array<{ label: string }>;
 }

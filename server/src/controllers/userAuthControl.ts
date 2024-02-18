@@ -8,6 +8,7 @@ import { IMentorProfile, IUser } from "../Interfaces";
 import { IMenteeProfile } from "../Interfaces/index";
 import sendEmailOtp from "../utils/sendEmail";
 import Otp from "../models/otpModel";
+import Jwt, { JwtPayload } from "jsonwebtoken";
 import { jwtDecode } from "jwt-decode";
 import generateUsername from "../utils/generateUsername";
 
@@ -16,17 +17,10 @@ interface jwtPayload {
   given_name: string;
 }
 
-/***
- * @dec Mentee Registration and Authentication
- * @route POST /api/signup
- * @access Public
- * @type Class
- */
-
 export class MenteeAuthController {
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { first_name, last_name, email, password } = req.body.data;
+      const { first_name, last_name, email, password } = req.body;
       if (!first_name || !last_name || !email || !password) {
         res.status(400);
         return next(Error("Data Fields Missing"));
@@ -41,7 +35,7 @@ export class MenteeAuthController {
       res.status(200).json({
         status: "success",
         message: "Successfull",
-        user: req.body.data,
+        user: req.body,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -53,7 +47,7 @@ export class MenteeAuthController {
 
   async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email, password } = req.body.userData;
+      const { email, password } = req.body;
       if (!email || !password) {
         res.status(400).json({ message: "Data fields missing" });
         return next(Error("Invalid Credentials"));
@@ -67,13 +61,34 @@ export class MenteeAuthController {
           userExists.password,
           process.env.HASH_KEY as string
         ).toString(CryptoJS.enc.Utf8);
+
         if (password === dbPassword) {
-          //Getting users name because both stored in different
-          //collections user and menteeprofile
+          const accessToken = Jwt.sign(
+            {
+              UserInfo: {
+                id: userExists._id,
+                email: userExists.email,
+                roles: userExists.role,
+              },
+            },
+            process.env.ACCESS_TOKEN_SECRETE as string,
+            { expiresIn: "10m" }
+          );
+
+          const refreshToken = Jwt.sign(
+            { email: userExists.email },
+            process.env.REFRESH_TOKEN_SECRETE as string,
+            { expiresIn: "7d" }
+          );
           const userDataFromProfile = await Menteeprofile.findOne({
             mentee_id: userExists?._id,
           });
-          const token = generateJwt(userExists._id, email);
+          res.cookie("jwt", refreshToken, {
+            httpOnly: true,
+            secure: false,
+            // sameSite: "none",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+          });
           res.status(200).json({
             status: "success",
             user: {
@@ -82,13 +97,91 @@ export class MenteeAuthController {
               email: userExists?.email,
               role: userExists?.role,
             },
-            token,
+            accessToken,
           });
         } else {
           res.status(401).json({ message: "Invalid Password" });
           return next(Error("Invalid Password"));
         }
       }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        return next(error);
+      }
+    }
+  }
+
+  async refreshToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const cookies = req.cookies;
+      console.log("this is jwt token", cookies);
+      console.log("test--->", cookies.testCookie);
+      if (!cookies?.testCookie) {
+        console.log("Refresh toke not exists....why??");
+        res.status(401).json({ message: "Refresh token not exists" });
+        return;
+      }
+      const refreshToken = cookies.jwt;
+      // const refreshToken = process.env.REFRESH_TOKEN_ID as string;
+      try {
+        const decoded = Jwt.verify(
+          refreshToken,
+          process.env.REFRESH_TOKEN_SECRETE as string
+        );
+        const foundUser = await User.findOne({
+          email: (decoded as JwtPayload).email,
+        });
+        if (!foundUser) {
+          res.status(401).json({
+            message: "Unauthorized user not exists in the database",
+          });
+          return;
+        }
+        const accessToken = Jwt.sign(
+          {
+            UserInfo: {
+              id: foundUser._id,
+              email: foundUser.email,
+              roles: foundUser.role,
+            },
+          },
+          process.env.ACCESS_TOKEN_SECRETE as string,
+          { expiresIn: "2d" }
+        );
+        res.json({ accessToken });
+      } catch (err) {
+        console.error("Error in decoding or processing refresh token:", err);
+        res.status(403).json({ message: "Forbidden" });
+        return;
+      }
+    } catch (error) {
+      console.log("error here");
+      console.log(error);
+      if (error instanceof Error) {
+        console.log(error.message);
+        return next(error);
+      }
+    }
+  }
+
+  async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("logout controller");
+      const cookies = req.cookies;
+      if (!cookies?.jwt) {
+        res.sendStatus(204);
+      }
+      res.clearCookie("jwt", {
+        httpOnly: true,
+        sameSite: "none",
+        secure: false,
+      });
+      res.json({ message: "Cookie cleared, log out successfull" });
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);

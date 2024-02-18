@@ -12,14 +12,16 @@ import { MentorApplication } from "./pages/admin/MentorApplication";
 import { ApplicationReview } from "./pages/admin/ApplicationReview";
 import MentorHome from "./pages/mentor/MentorHome";
 import { MentorProfile } from "./pages/mentor/MentorProfile";
-import { SearchMentors } from "./pages/mentee/SearchMentors";
 import { SkillManagment } from "./pages/admin/SkillManagment";
 import { MenteeProfile } from "./pages/mentee/MenteeProfile";
 import { ChangePassword } from "../src/componets/mentee/ChangePassword";
 import { MentorProfileEdit } from "./pages/mentor/MentorProfileEdit";
+import React from "react";
 // import MentorLoginForm from "./pages/mentor/MentorLogin";
 // import IsAuthenticated from "./componets/Routes/IsAuthenticated";
 // import IsProtected from "./componets/Routes/IsProtected";
+const SearchMentors = React.lazy(() => import("./pages/mentee/SearchMentors"));
+// from "./pages/mentee/SearchMentors";
 
 function App() {
   return (
@@ -34,7 +36,16 @@ function App() {
             {/* Mentee Route */}
             {/* <Route element={<IsProtected allowedRole="mentee" />}> */}
             <Route path="/" element={<Home />} />
-            <Route path="/mentor/browse" element={<SearchMentors />} />
+
+            <Route
+              path="/mentor/browse"
+              element={
+                <React.Suspense fallback={<>Loading...</>}>
+                  <SearchMentors />
+                </React.Suspense>
+              }
+            />
+
             <Route path="/managment" element={<MenteeProfile />} />
             <Route path="/managment/password" element={<ChangePassword />} />
             {/* </Route> */}

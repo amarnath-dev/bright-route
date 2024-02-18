@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { loginSchema } from "../../../validations/loginSchema";
 import { useAppDispatch } from "../../../app/hooks";
 import { signin } from "../../../services/authServices";
-import { authActions } from "../../../redux/auth/authSlice";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
@@ -12,9 +11,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { SigninCredential } from "../../../datatypes/Datatypes";
 import { useState } from "react";
 import { MentorLogin } from "../../../services/authServices";
+// import { useAppSelector } from "../../../app/hooks";
 
 const SigninForm: React.FC = () => {
   const [user, setUser] = useState(false);
+  // const { isLoading } = useAppSelector((state) => state.userAuth);
 
   const {
     register,
@@ -27,19 +28,23 @@ const SigninForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  // Mentee
+  // Menteee
   const submitDataMentee = async (data: SigninCredential) => {
     try {
       const response = await dispatch(signin(data));
       if (response) {
         const payloadData = response.payload;
-        dispatch(authActions.setUser(payloadData));
-        if (payloadData.role === "mentee") {
-          navigate("/");
-        } else if (payloadData.role == "mentor") {
-          navigate("/mentor/home");
-        } else if (payloadData.role == "admin") {
-          navigate("/admin/dashboard");
+        if (payloadData.status === "success") {
+          const user = payloadData.user;
+          if (user.role === "mentee") {
+            navigate("/");
+          } else if (user.role === "mentor") {
+            //error because mentor have seperate login page
+            toast.error("Canno't Find Email");
+          } else if (user.role === "admin") {
+            //error because admin have seperate login page
+            toast.error("Canno't Find Email");
+          }
         } else {
           toast.error(payloadData.message);
         }
@@ -55,14 +60,11 @@ const SigninForm: React.FC = () => {
   const submitDataMentor = async (data: SigninCredential) => {
     try {
       const response = await dispatch(MentorLogin(data));
-      if (response) {
-        const payloadData = response.payload;
-        dispatch(authActions.setUser(payloadData));
-        if (payloadData.role === "mentor") {
-          navigate("/mentor/home");
-        } else {
-          toast.error(payloadData.message);
-        }
+      const payloadData = response.payload;
+      if (payloadData.status === "success") {
+        navigate("/mentor/home");
+      } else {
+        toast.error(payloadData.message);
       }
     } catch (error) {
       if (typeof error == "string") {
@@ -73,6 +75,7 @@ const SigninForm: React.FC = () => {
 
   return (
     <>
+      {/* {isLoading ? <h1>Loading...</h1> : <h1>loading finished</h1>} */}
       {user ? (
         <>
           {/* Mentee Login  */}

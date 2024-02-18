@@ -3,7 +3,7 @@ import { Button, Label, Modal } from "flowbite-react";
 import { Dispatch, SetStateAction, useRef } from "react";
 import { signup } from "../../../services/authServices";
 import { useAppDispatch } from "../../../app/hooks";
-import { authActions } from "../../../redux/auth/authSlice";
+// import { authActions } from "../../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import API from "../../../api";
 import Snackbar from "@mui/material/Snackbar";
@@ -28,7 +28,6 @@ const SignupOtp = ({
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  //Snack bar
   const [open, setOpen] = React.useState(false);
 
   const handleClose = (
@@ -64,19 +63,14 @@ const SignupOtp = ({
             serverResponse.otp = userOtp;
             const response = await dispatch(signup(serverResponse));
             if (response) {
-              console.log(
-                "this is response after the verify otp verify",
-                response
-              );
               const payloadData = response.payload;
-
               if (payloadData.status == 404) {
                 toast.error(payloadData.message);
               } else if (payloadData.status == 400) {
                 toast.error(payloadData.message);
               } else {
-                dispatch(authActions.setUser(payloadData));
-                if (payloadData.role === "mentee") {
+                // dispatch(authActions.setUser(payloadData));
+                if (payloadData?.user?.role === "mentee") {
                   navigate("/");
                 }
               }
