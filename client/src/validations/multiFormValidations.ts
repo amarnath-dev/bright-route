@@ -12,7 +12,6 @@ interface aboutYouSchema {
 }
 
 export const MultiFormOne: ZodType<aboutYouSchema> = z.object({
-  //   profile_img: z.string(),
   first_name: z
     .string()
     .min(3)

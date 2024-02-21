@@ -43,7 +43,6 @@ export const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        console.log("accessToken", action.payload.token);
         Cookies.set("token", action.payload.token, { expires: 3 });
       })
       .addCase(signup.rejected, (state, action) => {
@@ -63,7 +62,7 @@ export const authSlice = createSlice({
       .addCase(signin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        Cookies.set("token", action.payload.accessToken);
+        Cookies.set("accessToken", action.payload.accessToken);
       })
       .addCase(signin.rejected, (state, action) => {
         state.isLoading = false;
@@ -82,7 +81,7 @@ export const authSlice = createSlice({
       .addCase(MentorLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        Cookies.set("token", action.payload.token, { expires: 3 });
+        Cookies.set("accessToken", action.payload.accessToken);
       })
       .addCase(MentorLogin.rejected, (state, action) => {
         state.isLoading = false;

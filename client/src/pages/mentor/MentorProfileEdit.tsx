@@ -12,6 +12,7 @@ import Stack from "@mui/material/Stack";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import useAxiosPrivate from "../../app/useAxiosPrivate";
 
 import ReactCrop, {
   centerCrop,
@@ -40,6 +41,8 @@ export const MentorProfileEdit: React.FC = () => {
   const navigate = useNavigate();
   const [mentor, setMentor] = useState<mentorProfileObj>();
   const [defaultSkills, setDefaultSkills] = useState([]);
+
+  const axiosPrivate = useAxiosPrivate();
 
   const [imgSrc, setImgSrc] = useState("");
   const [aspect, setAspect] = useState<number | undefined>(16 / 9);
@@ -83,7 +86,7 @@ export const MentorProfileEdit: React.FC = () => {
   useEffect(() => {
     const fetchMentorData = async () => {
       try {
-        const response = await API.get("/mentor/profile", {
+        const response = await axiosPrivate.get("/mentor/profile", {
           withCredentials: true,
         });
         if (response.data) {
@@ -122,7 +125,8 @@ export const MentorProfileEdit: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await API.post(
+      console.log("Button Clicked");
+      const response = await axiosPrivate.post(
         "/mentor/profile/update",
         { mentorData, defaultSkills },
         {
@@ -280,7 +284,7 @@ export const MentorProfileEdit: React.FC = () => {
   return (
     <>
       <ToastContainer className="w-40 md:w-80" />
-      <div className="w-screen h-screen flex-row md:flex md:items-center md:flex-col">
+      <div className="w-full h-screen flex-row md:flex md:items-center md:flex-col">
         <div className="w-full ml-1 mr-1 md:ml-0 md:mr-0  md:w-2/3 md:h-40 mt-10 rounded-lg flex flex-row">
           <div className="w-40 h-full flex justify-center items-center flex-col px-2 py-2">
             <img

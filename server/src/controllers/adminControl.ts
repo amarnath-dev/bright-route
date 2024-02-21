@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import MentorProfile from "../models/mentorProfileModel";
-import Skill from "../models/skillModel";
 import { ObjectId } from "mongodb";
 
 export class AdminControls {
@@ -115,24 +114,6 @@ export class AdminControls {
           .status(200)
           .json({ status: "success", message: "Application Rejected" });
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error);
-        return next(error);
-      }
-    }
-  }
-
-  async addNewSkill(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const { skill } = req.body;
-      console.log(skill);
-      const result = await Skill.find();
-      console.log(result);
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);

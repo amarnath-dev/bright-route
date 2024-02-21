@@ -15,13 +15,17 @@ export const protect = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies.token;
+  const token = req.cookies;
+  console.log("--->", token);
   if (token) {
     try {
+
       const decode = Jwt.verify(
         token,
-        process.env.ACCESS_TOKEN_SECRETE as string
+        process.env.JWT_SECRETE as string
       ) as JwtPayload;
+
+      console.log("this is decoded token", decode);
       // const userId = new mongoose.Types.ObjectId(decode.id);
       const user = await userModel.findOne({ email: decode.UserInfo.email });
       if (!user) {

@@ -25,7 +25,6 @@ const SignupForm: React.FC = () => {
   const { isLoading } = useAppSelector((state) => state.userAuth);
   const dispatch = useAppDispatch();
 
-  //snackbar handle function
   const handleClose = (
     _event: React.SyntheticEvent | Event,
     reason?: string
@@ -216,7 +215,3 @@ const SignupForm: React.FC = () => {
 
 export default SignupForm;
 
-//changingsdfksadf;lsadfh
-//sdfkhsdaf;osdaf
-//sdfhsdfs
-//sdfsadhfsahdf

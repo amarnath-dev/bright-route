@@ -1,11 +1,14 @@
 import { FC } from "react";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
+import { useNavigate } from "react-router-dom";
 
-interface MentorListCardProps { 
+interface MentorListCardProps {
   filtered: mentorProfileObj[];
 }
 
 export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="w-full h-full flex justify-center items-center flex-col px-4 py-4 mt-2 md:mt-10 md:py-0 md:px-0">
@@ -71,7 +74,12 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
                     </div>
 
                     <div className="w-full">
-                      <button className="w-full border-2 rounded-md px-1 py-1 text-white bg-color-one text-lg font-bold md:h-10 md:w-96">
+                      <button
+                        className="w-full border-2 rounded-md px-1 py-1 text-white bg-color-one text-lg font-bold md:h-10 md:w-96"
+                        onClick={() =>
+                          navigate(`/mentor-profile/${mentor.mentor_id}`)
+                        }
+                      >
                         View Profile
                       </button>
                     </div>

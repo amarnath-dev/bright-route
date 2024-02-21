@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { MentorAuthController } from "../controllers/userAuthControl";
 import { MentorController } from "../controllers/mentorControl";
-import { protect } from "../middleware/authMiddleware";
+import { verifyJWT } from "../middleware/verifyJWT";
 const router: Router = Router();
 
 const mentorAuthController = new MentorAuthController();
@@ -9,12 +9,16 @@ const mentorController = new MentorController();
 
 router.post("/apply", mentorAuthController.apply);
 router.post("/mentor-login", mentorAuthController.mentorLogin);
-router.get("/profile", protect, mentorController.mentorprofileDetails);
+
+router.get("/profile", verifyJWT, mentorController.mentorprofileDetails);
 router.post(
   "/profile/profileImg-update",
-  protect,
+  verifyJWT,
   mentorController.updateProfileImg
 );
-router.post("/profile/update", protect, mentorController.updateProfile);
+
+router.post("/profile/update", verifyJWT, mentorController.updateProfile);
+router.post("/plans/create", verifyJWT, mentorController.createPlan);
+router.get("/plans", verifyJWT, mentorController.getPlans);
 
 export default router;
