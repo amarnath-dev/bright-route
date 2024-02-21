@@ -33,6 +33,4 @@ router.patch(
   adminControls.rejectApplication
 );
 
-router.post("/new-skill", adminControls.addNewSkill);
-
 export default router;

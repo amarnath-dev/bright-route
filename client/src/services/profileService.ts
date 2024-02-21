@@ -33,7 +33,7 @@ export const changePassword = createAsyncThunk(
 
 export const sendOTP = createAsyncThunk(
   "profile/changePassword/sendOTP",
-  async (data: string, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
       const response = await API.post(
         "/managment/password/sentotp",

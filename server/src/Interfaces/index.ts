@@ -69,3 +69,9 @@ export interface IAdmin extends Document {
   password: string;
   role: string;
 }
+
+export interface IPlans extends Document {
+  mentor_id: string;
+  planDetails: [{}];
+  planLimit: number;
+}

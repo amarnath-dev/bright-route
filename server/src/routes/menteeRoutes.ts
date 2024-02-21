@@ -19,7 +19,7 @@ router.post("/google-auth", menteeAuthController.googleAuth);
 router.get("/browse-mentors", verifyJWT, menteeController.mentorProfile);
 router.get("/browse/filter", menteeController.mentorSearch);
 
-router.get("/managment/:menteeId", menteeController.menteeProfile);
+router.get("/managment/:menteeId", verifyJWT, menteeController.menteeProfile);
 router.post(
   "/managment/profie-update",
   verifyJWT,
@@ -27,9 +27,24 @@ router.post(
 );
 router.post(
   "/managment/profieImage-update",
+  verifyJWT,
   menteeController.updateProfileImage
 );
-router.post("/change-password", menteeController.changePassword);
-router.post("/managment/password/sentotp", menteeController.sendOtp);
+router.post("/change-password", verifyJWT, menteeController.changePassword);
+router.post("/managment/password/sentotp", verifyJWT, menteeController.sendOtp);
+
+router.post("/profile/changePassword/sendOTP", verifyJWT, menteeController.sendOtp);
+
+router.get(
+  "/visit/mentor-profile/:mentorId",
+  verifyJWT,
+  menteeController.getMentorProfile
+);
+router.post("/mentorship/apply", verifyJWT, menteeController.mentorshipApply);
+router.get(
+  "/mentor/plans/:mentorId",
+  verifyJWT,
+  menteeController.getMentorPlans
+);
 
 export default router;

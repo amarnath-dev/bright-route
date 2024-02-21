@@ -7,11 +7,11 @@ import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
-import API from "../../api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../app/firebase";
+import useAxiosPrivate from "../../app/useAxiosPrivate";
 
 import ReactCrop, {
   centerCrop,
@@ -40,12 +40,15 @@ export const MenteeProfile = () => {
   const { user } = useAppSelector((state) => state.userAuth);
   const [stateChange, setStateChange] = useState(false);
 
+  const axiosPrivate = useAxiosPrivate();
+
   const [country, setCountry] = useState("");
   const [region, setRegion] = useState("");
   const [goal, setGoal] = useState("");
   const [radioDefault, setRadioDefault] = useState("");
   const [defaultCountry, setDefaultCountry] = useState("");
   const [defaultRegion, setdefaultRegion] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [profileImg, setProfileImg] = useState("");
 
   const [imgSrc, setImgSrc] = useState("");
@@ -94,22 +97,19 @@ export const MenteeProfile = () => {
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await API.get(`/managment/${user?._id}`, {
+        const response = await axiosPrivate.get(`/managment/${user?._id}`, {
           withCredentials: true,
         });
         const details = response.data;
-        console.log("details", details);
         setRadioDefault(details.menteeDetails.available_time);
-        console.log("---------->", details.menteeDetails.goal);
         setGoal(details.menteeDetails.goal);
-        console.log("---------->", details.menteeDetails.region);
         setDefaultCountry(details.menteeDetails.country);
         setdefaultRegion(details.menteeDetails.region);
         setProfileImg(details.menteeDetails.profile_img);
         setFormdata(details.menteeDetails);
       } catch (error) {
-        // toast.error("Something went wrong");
-        console.log("this is the error", error);
+        console.log(error);
+        toast.error("Data fetch failed");
       }
     };
     fetchDetails();
@@ -142,15 +142,17 @@ export const MenteeProfile = () => {
     formData.country = country;
     formData.region = region;
     formData.goal = goal;
-
     try {
-      const response = await API.post("/managment/profie-update", formData, {
-        withCredentials: true,
-      });
+      const response = await axiosPrivate.post(
+        "/managment/profie-update",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
       if (response) {
         const reqRes = response.data;
         if (reqRes.status == "success") {
-          console.log("updated success");
           setStateChange(false);
           toast(reqRes.message);
         }
@@ -259,18 +261,16 @@ export const MenteeProfile = () => {
 
     if (hiddenAnchorRef.current) {
       hiddenAnchorRef.current.href = blobUrlRef.current;
-      // hiddenAnchorRef.current.click(); //this one downloads the image
-
       //Now upload it to the firebase
       const imgId =
         Math.random().toString(16).slice(2) +
         (new Date().getTime() / 1000).toString();
       const reference = ref(storage, imgId);
       const snapshot = await uploadBytes(reference, blob);
-
       if (snapshot.metadata) {
         const img_firebase_id: string = snapshot.metadata.fullPath;
-        const response = await API.post(
+        console.log("This is profile-img id", img_firebase_id);
+        const response = await axiosPrivate.post(
           "/managment/profieImage-update",
           { img_firebase_id },
           { withCredentials: true }
@@ -491,34 +491,53 @@ export const MenteeProfile = () => {
                 <h1>(Email only visible to you)</h1>
               </label>
               <label className="mt-2">
+                Job Title
+                <input
+                  id="job_title"
+                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm md:ml-3"
+                  type="text"
+                  name="job_title"
+                  value={formData.job_title}
+                  onChange={onchange}
+                  disabled
+                />
+              </label>
+            </div>
+
+            <div className="flex flex-col w-full md:flex-row justify-center">
+              <label className="mt-2">
                 Country & Region
-                <div className="flex">
-                  <div className="md:ml-1 w-56 md:w-full">
+                <div className="mt-1 md:mt-1 flex flex-col md:flex-row">
+                  <div
+                    className="w-full md:w-full p-4 md:mr-4 overflow-hidden"
+                    style={{
+                      height: 45,
+                      width: 400,
+                      padding: "10px",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+                    }}
+                  >
                     <CountryDropdown
-                      style={{
-                        padding: "5px",
-                        marginTop: 4,
-                        width: 300,
-                        height: 45,
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-                      }}
                       defaultOptionLabel={defaultCountry}
                       value={country}
                       onChange={(val) => setCountry(val)}
                     />
                   </div>
-                  <div className="md:ml-1 mt-1 w-24 ml-6">
+
+                  <div
+                    className="mt-4 md:mt-0 w-full md:w-full"
+                    style={{
+                      height: 45,
+                      width: 360,
+                      padding: "10px",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+                    }}
+                  >
                     <RegionDropdown
-                      style={{
-                        height: 45,
-                        width: 80,
-                        padding: "5px",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-                      }}
                       defaultOptionLabel={defaultRegion}
                       country={country}
                       value={region}
@@ -527,19 +546,6 @@ export const MenteeProfile = () => {
                   </div>
                 </div>
               </label>
-            </div>
-
-            <div className="flex justify-center mt-3 flex-col md:mr-10 w-full md:px-9">
-              <h1>Job Title</h1>
-              <input
-                id="job_title"
-                className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-full sm:text-sm"
-                type="text"
-                name="job_title"
-                value={formData.job_title}
-                onChange={onchange}
-                disabled
-              />
             </div>
 
             <div className="flex flex-col md:flex-row justify-center">

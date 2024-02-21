@@ -1,5 +1,4 @@
 import { ZodType, z } from "zod";
-// import { string } from "zod"
 
 interface MenteeSignupShema {
   first_name: string;

@@ -6,6 +6,7 @@ import User from "../models/userModel";
 import CryptoJS from "crypto-js";
 import sendEmailOtp from "../utils/sendEmail";
 import OTP from "../models/otpModel";
+import Plans from "../models/mentorPlansModel";
 
 export interface mentorProfileObj {
   imageUrl: string;
@@ -55,7 +56,6 @@ export class MenteeController {
     }
   }
 
-
   async mentorSearch(
     req: Request,
     res: Response,
@@ -88,6 +88,76 @@ export class MenteeController {
         res
           .status(200)
           .json({ message: "Mentor filtered", mentors: mentorProfiles });
+      }
+    } catch (error) {
+      console.error(error);
+      return next(Error("Data fetch failed"));
+    }
+  }
+
+  async getMentorProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const mentorId = new mongoose.Types.ObjectId(req.params.mentorId);
+      console.log("This is mentor id", mentorId);
+
+      if (mentorId) {
+        const mentorProfile = await MentorModel.aggregate([
+          { $match: { mentor_id: mentorId } },
+          {
+            $lookup: {
+              from: "users",
+              localField: "mentor_id",
+              foreignField: "_id",
+              as: "mentorEmail",
+            },
+          },
+        ]);
+
+        const mentor = mentorProfile[0];
+        const mentorDetails = {
+          mentor_id: mentor?.mentor_id,
+          profile_img: mentor?.profile_img ? mentorProfile[0].profile_img : "",
+          first_name: mentor?.first_name,
+          last_name: mentor?.last_name,
+          job_title: mentor?.job_title ? mentor.job_title : "",
+          mentorEmail: mentor?.mentorEmail[0].email,
+          linkedIn: mentor?.linkedIn ? mentor.linkedIn : "",
+          twitter: mentor?.twitter ? mentor.twitter : "",
+          web_url: mentor?.web_url ? mentor.web_url : "",
+          bio: mentor?.bio ? mentor.bio : "",
+          skills: mentor?.skills,
+          state: mentor?.state,
+          company: mentor?.company ? mentor.company : "",
+          category: mentor?.category,
+          role: mentor?.mentorEmail[0].role,
+        };
+
+        if (mentorProfile) {
+          res.status(200).json({ status: "sucess", mentorDetails });
+        }
+      } else {
+        console.log("User object is not available");
+      }
+    } catch (error) {
+      console.error(error);
+      return next(Error("Data fetch failed"));
+    }
+  }
+
+  async getMentorPlans(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const mentorId = req.params.mentorId;
+      const plans = await Plans.findOne({ mentor_id: mentorId });
+      if (plans?._id) {
+        res.status(200).json({ status: "success", plans });
       }
     } catch (error) {
       console.error(error);
@@ -136,6 +206,8 @@ export class MenteeController {
         role: menteeEmail.role,
       };
 
+      console.log("this is mentee details", menteeDetails);
+
       if (menteeDetails) {
         res.status(200).json({ status: "success", menteeDetails });
       }
@@ -151,8 +223,7 @@ export class MenteeController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const user = req.body.user;
-      // console.log("reached at the server", )
+      const user = req.user;
       if (user) {
         const newMenteeData = {
           profile_img: req.body.profile_img,
@@ -170,13 +241,12 @@ export class MenteeController {
 
         const updateMentor = await MenteeModel.findOneAndUpdate(
           {
-            mentee_id: user._id,
+            mentee_id: user.id,
           },
           { $set: newMenteeData },
           { new: true }
         );
         if (updateMentor) {
-          console.log("Mentee profile updated successfully:", updateMentor);
           res.status(200).json({
             status: "success",
             message: "Updated Successfully",
@@ -200,7 +270,7 @@ export class MenteeController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const user = req.body.user;
+      const user = req.user;
       const { img_firebase_id } = req.body;
       if (user) {
         if (!img_firebase_id) {
@@ -208,7 +278,7 @@ export class MenteeController {
         } else {
           const updateMentee = await MenteeModel.findOneAndUpdate(
             {
-              mentee_id: user._id,
+              mentee_id: user.id,
             },
             { $set: { profile_img: img_firebase_id } },
             { new: true }
@@ -232,16 +302,18 @@ export class MenteeController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const user = req.body.user;
+      const user = req.user;
+      console.log("this is the user", req.user);
+      console.log("this is req body from client", req.body);
       const { oldPassword, newPassword, confirmPassword, otpNumber } = req.body;
       if (!newPassword || !confirmPassword) {
         res.status(400).json({ message: "Data fields missing" });
         return next(Error("Data fields missing"));
       }
-      const userDB = await User.findById(user._id);
+      const userDB = await User.findById(user?.id);
       if (userDB) {
         if (oldPassword === "") {
-          const dbOtp = await OTP.findOne({ email: user.email });
+          const dbOtp = await OTP.findOne({ email: "" });
           if (dbOtp?.email) {
             const dbOtpDecrypt = CryptoJS.AES.decrypt(
               dbOtp.otp,
@@ -252,16 +324,14 @@ export class MenteeController {
                 confirmPassword,
                 process.env.HASH_KEY as string
               ).toString();
-              const resetingUser = await User.findByIdAndUpdate(user._id, {
+              const resetingUser = await User.findByIdAndUpdate(user?.id, {
                 password: hashNewPass,
               });
-              res
-                .status(200)
-                .json({
-                  status: "success",
-                  message: "Password Updated",
-                  role: resetingUser?.role,
-                });
+              res.status(200).json({
+                status: "success",
+                message: "Password Updated",
+                role: resetingUser?.role,
+              });
             } else {
               console.log("Invalid OTP");
               res.status(400).json({ message: "Invalid OTP Number" });
@@ -284,7 +354,7 @@ export class MenteeController {
             confirmPassword,
             process.env.HASH_KEY as string
           ).toString();
-          const resetingUser = await User.findByIdAndUpdate(user._id, {
+          const resetingUser = await User.findByIdAndUpdate(user?.id, {
             password: hashNewPass,
           });
           res.status(200).json({
@@ -306,16 +376,33 @@ export class MenteeController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const user = req.body.user;
+      const user = req.user;
       if (user) {
-        const userExists = await User.findById(user._id);
+        const userExists = await User.findById(user.id);
+        console.log("Reached at the otp send")
         if (!userExists?._id) {
           res.status(404).json({ message: "Can't find email" });
         }
-        await sendEmailOtp("", "", user.email);
+        await sendEmailOtp("", "", userExists?.email as string);
         res
           .status(200)
           .json({ status: "success", message: "OTP send sucessfully" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Email send failed"));
+    }
+  }
+
+  async mentorshipApply(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user;
+      if (user) {
+        console.log("This is the user --> ", user);
       }
     } catch (error) {
       console.log(error);

@@ -88,8 +88,11 @@ export const MentorLogin = createAsyncThunk(
   "auth/mentor/signin",
   async (mentorData: UserWithEmailAndPassword, thunkAPI) => {
     try {
-      const response = await API.post("/mentor/mentor-login", { mentorData });
-      console.log("response in thunk", response.data);
+      const response = await API.post(
+        "/mentor/mentor-login",
+        { mentorData },
+        { withCredentials: true }
+      );
       return response.data;
     } catch (error) {
       const err = error as AxiosError<{

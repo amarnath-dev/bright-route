@@ -1,11 +1,13 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { changePassword, sendOTP } from "../../services/profileService";
+import { useAppSelector } from "../../app/hooks";
+// import { sendOTP } from "../../services/profileService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useAxiosPrivate from "../../app/useAxiosPrivate";
 
 export const ChangePassword = () => {
+  const axiosPrivate = useAxiosPrivate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [formData, setFormData] = useState({
     oldPassword: "",
@@ -18,22 +20,26 @@ export const ChangePassword = () => {
   const [otpNumber, setOtpNumber] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const [minutes, setMinutes] = useState(1);
   const [seconds, setSeconds] = useState(59);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const formElements = e.target as HTMLFormElement;
-    formData.oldPassword = formElements[0].value;
-    const isBtn = formElements[1].value;
+    formData.oldPassword = (formElements[0] as HTMLInputElement).value;
+    const isBtn = (formElements[1] as HTMLFormElement).value;
     //Checking because in this position resendOTP btn is coming
     //So the input value will at index 2 instead of index 1.
     if (!isBtn) {
-      formData.newPassword = formElements[2].value;
-      formData.confirmPassword = formElements[3].value;
-      if (formElements[2].value !== formElements[3].value) {
+      formData.newPassword = (formElements[2] as HTMLFormElement).value;
+      formData.confirmPassword = (formElements[3] as HTMLFormElement).value;
+      if (
+        (formElements[2] as HTMLFormElement).value !==
+        (formElements[3] as HTMLFormElement).value
+      ) {
         setError(true);
         return;
       }
@@ -43,9 +49,12 @@ export const ChangePassword = () => {
       }
     } else {
       //btn is not not there.Value in index 1.
-      formData.newPassword = formElements[1].value;
-      formData.confirmPassword = formElements[2].value;
-      if (formElements[1].value !== formElements[2].value) {
+      formData.newPassword = (formElements[1] as HTMLFormElement).value;
+      formData.confirmPassword = (formElements[2] as HTMLFormElement).value;
+      if (
+        (formElements[1] as HTMLFormElement).value !==
+        (formElements[2] as HTMLFormElement).value
+      ) {
         setError(true);
         return;
       }
@@ -55,23 +64,26 @@ export const ChangePassword = () => {
       }
     }
     try {
-      const response = await dispatch(changePassword(formData));
-      if (response.payload.status === "success") {
-        toast(response.payload.message);
+      // const response = await dispatch(changePassword(formData));
+      const response = await axiosPrivate.post("/change-password", formData, {
+        withCredentials: true,
+      });
+      if (response.data.status === "success") {
+        toast(response.data.message);
         setTimeout(() => {
-          if (response.payload.role === "mentee") {
+          if (response.data.role === "mentee") {
             navigate("/managment");
           }
-          if (response.payload.role === "mentor") {
+          if (response.data.role === "mentor") {
             navigate("/mentor/profile");
           }
         }, 1000);
       } else {
-        toast.error(response.payload.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
-      const errorRes = error.response;
-      if (errorRes.status === 401) {
+      const errorRes = (error as { response?: { status: number } }).response;
+      if (errorRes?.status === 401) {
         toast.error("Incorrect Password");
       } else {
         toast.error("Please Try Again");
@@ -81,20 +93,24 @@ export const ChangePassword = () => {
 
   const forgotPassword = async () => {
     try {
-      const response = await dispatch(sendOTP("no value"));
-      if (response.payload.status === "success") {
+      // const response = await dispatch(sendOTP());
+      const response = await axiosPrivate.post(
+        "/profile/changePassword/sendOTP",
+        { withCredentials: true }
+      );
+      if (response.data.status === "success") {
         setOtpSend(true);
-        setMinutes(0);
-        setSeconds(30);
-        toast(response.payload.message);
+        setMinutes(3);
+        setSeconds(0);
+        toast(response.data.message);
       } else {
-        toast.error(response.payload.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.log(error);
-      const errRes = error?.response;
+      const errRes = (error as { response?: { status: number } }).response;
       if (errRes?.status === 404) {
-        toast.error(errRes?.data?.message);
+        toast.error("Email not found");
       } else {
         toast.error("Somehing went Wrong");
       }

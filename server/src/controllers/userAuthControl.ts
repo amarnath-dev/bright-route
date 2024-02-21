@@ -72,7 +72,7 @@ export class MenteeAuthController {
               },
             },
             process.env.ACCESS_TOKEN_SECRETE as string,
-            { expiresIn: "10m" }
+            { expiresIn: "30m" }
           );
 
           const refreshToken = Jwt.sign(
@@ -83,7 +83,7 @@ export class MenteeAuthController {
           const userDataFromProfile = await Menteeprofile.findOne({
             mentee_id: userExists?._id,
           });
-          res.cookie("jwt", refreshToken, {
+          res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: false,
             // sameSite: "none",
@@ -119,15 +119,13 @@ export class MenteeAuthController {
   ): Promise<void> {
     try {
       const cookies = req.cookies;
-      console.log("this is jwt token", cookies);
-      console.log("test--->", cookies.testCookie);
-      if (!cookies?.testCookie) {
-        console.log("Refresh toke not exists....why??");
+      // console.log("this is cookies -->", cookies);
+      if (!cookies?.refreshToken) {
+        console.log("Refresh toke not exists");
         res.status(401).json({ message: "Refresh token not exists" });
         return;
       }
-      const refreshToken = cookies.jwt;
-      // const refreshToken = process.env.REFRESH_TOKEN_ID as string;
+      const refreshToken = cookies.refreshToken;
       try {
         const decoded = Jwt.verify(
           refreshToken,
@@ -151,7 +149,7 @@ export class MenteeAuthController {
             },
           },
           process.env.ACCESS_TOKEN_SECRETE as string,
-          { expiresIn: "2d" }
+          { expiresIn: "30m" }
         );
         res.json({ accessToken });
       } catch (err) {
@@ -160,7 +158,6 @@ export class MenteeAuthController {
         return;
       }
     } catch (error) {
-      console.log("error here");
       console.log(error);
       if (error instanceof Error) {
         console.log(error.message);
@@ -171,17 +168,18 @@ export class MenteeAuthController {
 
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      console.log("logout controller");
       const cookies = req.cookies;
-      if (!cookies?.jwt) {
+      if (!cookies?.refreshToken) {
         res.sendStatus(204);
       }
-      res.clearCookie("jwt", {
+      res.clearCookie("refreshToken", {
         httpOnly: true,
-        sameSite: "none",
+        // sameSite: "none",
         secure: false,
       });
-      res.json({ message: "Cookie cleared, log out successfull" });
+      res
+        .status(200)
+        .json({ status: "success", message: "Log out successfull" });
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -435,12 +433,34 @@ export class MentorAuthController {
         ).toString(CryptoJS.enc.Utf8);
 
         if (password === dbPassword) {
+          const accessToken = Jwt.sign(
+            {
+              UserInfo: {
+                id: userExists._id,
+                email: userExists.email,
+                roles: userExists.role,
+              },
+            },
+            process.env.ACCESS_TOKEN_SECRETE as string,
+            { expiresIn: "30m" }
+          );
+
+          const refreshToken = Jwt.sign(
+            { email: userExists.email },
+            process.env.REFRESH_TOKEN_SECRETE as string,
+            { expiresIn: "7d" }
+          );
           //Getting mentor name because both stored in different
           //collections user and mentorprofile
           const mentorDataFromProfile = await Mentorprofile.findOne({
             mentor_id: userExists?._id,
           });
-          const token = generateJwt(userExists._id, email);
+          res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: false,
+            // sameSite: "none",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+          });
           res.status(200).json({
             status: "success",
             user: {
@@ -449,7 +469,7 @@ export class MentorAuthController {
               email: userExists?.email,
               role: userExists?.role,
             },
-            token,
+            accessToken,
           });
         } else {
           res.status(401).json({ message: "Incorrect Password" });
