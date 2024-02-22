@@ -19,8 +19,8 @@ import { MentorProfileEdit } from "./pages/mentor/MentorProfileEdit";
 import React from "react";
 import { MentorPlans } from "./pages/mentor/MentorPlans";
 import { CreatePlan } from "./pages/mentor/CreatePlan";
-import { MentorshipApplyDetails } from "./pages/mentor/MentorshipApplyDetails";
 import { VisitMentorProfile } from "./pages/mentee/VisitMentorProfile";
+import { MentorshipApplyDetails } from "./pages/mentee/MentorshipApplyDetails";
 // import MentorLoginForm from "./pages/mentor/MentorLogin";
 // import IsAuthenticated from "./componets/Routes/IsAuthenticated";
 // import IsProtected from "./componets/Routes/IsProtected";
@@ -56,7 +56,10 @@ function App() {
               path="/mentorship/apply"
               element={<MentorshipApplyDetails />}
             />
-            <Route path="/mentor-profile/:mentorId" element={<VisitMentorProfile />} />
+            <Route
+              path="/mentor-profile/:mentorId"
+              element={<VisitMentorProfile />}
+            />
 
             {/* </Route> */}
             {/* Mentor Specific routes  */}
@@ -71,10 +74,13 @@ function App() {
             <Route path="/mentor/login" element={<SigninPage />} />
             <Route path="/mentor/apply-success" element={<ApplySuccess />} />
             <Route path="/mentor/plans" element={<MentorPlans />} />
-            <Route path="/mentor/plans/create" element={<CreatePlan />} />
+            <Route path="/mentor/plans/new" element={<CreatePlan />} />
+            <Route
+              path="/mentor-profile/apply"
+              element={<MentorshipApplyDetails />}
+            />
 
             {/* </Route> */}
-
             {/* Admin Routes  */}
             {/* <Route element={<IsProtected allowedRole="admin" />}> */}
             <Route path="/admin/login" element={<AdminLogin />} />

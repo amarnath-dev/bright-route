@@ -38,7 +38,7 @@ export const VisitMentorProfile = () => {
         withCredentials: true,
       });
       if (response.data.status === "success") {
-        console.log("this is mentor deatails", response.data.plans);
+        // console.log("this is mentor deatails", response.data.plans);
         setMentorPlans(response?.data?.plans);
       }
     };
@@ -47,16 +47,16 @@ export const VisitMentorProfile = () => {
 
   return (
     <>
-      <div className="h-full grid grid-cols-12 bg-slate-200">
+      <div className="h-full grid grid-cols-12 bg-slate-100">
         <div className="col-span-12  md:col-span-4 px-10 py-10">
           <MentorProfileCard mentor={mentor} user={"mentee"} />
         </div>
 
         <div className="col-span-12 md:col-span-8 md:px-10 md:py-10">
-          <MentorAboutSkill mentor={mentor} />
+          <MentorAboutSkill mentor={mentor} user={"mentee"} />
         </div>
       </div>
-      <div className="w-full h-full flex justify-center items-center">
+      <div className="w-full h-full flex justify-center items-center bg-slate-100">
         <MentorPaymentCard
           mentorPlans={mentorPlans}
           handleOpen={""}

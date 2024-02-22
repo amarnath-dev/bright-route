@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import { useDispatch } from "react-redux";
+import { Form, submitForm } from "../../redux/applyForm/applySlice";
+import { useNavigate } from "react-router-dom";
 
 export const MentorshipApplyDetails = () => {
-  const [formData, setFormData] = useState({
-    mentorshipGoal: "",
-    timeInfo: "",
-    message: "",
-  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const axiosPrivate = useAxiosPrivate();
+  const [formData, setFormData] = useState<Form>({
+    mentorship_goal: "",
+    time_to_reach: "",
+    message_to_mentor: "",
+  });
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setFormData({
@@ -19,25 +22,33 @@ export const MentorshipApplyDetails = () => {
     });
   };
 
-  const handleSubmit = async () => {
-    if (!formData.mentorshipGoal || !formData.timeInfo || !formData.message) {
+  const handleSubmit = () => {
+    if (
+      !formData.mentorship_goal ||
+      !formData.time_to_reach ||
+      !formData.message_to_mentor
+    ) {
       toast.error("Please select all fields");
       return;
     }
-    const response = await axiosPrivate.post(
-      "/mentorship/apply",
-      {},
-      { withCredentials: true }
-    );
-    console.log("This is the response after applying", response);
+    const result = dispatch(submitForm(formData));
+    setFormData({
+      mentorship_goal: "",
+      time_to_reach: "",
+      message_to_mentor: "",
+    });
+    if (result.payload) {
+      // navigate("");
+    }
   };
+
   return (
     <>
       <ToastContainer className="w-40 md:w-80" />
       <div className="w-full h-screen">
-        <div className="h-screen flex justify-center items-center px-2 py-5">
-          <div className="w-3/4 h-full rounded-lg px-4">
-            <div className="mt-4">
+        <div className="w-full h-screen flex justify-center items-center px-2 py-5">
+          <div className="w-full h-full md:w-3/4 rounded-lg md:px-4">
+            <div className="mt-10 md:mt-4">
               <label
                 htmlFor="large"
                 className="block mb-2 text-base font-medium text-gray-900"
@@ -46,9 +57,9 @@ export const MentorshipApplyDetails = () => {
               </label>
               <select
                 id="large"
-                name="mentorshipGoal"
+                name="mentorship_goal"
                 onChange={handleChange}
-                value={formData.mentorshipGoal}
+                value={formData.mentorship_goal}
                 className="block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option>Choose an option</option>
@@ -75,7 +86,7 @@ export const MentorshipApplyDetails = () => {
                 </option>
               </select>
             </div>
-            <div className="mt-4">
+            <div className="mt-10 md:mt-4">
               <label
                 htmlFor="large"
                 className="block mb-2 text-base font-medium text-gray-900"
@@ -84,8 +95,8 @@ export const MentorshipApplyDetails = () => {
               </label>
               <select
                 id="large"
-                name="timeInfo"
-                value={formData.timeInfo}
+                name="time_to_reach"
+                value={formData.time_to_reach}
                 onChange={handleChange}
                 className="block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
@@ -110,7 +121,7 @@ export const MentorshipApplyDetails = () => {
                 </option>
               </select>
             </div>
-            <div className="mt-5">
+            <div className="mt-10 md:mt-5">
               <label
                 htmlFor="message"
                 className="block mb-2 text-lg font-medium text-gray-900"
@@ -120,8 +131,8 @@ export const MentorshipApplyDetails = () => {
               <textarea
                 id="message"
                 rows={5}
-                value={formData.message}
-                name="message"
+                value={formData.message_to_mentor}
+                name="message_to_mentor"
                 onChange={handleChange}
                 className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Write your message here..."
@@ -130,21 +141,12 @@ export const MentorshipApplyDetails = () => {
                 <option value="" className="font-bold">
                   What to include in your message ?
                 </option>
-                <option value="">
-                  1. Introduce yourself: Describe your background and
-                  professional journey
-                </option>
-                <option value="">
-                  2. State your goal: Share your aspirations and the steps
-                  you’ve taken so far
-                </option>
-                <option value="">
-                  3. Express your needs: Tell about the challenges in pursuing
-                  your goal.
-                </option>
+                <option value="">1.You can indroduce yourself</option>
+                <option value="">2. You can state your goal</option>
+                <option value="">3.You can express your needs</option>
               </div>
             </div>
-            <div className="mt-3 flex justify-end">
+            <div className="mt-10 flex justify-center md:justify-end">
               <button
                 className="border-2 bg-color-one text-white px-2 py-2 rounded-md"
                 onClick={handleSubmit}

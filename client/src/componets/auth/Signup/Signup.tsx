@@ -93,7 +93,6 @@ const SignupForm: React.FC = () => {
         message="Email sent Successfully"
       />
       <ToastContainer className="w-40 md:w-80" />
-
       {isLoading ? (
         <h1 className="font-bold">Loading...</h1>
       ) : (

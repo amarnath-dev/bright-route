@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import React from "react";
 import { MentorPaymentCard } from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 const style = {
   position: "absolute" as const,
@@ -25,7 +27,10 @@ export const MentorPlans = () => {
   const [isPlan, setIsPlan] = useState(false);
   const axiosPrivate = useAxiosPrivate();
 
-  const handleOpen = () => {
+  const [deleteSelected, setDeleteSelected] = useState("");
+
+  const handleOpen = (planType: string) => {
+    setDeleteSelected(planType);
     setOpen(true);
   };
   const handleClose = () => {
@@ -38,23 +43,44 @@ export const MentorPlans = () => {
         withCredentials: true,
       });
       if (response.data.status === "success") {
-        console.log("this is mentor deatails", response.data.plans);
-        setIsPlan(true);
-        setMentorPlans(response?.data?.plans);
+        const result = response.data.plans;
+        if (result.planDetails.length > 0) {
+          setIsPlan(true);
+          setMentorPlans(response?.data?.plans);
+        } else {
+          setIsPlan(false);
+        }
       } else {
         setIsPlan(false);
       }
     };
     fetchPlans();
-  }, []);
+  }, [axiosPrivate, deleteSelected]);
 
-  const handleDelete = () => {
-    console.log("handle delete clicked");
+  const handleDelete = async () => {
+    try {
+      const response = await axiosPrivate.delete(
+        `mentor/plans/delete/${mentorPlans._id}/${deleteSelected}`,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.data.status === "success") {
+        toast(response.data.message);
+        setDeleteSelected("");
+        setOpen(false);
+      } else {
+        toast.error("Delete Failed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <>
-      <div className="w-full h-screen">
+      <ToastContainer className="w-40 md:w-80" />
+      <div className="w-full h-full md:h-screen mb-10 md:mb-0">
         <div>
           <Modal
             open={open}
@@ -80,13 +106,27 @@ export const MentorPlans = () => {
         </div>
 
         {isPlan ? (
-          <div className="h-screen flex justify-center items-center">
-            <MentorPaymentCard
-              mentorPlans={mentorPlans}
-              handleOpen={handleOpen}
-              mentor={"mentor"}
-            />
-          </div>
+          <>
+            {mentorPlans?.planDetails?.length >= 2 ? (
+              ""
+            ) : (
+              <div className="w-full h-12 flex justify-end items-center">
+                <Link
+                  to={"/mentor/plans/new"}
+                  className="mr-6 md:mr-40 border-2 px-1 py-1 rounded-md text-white bg-color-one"
+                >
+                  Create Plans
+                </Link>
+              </div>
+            )}
+            <div className="w-full h-full flex justify-center items-center mt-6 md:mt-0">
+              <MentorPaymentCard
+                mentorPlans={mentorPlans}
+                handleOpen={handleOpen}
+                mentor={"mentor"}
+              />
+            </div>
+          </>
         ) : (
           <div className="h-screen flex justify-center items-center">
             <div className="shadow-lg">
@@ -99,7 +139,7 @@ export const MentorPlans = () => {
                   purchase youre plan to Enroll for mentorship.
                 </p>
                 <div className="mt-5">
-                  <Link to={"/mentor/plans/create"}>
+                  <Link to={"/mentor/plans/new"}>
                     <div className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-color-one rounded-lg hover:bg-teal-900 focus:ring-1 focus:outline-none focus:ring-blue-300 dark:hover:bg-dark-700 cursor-pointer">
                       Create Plan
                       <svg
