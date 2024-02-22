@@ -28,6 +28,10 @@ const planSchema: Schema<IPlans> = new mongoose.Schema<IPlans>(
             },
           },
         ],
+        isDeleted: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
     planLimit: {

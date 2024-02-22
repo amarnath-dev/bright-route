@@ -29,6 +29,24 @@ export interface IOtp extends Document {
   createdAt: Date;
 }
 
+export interface IApplication extends Document {
+  mentee_id: ObjectId;
+  mentor_id: ObjectId;
+  payment_id: ObjectId;
+  mentor_plan_id: ObjectId;
+  date: Date;
+  goal_of_mentorship: string;
+  time_to_reach: string;
+  message_to_mentor: string;
+  paymentDone: boolean;
+}
+
+export interface IReport extends Document {
+  mentor_id: ObjectId;
+  mentee_id: ObjectId;
+  ReportDetails: [{}];
+}
+
 export interface IRefreshToken extends Document {
   refreshToken: string;
 }
@@ -58,7 +76,7 @@ export interface IMentorProfile extends Document {
   achievement: string;
   profile_state: string;
   skills: [];
-  reports: Report[];
+  // reports: Report[];
   isPaymentDetails: boolean;
   isBlocked: boolean;
   mentorPlans: [{}];

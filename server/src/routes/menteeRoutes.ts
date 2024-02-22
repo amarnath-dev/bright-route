@@ -10,7 +10,7 @@ const menteeController = new MenteeController();
 router.post("/signup", menteeAuthController.signup);
 router.post("/login", menteeAuthController.signin);
 router.get("/refresh", menteeAuthController.refreshToken);
-router.get("/logout", menteeAuthController.logout);
+router.delete("/logout", menteeAuthController.logout);
 
 router.post("/verifyOTP", menteeAuthController.verifyOTP);
 router.post("/resendOTP", menteeAuthController.resendOTP);
@@ -40,6 +40,8 @@ router.get(
   verifyJWT,
   menteeController.getMentorProfile
 );
+
+router.post("/report/mentor/:mentorId", verifyJWT, menteeController.reportMentor)
 router.post("/mentorship/apply", verifyJWT, menteeController.mentorshipApply);
 router.get(
   "/mentor/plans/:mentorId",

@@ -119,9 +119,7 @@ export class MenteeAuthController {
   ): Promise<void> {
     try {
       const cookies = req.cookies;
-      // console.log("this is cookies -->", cookies);
       if (!cookies?.refreshToken) {
-        console.log("Refresh toke not exists");
         res.status(401).json({ message: "Refresh token not exists" });
         return;
       }
@@ -153,12 +151,10 @@ export class MenteeAuthController {
         );
         res.json({ accessToken });
       } catch (err) {
-        console.error("Error in decoding or processing refresh token:", err);
         res.status(403).json({ message: "Forbidden" });
         return;
       }
     } catch (error) {
-      console.log(error);
       if (error instanceof Error) {
         console.log(error.message);
         return next(error);
