@@ -1,11 +1,13 @@
 import { Router } from "express";
 import { MenteeAuthController } from "../controllers/userAuthControl";
 import { MenteeController } from "../controllers/menteeControls";
+import { PaymentControls } from "../controllers/paymentController";
 import { verifyJWT } from "../middleware/verifyJWT";
 
 const router: Router = Router();
 const menteeAuthController = new MenteeAuthController();
 const menteeController = new MenteeController();
+const paymentController = new PaymentControls();
 
 router.post("/signup", menteeAuthController.signup);
 router.post("/login", menteeAuthController.signin);
@@ -33,7 +35,11 @@ router.post(
 router.post("/change-password", verifyJWT, menteeController.changePassword);
 router.post("/managment/password/sentotp", verifyJWT, menteeController.sendOtp);
 
-router.post("/profile/changePassword/sendOTP", verifyJWT, menteeController.sendOtp);
+router.post(
+  "/profile/changePassword/sendOTP",
+  verifyJWT,
+  menteeController.sendOtp
+);
 
 router.get(
   "/visit/mentor-profile/:mentorId",
@@ -41,12 +47,19 @@ router.get(
   menteeController.getMentorProfile
 );
 
-router.post("/report/mentor/:mentorId", verifyJWT, menteeController.reportMentor)
+router.post(
+  "/report/mentor/:mentorId",
+  verifyJWT,
+  menteeController.reportMentor
+);
 router.post("/mentorship/apply", verifyJWT, menteeController.mentorshipApply);
 router.get(
   "/mentor/plans/:mentorId",
   verifyJWT,
   menteeController.getMentorPlans
 );
+
+//using new controller class
+router.post("/create-payment-intent", verifyJWT, paymentController.payment);
 
 export default router;

@@ -11,6 +11,9 @@ const applicationShema: Schema<IApplication> =
       type: String,
       required: true,
     },
+    stripe_payment_id: {
+      type: String,
+    },
     mentor_plan_id: {
       type: String,
       required: true,

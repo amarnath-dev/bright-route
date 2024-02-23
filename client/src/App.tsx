@@ -21,6 +21,8 @@ import { MentorPlans } from "./pages/mentor/MentorPlans";
 import { CreatePlan } from "./pages/mentor/CreatePlan";
 import { VisitMentorProfile } from "./pages/mentee/VisitMentorProfile";
 import { MentorshipApplyDetails } from "./pages/mentee/MentorshipApplyDetails";
+import { MenteeManagement } from "./pages/admin/MenteeManagement";
+import { StripeCheckout } from "./pages/mentee/StripeCheckout";
 // import MentorLoginForm from "./pages/mentor/MentorLogin";
 // import IsAuthenticated from "./componets/Routes/IsAuthenticated";
 // import IsProtected from "./componets/Routes/IsProtected";
@@ -61,6 +63,11 @@ function App() {
               element={<VisitMentorProfile />}
             />
 
+            <Route
+              path="/mentor-profile/apply/checkout"
+              element={<StripeCheckout />}
+            />
+
             {/* </Route> */}
             {/* Mentor Specific routes  */}
             {/* <Route element={<IsProtected allowedRole="mentor" />}> */}
@@ -94,6 +101,11 @@ function App() {
               element={<ApplicationReview />}
             />
             <Route path="/admin/skill-managment" element={<SkillManagment />} />
+            <Route
+              path="/admin/mentee-management"
+              element={<MenteeManagement />}
+            />
+
             {/* </Route> */}
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Routes>

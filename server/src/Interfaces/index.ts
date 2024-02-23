@@ -32,12 +32,12 @@ export interface IOtp extends Document {
 export interface IApplication extends Document {
   mentee_id: ObjectId;
   mentor_id: ObjectId;
-  payment_id: ObjectId;
   mentor_plan_id: ObjectId;
   date: Date;
   goal_of_mentorship: string;
   time_to_reach: string;
   message_to_mentor: string;
+  stripe_payment_id: string;
   paymentDone: boolean;
 }
 

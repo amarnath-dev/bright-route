@@ -38,7 +38,7 @@ export const MentorshipApplyDetails = () => {
       message_to_mentor: "",
     });
     if (result.payload) {
-      // navigate("");
+      navigate("/mentor-profile/apply/checkout");
     }
   };
 

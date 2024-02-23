@@ -440,6 +440,4 @@ export class MenteeController {
       return next(Error("Email send failed"));
     }
   }
-
-  
 }
