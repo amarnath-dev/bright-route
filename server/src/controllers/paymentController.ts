@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY as string);
+import Payment from "../models/PaymentModel";
 
 export class PaymentControls {
   async payment(
@@ -9,27 +10,43 @@ export class PaymentControls {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("Reached at the server");
-      const { tokenId, amount } = req.body;
-      console.log("--->", tokenId);
-      console.log("--->", amount);
-      stripe.charges.create({
-        source: tokenId,
-        amount: amount,
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: 5,
         currency: "usd",
+        automatic_payment_methods: {
+          enabled: true,
+        },
       });
-      (stripeErr: any, stripeRes: any) => {
-        if (stripeErr) {
-          console.log("This is the strip error message", stripeErr);
-          res.status(400).json({ message: "stripe error" });
-        } else {
-          res.status(200).json({
-            status: "success",
-            message: "stripe payment successfull 🤝",
-            stripeRes,
-          });
-        }
-      };
+      console.log(paymentIntent);
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
+    } catch (error) {
+      console.error(error);
+      return next(Error("Data fetch failed"));
+    }
+  }
+  async storePaymentData(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      console.log("reached at payment data store", req.body);
+      const paymentDetails = new Payment({
+        mentor_plan_id: req.body.mentor_plan_id,
+        razorPay_id: req.body.razorPay_id,
+        mentor_id: req.body.mentor_id,
+        mentee_id: req.body.mentee_id,
+        plan_price: req.body.mentor_plan_amount,
+        goal_of_mentorship: req.body.goal_of_mentorship,
+        time_to_reach_goal: req.body.time_to_reach_goal,
+        message_to_mentor: req.body.message_to_mentor,
+      });
+      await paymentDetails.save();
+      res
+        .status(202)
+        .json({ status: "success", message: "Transaction Successfull" });
     } catch (error) {
       console.error(error);
       return next(Error("Data fetch failed"));

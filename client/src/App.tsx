@@ -22,7 +22,8 @@ import { CreatePlan } from "./pages/mentor/CreatePlan";
 import { VisitMentorProfile } from "./pages/mentee/VisitMentorProfile";
 import { MentorshipApplyDetails } from "./pages/mentee/MentorshipApplyDetails";
 import { MenteeManagement } from "./pages/admin/MenteeManagement";
-import { StripeCheckout } from "./pages/mentee/StripeCheckout";
+import { RazorpayPayment } from "./pages/mentee/RazorpayPayment";
+import { PaymentSuccess } from "./pages/mentee/PaymentSuccess";
 // import MentorLoginForm from "./pages/mentor/MentorLogin";
 // import IsAuthenticated from "./componets/Routes/IsAuthenticated";
 // import IsProtected from "./componets/Routes/IsProtected";
@@ -65,7 +66,11 @@ function App() {
 
             <Route
               path="/mentor-profile/apply/checkout"
-              element={<StripeCheckout />}
+              element={<RazorpayPayment />}
+            />
+            <Route
+              path="/mentor-profile/apply/checkout/success"
+              element={<PaymentSuccess />}
             />
 
             {/* </Route> */}

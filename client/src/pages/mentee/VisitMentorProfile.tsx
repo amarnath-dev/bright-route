@@ -38,7 +38,6 @@ export const VisitMentorProfile = () => {
         withCredentials: true,
       });
       if (response.data.status === "success") {
-        // console.log("this is mentor deatails", response.data.plans);
         setMentorPlans(response?.data?.plans);
       }
     };

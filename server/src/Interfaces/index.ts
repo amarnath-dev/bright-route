@@ -35,10 +35,12 @@ export interface IApplication extends Document {
   mentor_plan_id: ObjectId;
   date: Date;
   goal_of_mentorship: string;
-  time_to_reach: string;
+  time_to_reach_goal: string;
   message_to_mentor: string;
-  stripe_payment_id: string;
+  razorPay_id: string;
   paymentDone: boolean;
+  duration: Number;
+  plan_price: Number;
 }
 
 export interface IReport extends Document {

@@ -61,5 +61,6 @@ router.get(
 
 //using new controller class
 router.post("/create-payment-intent", verifyJWT, paymentController.payment);
+router.post("/payment-suceess", verifyJWT, paymentController.storePaymentData);
 
 export default router;

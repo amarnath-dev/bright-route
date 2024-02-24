@@ -3,6 +3,12 @@ import CallIcon from "@mui/icons-material/Call";
 import ChatIcon from "@mui/icons-material/Chat";
 import StarsIcon from "@mui/icons-material/Stars";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  submitPlanId,
+  submitMentorId,
+  submitPlanAmount,
+} from "../../../redux/applyForm/applySlice";
 
 interface PlanServices {
   serviceName: string;
@@ -21,6 +27,26 @@ interface MentorPlan {
 
 export const MentorPaymentCard = ({ mentorPlans, handleOpen, mentor }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // console.log("This is mentor plans", mentorPlans);
+
+  const handleNavigate = (
+    mentor_plan_id: string,
+    mentor_id: string,
+    mentor_plan_amount: string
+  ) => {
+    console.log(mentor_plan_id);
+    console.log(mentor_id);
+    console.log(mentor_plan_amount);
+
+    dispatch(submitPlanId({ mentor_plan_id }));
+    dispatch(submitMentorId({ mentor_id }));
+    dispatch(submitPlanAmount({ mentor_plan_amount }));
+
+    console.log("Dispatch Complete");
+    navigate("/mentor-profile/apply");
+  };
   return (
     <div className="w-full h-full flex-col px-6 md:px-0 md:flex-row md:w-3/4 md:h-4/5 flex justify-around items-center rounded-lg md:mb-10">
       {mentorPlans?.planDetails?.map((plan: MentorPlan, index: number) => {
@@ -58,9 +84,13 @@ export const MentorPaymentCard = ({ mentorPlans, handleOpen, mentor }) => {
                 {plan.planServices.map(
                   (service: PlanServices, serviceIndex: number) => (
                     <li key={serviceIndex} className="mt-3">
-                      {serviceIndex == 0 ? <CallIcon /> : ""}
-                      {serviceIndex == 1 ? <ChatIcon /> : ""}
-                      {serviceIndex == 2 ? <StarsIcon /> : ""}
+                      {service.serviceName && (
+                        <>
+                          {serviceIndex === 0 && <CallIcon />}
+                          {serviceIndex === 1 && <ChatIcon />}
+                          {serviceIndex === 2 && <StarsIcon />}
+                        </>
+                      )}
                       <span className="ml-2">
                         {service.serviceName} {service.serviceCount}
                       </span>
@@ -75,7 +105,13 @@ export const MentorPaymentCard = ({ mentorPlans, handleOpen, mentor }) => {
               <div className="mt-10 px-2 py-2">
                 <button
                   className="border-2 w-full bg-color-one text-white py-2 rounded-md shadow-lg"
-                  onClick={() => navigate("/mentor-profile/apply")}
+                  onClick={() =>
+                    handleNavigate(
+                      mentorPlans.planDetails[index]._id,
+                      mentorPlans.mentor_id,
+                      mentorPlans.planDetails[index].planAmount
+                    )
+                  }
                 >
                   Get Started
                 </button>

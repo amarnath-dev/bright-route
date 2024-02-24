@@ -4,12 +4,17 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { Form, submitForm } from "../../redux/applyForm/applySlice";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 
 export const MentorshipApplyDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { form, planAmount } = useAppSelector((state) => state.applySlice);
 
   const [formData, setFormData] = useState<Form>({
+    mentor_plan_id: "",
+    mentor_id: "",
+    mentor_plan_amount: "",
     mentorship_goal: "",
     time_to_reach: "",
     message_to_mentor: "",
@@ -33,6 +38,10 @@ export const MentorshipApplyDetails = () => {
     }
     const result = dispatch(submitForm(formData));
     setFormData({
+      mentor_plan_id: form?.mentor_plan_id as string,
+      mentor_id: form?.mentor_id as string,
+      mentor_plan_amount: planAmount?.mentor_plan_amount as string,
+
       mentorship_goal: "",
       time_to_reach: "",
       message_to_mentor: "",
@@ -46,6 +55,9 @@ export const MentorshipApplyDetails = () => {
     <>
       <ToastContainer className="w-40 md:w-80" />
       <div className="w-full h-screen">
+        One= {form?.mentor_plan_id}
+        two = {form?.mentor_id}
+        Three = {planAmount?.mentor_plan_amount}
         <div className="w-full h-screen flex justify-center items-center px-2 py-5">
           <div className="w-full h-full md:w-3/4 rounded-lg md:px-4">
             <div className="mt-10 md:mt-4">
