@@ -7,6 +7,16 @@ export interface IUser extends Document {
   is_blocked: boolean;
 }
 
+export interface IConversation extends Document {
+  members: [];
+}
+
+export interface IMessage extends Document {
+  conversationId: string;
+  senderId: string;
+  text: string;
+}
+
 export interface IMenteeProfile extends Document {
   mentee_id: ObjectId;
   first_name: string;

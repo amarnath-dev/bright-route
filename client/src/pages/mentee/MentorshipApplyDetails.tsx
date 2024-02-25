@@ -55,9 +55,6 @@ export const MentorshipApplyDetails = () => {
     <>
       <ToastContainer className="w-40 md:w-80" />
       <div className="w-full h-screen">
-        One= {form?.mentor_plan_id}
-        two = {form?.mentor_id}
-        Three = {planAmount?.mentor_plan_amount}
         <div className="w-full h-screen flex justify-center items-center px-2 py-5">
           <div className="w-full h-full md:w-3/4 rounded-lg md:px-4">
             <div className="mt-10 md:mt-4">

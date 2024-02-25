@@ -24,6 +24,7 @@ import { MentorshipApplyDetails } from "./pages/mentee/MentorshipApplyDetails";
 import { MenteeManagement } from "./pages/admin/MenteeManagement";
 import { RazorpayPayment } from "./pages/mentee/RazorpayPayment";
 import { PaymentSuccess } from "./pages/mentee/PaymentSuccess";
+import { MenteeMessages } from "./pages/mentee/MenteeMessages";
 // import MentorLoginForm from "./pages/mentor/MentorLogin";
 // import IsAuthenticated from "./componets/Routes/IsAuthenticated";
 // import IsProtected from "./componets/Routes/IsProtected";
@@ -72,6 +73,7 @@ function App() {
               path="/mentor-profile/apply/checkout/success"
               element={<PaymentSuccess />}
             />
+            <Route path="/chat" element={<MenteeMessages />} />
 
             {/* </Route> */}
             {/* Mentor Specific routes  */}
