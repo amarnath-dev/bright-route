@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import menteeRouter from "./routes/menteeRoutes";
 import mentorRouter from "./routes/mentorRoutes";
 import adminRouter from "./routes/adminRoutes";
+import chatRouter from "./routes/chatRoutes";
 // import { limiter } from "./middleware/authLimit";
 
 const app = express();
@@ -27,5 +28,6 @@ app.use(cors(corsConfig));
 app.use("/api", menteeRouter);
 app.use("/api/mentor", mentorRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/chat", chatRouter);
 
 export default app;
