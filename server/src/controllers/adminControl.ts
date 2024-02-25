@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import MentorProfile from "../models/mentorProfileModel";
+import MenteeProfile from "../models/menteeProfileModel";
+import User from "../models/userModel";
 import { ObjectId } from "mongodb";
 
 export class AdminControls {
@@ -114,6 +116,22 @@ export class AdminControls {
           .status(200)
           .json({ status: "success", message: "Application Rejected" });
       }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+        return next(error);
+      }
+    }
+  }
+
+  async getMentors(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const mentees = await MenteeProfile.find();
+      res.status(200).json({ status: "success", mentees });
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);

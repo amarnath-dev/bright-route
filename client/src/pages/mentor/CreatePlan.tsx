@@ -29,6 +29,14 @@ export const CreatePlan = () => {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!planDetails.planAmount) {
+      toast.error("Please select a plan amount");
+      return;
+    }
+    if (!planDetails.videoCallCount) {
+      toast.error("Plese select video call count");
+      return;
+    }
     try {
       const response = await axiosPrivate.post(
         "/mentor/plans/create",
@@ -37,7 +45,6 @@ export const CreatePlan = () => {
           withCredentials: true,
         }
       );
-      console.log(response);
       if (response.data.status === "success") {
         toast(response.data.message);
         setInterval(() => {
@@ -107,7 +114,7 @@ export const CreatePlan = () => {
                       id="category"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     >
-                      <option selected>---Select Type---</option>
+                      <option>---Select Type---</option>
                       <option value="Lite Plan">Lite Plan</option>
                       <option value="Standard Plan">Standard Plan</option>
                     </select>

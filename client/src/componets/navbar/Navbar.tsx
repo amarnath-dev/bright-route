@@ -12,11 +12,14 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
+import useAxiosPrivate from "../../app/useAxiosPrivate";
+import Cookies from "js-cookie";
 
 const NavBar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { user } = useAppSelector((state) => state.userAuth);
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -27,6 +30,17 @@ const NavBar: React.FC = () => {
   };
   const toProfile = () => {
     navigate("/managment");
+  };
+
+  const handleLogout = async () => {
+    const response = await axiosPrivate.delete("/logout", {
+      withCredentials: true,
+    });
+    console.log(response.data.status);
+    if (response.data.status === "success") {
+      Cookies.remove("accessToken");
+      navigate("/signin");
+    }
   };
   return (
     <>
@@ -128,12 +142,14 @@ const NavBar: React.FC = () => {
                   </ListItemIcon>
                   Settings
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <ListItemIcon>
-                    <Logout fontSize="small" />
-                  </ListItemIcon>
-                  Logout
-                </MenuItem>
+                <div className="bg-green-200" onClick={handleLogout}>
+                  <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <Logout fontSize="small" />
+                    </ListItemIcon>
+                    Logout
+                  </MenuItem>
+                </div>
               </Menu>
             </div>
           </div>

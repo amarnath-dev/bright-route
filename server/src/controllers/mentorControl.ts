@@ -11,7 +11,6 @@ export class MentorController {
   ): Promise<void> {
     try {
       const user = req.user;
-
       if (user) {
         const mentorProfile = await MentorModel.aggregate([
           { $match: { mentor_id: new ObjectId(user.id) } },
@@ -137,8 +136,9 @@ export class MentorController {
   ): Promise<void> {
     try {
       const user = req.user;
-
-      const existingDocument = await Plans.findOne({ mentor_id: user?.id });
+      const existingDocument = await Plans.findOne({
+        mentor_id: new ObjectId(user?.id),
+      });
 
       if (existingDocument && existingDocument.planDetails.length >= 2) {
         res.status(400).json({
@@ -167,36 +167,39 @@ export class MentorController {
           },
         ],
       };
-
-      if (existingDocument) {
+      if (existingDocument?._id) {
         existingDocument.planDetails.push(newPlanDetails);
         const updatedDocument = await existingDocument.save();
-
         res.status(200).json({
           status: "success",
           message: "Plan added successfully",
           plan: updatedDocument,
         });
+        return;
       } else {
         const planDetails = new Plans({
           mentor_id: user?.id,
           planDetails: [newPlanDetails],
         });
-
         const savedPlan = await planDetails.save();
-
+        if (savedPlan) {
+          await MentorModel.findOneAndUpdate(
+            { mentor_id: new ObjectId(user?.id) },
+            { $set: { isPaymentDetails: true } }
+          );
+        }
         res.status(201).json({
           status: "success",
           message: "Plan created successfully",
           plan: savedPlan,
         });
+        return;
       }
     } catch (error) {
       console.error(error);
       return next(Error("Plan Creation failed"));
     }
   }
-
 
   async getPlans(
     req: Request,
@@ -208,6 +211,35 @@ export class MentorController {
       const plans = await Plans.findOne({ mentor_id: user?.id });
       if (plans?._id) {
         res.status(200).json({ status: "success", plans });
+      }
+    } catch (error) {
+      console.error(error);
+      return next(Error("Plan Creation failed"));
+    }
+  }
+
+  async deletePlan(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const planId = req.params.planId;
+      const planType = req.params.planType;
+      console.log(planId);
+      console.log(planType);
+      if (planId) {
+        const remove = await Plans.updateOne(
+          {},
+          { $pull: { planDetails: { planType: planType } } }
+        );
+        if (remove.modifiedCount > 0) {
+          res
+            .status(200)
+            .json({ status: "success", message: "Plan Deleted Successfuly" });
+        } else {
+          res.status(404).json({ status: "failed", message: "Plan not found" });
+        }
       }
     } catch (error) {
       console.error(error);

@@ -7,6 +7,7 @@ import CryptoJS from "crypto-js";
 import sendEmailOtp from "../utils/sendEmail";
 import OTP from "../models/otpModel";
 import Plans from "../models/mentorPlansModel";
+import Report from "../models/mentorReportModel";
 
 export interface mentorProfileObj {
   imageUrl: string;
@@ -45,6 +46,7 @@ export class MenteeController {
           },
         },
       ]);
+      console.log("This is all mentors ==> ", allMentors);
       if (allMentors) {
         res.status(200).json({ status: "sucess", allMentors: allMentors });
       }
@@ -145,6 +147,37 @@ export class MenteeController {
     } catch (error) {
       console.error(error);
       return next(Error("Data fetch failed"));
+    }
+  }
+
+  async reportMentor(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const mentorId = req.params.mentorId;
+      const reportDetails = req.body;
+      if (mentorId && reportDetails) {
+        const report = new Report({
+          mentor_id: mentorId,
+          mentee_id: req.user?.id,
+          ReportDetails: {
+            issue_faced: reportDetails.issueFaced,
+            issue_desc: reportDetails.issueDescription,
+            report_date: reportDetails.date,
+          },
+        });
+        await report.save();
+        res.status(200).json({ status: "success", message: "Report submited" });
+      } else {
+        res
+          .status(400)
+          .json({ status: "error", message: "Report Sent Failed" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Email send failed"));
     }
   }
 
@@ -303,8 +336,6 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
-      console.log("this is the user", req.user);
-      console.log("this is req body from client", req.body);
       const { oldPassword, newPassword, confirmPassword, otpNumber } = req.body;
       if (!newPassword || !confirmPassword) {
         res.status(400).json({ message: "Data fields missing" });
@@ -379,7 +410,7 @@ export class MenteeController {
       const user = req.user;
       if (user) {
         const userExists = await User.findById(user.id);
-        console.log("Reached at the otp send")
+        console.log("Reached at the otp send");
         if (!userExists?._id) {
           res.status(404).json({ message: "Can't find email" });
         }

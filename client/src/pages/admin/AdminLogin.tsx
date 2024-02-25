@@ -37,7 +37,7 @@ const AdminLogin: React.FC = () => {
           // navigate("/admin/mentor-application");
         }
         if (payload.status === 400) {
-          toast(payload.message);
+          toast.error(payload.message);
         }
       }
     } catch (error) {

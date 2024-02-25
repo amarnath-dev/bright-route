@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AdminAuthControls } from "../controllers/adminAuthControl";
 import { AdminControls } from "../controllers/adminControl";
 import { protectAdmin } from "../middleware/authMiddleware";
+import { verifyJWT } from "../middleware/verifyJWT";
 
 const router: Router = Router();
 
@@ -32,5 +33,7 @@ router.patch(
   protectAdmin,
   adminControls.rejectApplication
 );
+
+router.get("/get-all-mentee", verifyJWT, adminControls.getMentors);
 
 export default router;

@@ -55,9 +55,6 @@ const mentorProfileSchema: Schema<IMentorProfile> =
       skills: {
         type: [],
       },
-      reports: {
-        type: [],
-      },
       isPaymentDetails: {
         type: Boolean,
         default: false,
@@ -66,7 +63,6 @@ const mentorProfileSchema: Schema<IMentorProfile> =
         type: Boolean,
         default: false,
       },
-      mentorPlans: [{}],
     },
     { timestamps: true }
   );

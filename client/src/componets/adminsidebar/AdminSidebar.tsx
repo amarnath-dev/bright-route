@@ -30,15 +30,15 @@ export const AdminSidebar = () => {
             </Link>
           </button>
 
-          {/* <button className="flex items-center px-4 py-2 rounded-md w-full mt-8">
+          <button className="flex items-center px-4 py-2 rounded-md w-full mt-8">
             <FaUserTie className="text-gray-500" />
             <Link
               className="ml-4 font-bold text-gray-500"
-              to={"/admin/skill-managment"}
+              to={"/admin/mentee-management"}
             >
-              Skill Managment
+              Mentee Managment
             </Link>
-          </button> */}
+          </button>
         </div>
       </div>
     </>
