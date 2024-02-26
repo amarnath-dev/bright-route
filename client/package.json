@@ -37,6 +37,7 @@
     "react-stripe-checkout": "^2.6.3",
     "react-toastify": "^10.0.4",
     "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.7.4",
     "timeago.js": "^4.0.0-beta.3",
     "zod": "^3.22.4"
   },

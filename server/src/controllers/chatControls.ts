@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from "express";
 import Conversation from "../models/conversationModel";
 import Message from "../models/messageModal";
 import Mentor from "../models/mentorProfileModel";
-import { error } from "console";
+import Mentee from "../models/menteeProfileModel";
 
 export class ChatControls {
   async makeConversation(
@@ -93,15 +93,14 @@ export class ChatControls {
   ): Promise<void> {
     try {
       const friendId = req.params.friendId;
-      console.log("Reached at friend details fetch", friendId);
+      console.log("FRIEND ID -> ", friendId);
       if (friendId) {
         const friendDetails = await Mentor.findOne({ mentor_id: friendId });
         if (friendDetails?._id) {
-          console.log("===>", friendDetails);
           res.status(200).json({ status: "success", friendDetails });
         } else {
-          console.log(error);
-          res.status(400).json({ message: "Friend details fetch failed" });
+          const friendDetails = await Mentee.findOne({ mentee_id: friendId });
+          res.status(200).json({ status: "success", friendDetails });
         }
       }
     } catch (error) {
