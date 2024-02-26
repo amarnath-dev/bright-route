@@ -13,7 +13,7 @@ export const Conversations = ({ conversation, currentUser, index }) => {
     });
     const getUser = async () => {
       try {
-        const response = await axiosPrivate.get(`chat/getUser/${friendId}`, {
+        const response = await axiosPrivate.get(`/chat/getUser/${friendId}`, {
           withCredentials: true,
         });
         if (response.data) {

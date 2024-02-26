@@ -1,18 +1,53 @@
 import { Conversations } from "../../componets/conversation/Conversations";
 import SendIcon from "@mui/icons-material/Send";
 import { Messages } from "../../componets/message/Messages";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { useAppSelector } from "../../app/hooks";
+import { Socket, io } from "socket.io-client";
+
+interface Message {
+  senderId: string;
+  text: string;
+  createdAt: number;
+}
 
 export const MenteeMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
   const { user } = useAppSelector((state) => state.userAuth);
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState<Message | null>(null);
   const scrollRef = React.useRef<HTMLInputElement>(null);
+
+  const socket = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:3000");
+    socket.current?.on("getMessage", (data) => {
+      setArrivalMessage({
+        senderId: data?.senderId,
+        text: data?.text,
+        createdAt: Date.now(),
+      });
+      console.log("DATA-->", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      conversation[0].members.includes(arrivalMessage.senderId) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, conversation]);
+
+  useEffect(() => {
+    socket.current?.emit("addUser", user?._id);
+    socket.current?.on("getUsers", (users) => {
+      console.log("these are the users", users);
+    });
+  }, [user, socket]);
 
   useEffect(() => {
     const fetchConversation = async () => {
@@ -28,12 +63,11 @@ export const MenteeMessages = () => {
       }
     };
     fetchConversation();
-  }, [axiosPrivate]);
+  }, [axiosPrivate, user?._id]);
 
   useEffect(() => {
     try {
       const fetchConversationMessages = async () => {
-        console.log("fetching conversations");
         const response = await axiosPrivate.get(
           `chat/allConversation/${conversation[0]?._id}`
         );
@@ -45,10 +79,18 @@ export const MenteeMessages = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [setMessages, conversation, axiosPrivate]);
+  }, [conversation, axiosPrivate]);
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    const receiverId = conversation[0]?.members.find(
+      (userId: string) => userId !== user?._id
+    );
+    socket.current?.emit("sendMessage", {
+      senderId: user?._id,
+      receiverId,
+      text: newMessage,
+    });
     try {
       const message = {
         senderId: user?._id,
@@ -66,7 +108,6 @@ export const MenteeMessages = () => {
   };
 
   useEffect(() => {
-    console.log("Running");
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -124,3 +165,7 @@ export const MenteeMessages = () => {
     </>
   );
 };
+
+//changing asdf;alsdkf
+//sdfkljsd;kjf
+//sdfsal;dfhasdlfk

@@ -11,7 +11,6 @@ const useAxiosPrivate = () => {
     const responseIntercept = axiosPrivate.interceptors.response.use(
       (response) => response,
       async (error) => {
-        console.log("Intercepting Response");
         const prevRequest = error?.config;
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true;
@@ -26,7 +25,6 @@ const useAxiosPrivate = () => {
 
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
-        console.log("intercepting request");
         if (accessToken && !config.headers["Authorization"]) {
           // config.headers["Authorization"] = `Bearer ${accessToken}`;
           config.headers["Authorization"] = accessToken;
