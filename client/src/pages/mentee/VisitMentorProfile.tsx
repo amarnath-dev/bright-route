@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { MentorPaymentCard } from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
 
-export const VisitMentorProfile = () => {
+const VisitMentorProfile = () => {
   const { mentorId } = useParams();
   const [mentor, setMentor] = useState<mentorProfileObj>();
   const axiosPrivate = useAxiosPrivate();
@@ -65,3 +65,5 @@ export const VisitMentorProfile = () => {
     </>
   );
 };
+
+export default VisitMentorProfile;

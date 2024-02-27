@@ -8,7 +8,6 @@ interface MentorListCardProps {
 
 export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
   const navigate = useNavigate();
-
   return (
     <>
       <div className="w-full h-full flex justify-center items-center flex-col px-4 py-4 mt-2 md:mt-10 md:py-0 md:px-0">

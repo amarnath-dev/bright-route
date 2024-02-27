@@ -36,7 +36,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export const MenteeProfile = () => {
+const MenteeProfile = () => {
   const { user } = useAppSelector((state) => state.userAuth);
   const [stateChange, setStateChange] = useState(false);
 
@@ -130,7 +130,6 @@ export const MenteeProfile = () => {
           })
           .catch((error) => {
             console.log(error);
-            toast.error("Image fetch failed");
           });
       }
     };
@@ -354,7 +353,7 @@ export const MenteeProfile = () => {
                       : "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
                   }
                   alt="profile_img"
-                  className="md:h-28 md:w-28 rounded-full"
+                  className="md:h-28 md:w-28 rounded-full object-cover"
                   id="profile-image"
                 />
               </span>
@@ -719,3 +718,5 @@ export const MenteeProfile = () => {
     </>
   );
 };
+
+export default MenteeProfile;

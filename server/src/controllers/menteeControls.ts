@@ -336,6 +336,7 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
+      console.log("reached at the server HY");
       const { oldPassword, newPassword, confirmPassword, otpNumber } = req.body;
       if (!newPassword || !confirmPassword) {
         res.status(400).json({ message: "Data fields missing" });
@@ -344,7 +345,7 @@ export class MenteeController {
       const userDB = await User.findById(user?.id);
       if (userDB) {
         if (oldPassword === "") {
-          const dbOtp = await OTP.findOne({ email: "" });
+          const dbOtp = await OTP.findOne({ email: userDB?.email });
           if (dbOtp?.email) {
             const dbOtpDecrypt = CryptoJS.AES.decrypt(
               dbOtp.otp,
@@ -408,6 +409,7 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
+      console.log("Reached the server");
       if (user) {
         const userExists = await User.findById(user.id);
         console.log("Reached at the otp send");

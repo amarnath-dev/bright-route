@@ -12,7 +12,7 @@ interface Message {
   createdAt: number;
 }
 
-export const MenteeMessages = () => {
+const MenteeMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
   const { user } = useAppSelector((state) => state.userAuth);
@@ -45,7 +45,7 @@ export const MenteeMessages = () => {
   useEffect(() => {
     socket.current?.emit("addUser", user?._id);
     socket.current?.on("getUsers", (users) => {
-      console.log("these are the users", users);
+      console.log(users);
     });
   }, [user, socket]);
 
@@ -115,7 +115,7 @@ export const MenteeMessages = () => {
     <>
       <div className="grid grid-cols-12 h-full bg-gray-600">
         <div className="col-span-3 px-1 py-1"></div>
-        <div className="col-span-6 bg-white rounded-md">
+        <div className="col-span-12 md:col-span-6 bg-white rounded-md">
           <div className="flex flex-col items-center justify-center w-full min-h-screen text-gray-800 rounded">
             <div className="w-full" id="chat_header">
               {conversation.map((c, index) => {
@@ -166,6 +166,4 @@ export const MenteeMessages = () => {
   );
 };
 
-//changing asdf;alsdkf
-//sdfkljsd;kjf
-//sdfsal;dfhasdlfk
+export default MenteeMessages;

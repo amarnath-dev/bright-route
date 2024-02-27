@@ -49,7 +49,7 @@ export const Conversations = ({ conversation, currentUser, index }) => {
         key={index}
         className="w-full bg-gray-200 hover:bg-gray-250 rounded-lg px-1 py-1 flex items-center cursor-pointer"
       >
-        <div>
+        <div className="md:px-1 md:py-1">
           <img
             id="profile_img"
             alt="profileImg"

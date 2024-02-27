@@ -1,7 +1,7 @@
 import NavBar from "../../componets/navbar/Navbar";
 import Header from "../../componets/header/Header";
 
-const SigninPage = () => {
+const Home = () => {
   return (
     <>
       <NavBar />
@@ -10,4 +10,4 @@ const SigninPage = () => {
   );
 };
 
-export default SigninPage;
+export default Home;

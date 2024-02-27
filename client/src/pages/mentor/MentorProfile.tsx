@@ -7,7 +7,7 @@ import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { MentorProfileCard } from "../../componets/mentor/ProfileCard/MentorProfileCard";
 import { MentorAboutSkill } from "../../componets/mentor/ProfileAboutndSkill/MentorAboutSkill";
 
-export const MentorProfile = () => {
+const MentorProfile = () => {
   const [mentor, setMentor] = useState<mentorProfileObj>();
   const axiosPrivate = useAxiosPrivate();
 
@@ -59,3 +59,5 @@ export const MentorProfile = () => {
     </>
   );
 };
+
+export default MentorProfile;

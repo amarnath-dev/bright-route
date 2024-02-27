@@ -169,3 +169,5 @@ export const MentorshipApplyDetails = () => {
     </>
   );
 };
+
+export default MentorshipApplyDetails;

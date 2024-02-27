@@ -12,8 +12,8 @@ const otpSchema: Schema<IOtp> = new mongoose.Schema<IOtp>({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
-    expires: 60 * 10,
+    default: Date.now,
+    expires: 60,
   },
 });
 

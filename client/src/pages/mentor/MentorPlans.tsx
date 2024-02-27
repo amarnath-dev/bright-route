@@ -21,7 +21,7 @@ const style = {
   pb: 3,
 };
 
-export const MentorPlans = () => {
+const MentorPlans = () => {
   const [open, setOpen] = React.useState(false);
   const [mentorPlans, setMentorPlans] = useState([]);
   const [isPlan, setIsPlan] = useState(false);
@@ -168,3 +168,5 @@ export const MentorPlans = () => {
     </>
   );
 };
+
+export default MentorPlans;

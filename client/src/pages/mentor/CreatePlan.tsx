@@ -14,7 +14,7 @@ interface PlanDetails {
   handsOnSupport: string;
 }
 
-export const CreatePlan = () => {
+const CreatePlan = () => {
   const [planDetails, setPlanDetails] = useState<PlanDetails>({
     planAmount: "",
     planType: "",
@@ -233,3 +233,5 @@ export const CreatePlan = () => {
     </>
   );
 };
+
+export default CreatePlan;

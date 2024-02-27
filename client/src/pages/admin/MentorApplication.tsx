@@ -29,7 +29,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-export const MentorApplication = () => {
+const MentorApplication = () => {
   const [details, setDetails] = useState([]);
 
   useEffect(() => {
@@ -85,3 +85,5 @@ export const MentorApplication = () => {
     </>
   );
 };
+
+export default MentorApplication;
