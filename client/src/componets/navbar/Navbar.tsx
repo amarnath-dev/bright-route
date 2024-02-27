@@ -7,15 +7,15 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
+// import PersonAdd from "@mui/icons-material/PersonAdd";
+// import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import Cookies from "js-cookie";
 
-const NavBar: React.FC = () => {
+const NavBar = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { user } = useAppSelector((state) => state.userAuth);
   const navigate = useNavigate();
@@ -44,16 +44,13 @@ const NavBar: React.FC = () => {
   };
   return (
     <>
-      <div className="grid grid-cols-12 w-screen items-center sticky shadow-lg">
-        <div className="col-span-4 bg-color-one h-14 flex items-center">
-          {/* <h1 className="ml-12 font-mono text-2xl text-white">Bright Route</h1> */}
-        </div>
-        <div className="col-span-8 bg-color-one h-14">
+      <div className="grid grid-cols-12 w-full items-center sticky shadow-lg">
+        <div className="col-span-4 bg-blue-500 h-14 flex items-center"></div>
+        <div className="col-span-8 bg-blue-500 h-14">
           <div className="flex justify-evenly items-center text-white">
             <span>Link1</span>
             <span>Link1</span>
             <span>Link1</span>
-
             <div className="mt-2">
               <Box
                 sx={{
@@ -130,18 +127,18 @@ const NavBar: React.FC = () => {
                   </div>
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={handleClose}>
+                {/* <MenuItem onClick={handleClose}>
                   <ListItemIcon>
                     <PersonAdd fontSize="small" />
                   </ListItemIcon>
                   Add another account
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
+                </MenuItem> */}
+                {/* <MenuItem onClick={handleClose}>
                   <ListItemIcon>
                     <Settings fontSize="small" />
                   </ListItemIcon>
                   Settings
-                </MenuItem>
+                </MenuItem> */}
                 <div className="bg-green-200" onClick={handleLogout}>
                   <MenuItem onClick={handleClose}>
                     <ListItemIcon>

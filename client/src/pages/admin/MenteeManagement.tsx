@@ -2,8 +2,9 @@ import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { useEffect, useState } from "react";
 
-export const MenteeManagement = () => {
+const MenteeManagement = () => {
   const axiosPrivate = useAxiosPrivate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mentee, setMentee] = useState();
 
   useEffect(() => {
@@ -110,3 +111,5 @@ export const MenteeManagement = () => {
     </>
   );
 };
+
+export default MenteeManagement;

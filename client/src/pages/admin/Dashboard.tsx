@@ -1,6 +1,6 @@
 import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
 
-export const Dashboard = () => {
+const Dashboard = () => {
   return (
     <>
       <div className="grid grid-cols-12">
@@ -14,3 +14,5 @@ export const Dashboard = () => {
     </>
   );
 };
+
+export default Dashboard;

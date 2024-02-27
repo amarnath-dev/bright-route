@@ -31,10 +31,8 @@ const SearchMentors = () => {
       }
     };
     mentorProfile();
-  }, []);
+  }, [axiosPrivate]);
 
-  // fetching img from firebase
-  //Image fetching is not working, take a look at that
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -60,7 +58,7 @@ const SearchMentors = () => {
       }
     };
     fetchImages();
-  }, []);
+  }, [filtered.length]);
 
   useEffect(() => {
     const filterMentors = () => {

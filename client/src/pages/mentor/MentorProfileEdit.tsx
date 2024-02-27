@@ -37,7 +37,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export const MentorProfileEdit: React.FC = () => {
+const MentorProfileEdit: React.FC = () => {
   const navigate = useNavigate();
   const [mentor, setMentor] = useState<mentorProfileObj>();
   const [defaultSkills, setDefaultSkills] = useState([]);
@@ -289,7 +289,7 @@ export const MentorProfileEdit: React.FC = () => {
           <div className="w-40 h-full flex justify-center items-center flex-col px-2 py-2">
             <img
               alt="profile_img"
-              className="mt-2 w-32 h-32 md:mt-0 rounded-full ml-2 border-2"
+              className="mt-2 w-32 h-32 md:mt-0 rounded-full ml-2 border-2 object-cover"
               id="profile_img"
             />
             <div className="mt-3">
@@ -577,6 +577,7 @@ export const MentorProfileEdit: React.FC = () => {
   );
 };
 
+export default MentorProfileEdit;
 const topSkills = [
   { title: "Node js" },
   { title: "React" },

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export const PaymentSuccess = () => {
+const PaymentSuccess = () => {
   return (
     <>
       <div className="w-full h-screen flex justify-center items-center flex-col">
@@ -26,3 +26,5 @@ export const PaymentSuccess = () => {
     </>
   );
 };
+
+export default PaymentSuccess;

@@ -16,7 +16,7 @@ import {
 import { Button } from "@mui/material";
 import React from "react";
 
-export const ApplicationReview = () => {
+const ApplicationReview = () => {
   const { mentor } = useParams();
   const [applicationData, setApplicationData] =
     useState<singleApplicationObj>();
@@ -235,3 +235,5 @@ export const ApplicationReview = () => {
     </>
   );
 };
+
+export default ApplicationReview;

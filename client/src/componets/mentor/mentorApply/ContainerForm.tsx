@@ -10,7 +10,7 @@ import { MultiFromApply } from "../../../services/authServices";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../app/hooks";
 
-export function ContainerForm() {
+function ContainerForm() {
   const [mentorData, setMentorData] = useState(INITIAL_DATA);
   const { isLoading } = useAppSelector((state) => state.userAuth);
   const dispatch = useAppDispatch();
@@ -80,3 +80,5 @@ export function ContainerForm() {
     </>
   );
 }
+
+export default ContainerForm;

@@ -1,9 +1,11 @@
 import { RazorPay } from "../../componets/Razorpay/RazorPay";
 
-export const RazorpayPayment = () => {
+const RazorpayPayment = () => {
   return (
     <div>
       <RazorPay />
     </div>
   );
 };
+
+export default RazorpayPayment;
