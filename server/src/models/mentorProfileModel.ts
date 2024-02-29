@@ -59,6 +59,10 @@ const mentorProfileSchema: Schema<IMentorProfile> =
         type: Boolean,
         default: false,
       },
+      is_active: {
+        type: Boolean,
+        default: true,
+      },
       isBlocked: {
         type: Boolean,
         default: false,

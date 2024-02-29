@@ -5,11 +5,13 @@ import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { MentorPaymentCard } from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
+import React from "react";
 
 const VisitMentorProfile = () => {
   const { mentorId } = useParams();
   const [mentor, setMentor] = useState<mentorProfileObj>();
   const axiosPrivate = useAxiosPrivate();
+  const scrollRef = React.useRef<HTMLInputElement>(null);
 
   const [mentorPlans, setMentorPlans] = useState([]);
 
@@ -30,7 +32,7 @@ const VisitMentorProfile = () => {
       }
     };
     fetchMentorData();
-  }, []);
+  }, [axiosPrivate, mentorId]);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -42,11 +44,15 @@ const VisitMentorProfile = () => {
       }
     };
     fetchPlans();
+  }, [axiosPrivate, mentorId]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   return (
     <>
-      <div className="h-full grid grid-cols-12 bg-slate-100">
+      <div className="h-full grid grid-cols-12 bg-slate-100" ref={scrollRef}>
         <div className="col-span-12  md:col-span-4 px-10 py-10">
           <MentorProfileCard mentor={mentor} user={"mentee"} />
         </div>
@@ -55,7 +61,7 @@ const VisitMentorProfile = () => {
           <MentorAboutSkill mentor={mentor} user={"mentee"} />
         </div>
       </div>
-      <div className="w-full h-full flex justify-center items-center bg-slate-100">
+      <div className="flex justify-center bg-slate-100">
         <MentorPaymentCard
           mentorPlans={mentorPlans}
           handleOpen={""}

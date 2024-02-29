@@ -25,7 +25,7 @@ const MentorProfile = () => {
       }
     };
     fetchMentorData();
-  }, []);
+  }, [axiosPrivate]);
 
   useEffect(() => {
     const imageId = mentor?.profile_img;

@@ -2,11 +2,9 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { MenteeProfileCard } from "../../componets/mentee/MenteeProfileCard";
-import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -38,19 +36,11 @@ const VisuallyHiddenInput = styled("input")({
 
 const MenteeProfile = () => {
   const { user } = useAppSelector((state) => state.userAuth);
-  const [stateChange, setStateChange] = useState(false);
-
   const axiosPrivate = useAxiosPrivate();
-
-  const [country, setCountry] = useState("");
-  const [region, setRegion] = useState("");
+  const [controlCrop, setControlCrop] = useState(false);
   const [goal, setGoal] = useState("");
-  const [radioDefault, setRadioDefault] = useState("");
-  const [defaultCountry, setDefaultCountry] = useState("");
-  const [defaultRegion, setdefaultRegion] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [profileImg, setProfileImg] = useState("");
-
   const [imgSrc, setImgSrc] = useState("");
   const [aspect, setAspect] = useState<number | undefined>(16 / 9);
   const [crop, setCrop] = useState<Crop>();
@@ -82,18 +72,6 @@ const MenteeProfile = () => {
     });
   };
 
-  const changeState = () => {
-    setStateChange(true);
-    document.getElementById("first_name")?.removeAttribute("disabled");
-    document.getElementById("last_name")?.removeAttribute("disabled");
-    document.getElementById("email")?.removeAttribute("disabled");
-    document.getElementById("location")?.removeAttribute("disabled");
-    document.getElementById("job_title")?.removeAttribute("disabled");
-    document.getElementById("linkedIn")?.removeAttribute("disabled");
-    document.getElementById("twitter")?.removeAttribute("disabled");
-    document.getElementById("goal")?.removeAttribute("disabled");
-  };
-
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -101,19 +79,15 @@ const MenteeProfile = () => {
           withCredentials: true,
         });
         const details = response.data;
-        setRadioDefault(details.menteeDetails.available_time);
         setGoal(details.menteeDetails.goal);
-        setDefaultCountry(details.menteeDetails.country);
-        setdefaultRegion(details.menteeDetails.region);
         setProfileImg(details.menteeDetails.profile_img);
         setFormdata(details.menteeDetails);
       } catch (error) {
         console.log(error);
-        toast.error("Data fetch failed");
       }
     };
     fetchDetails();
-  }, []);
+  }, [axiosPrivate, user?._id]);
 
   if (formData.profile_img) {
     const fetchImg = async () => {
@@ -138,8 +112,6 @@ const MenteeProfile = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    formData.country = country;
-    formData.region = region;
     formData.goal = goal;
     try {
       const response = await axiosPrivate.post(
@@ -152,7 +124,6 @@ const MenteeProfile = () => {
       if (response) {
         const reqRes = response.data;
         if (reqRes.status == "success") {
-          setStateChange(false);
           toast(reqRes.message);
         }
       }
@@ -260,7 +231,6 @@ const MenteeProfile = () => {
 
     if (hiddenAnchorRef.current) {
       hiddenAnchorRef.current.href = blobUrlRef.current;
-      //Now upload it to the firebase
       const imgId =
         Math.random().toString(16).slice(2) +
         (new Date().getTime() / 1000).toString();
@@ -268,7 +238,6 @@ const MenteeProfile = () => {
       const snapshot = await uploadBytes(reference, blob);
       if (snapshot.metadata) {
         const img_firebase_id: string = snapshot.metadata.fullPath;
-        console.log("This is profile-img id", img_firebase_id);
         const response = await axiosPrivate.post(
           "/managment/profieImage-update",
           { img_firebase_id },
@@ -276,7 +245,7 @@ const MenteeProfile = () => {
         );
         if (response?.data?.status === "success") {
           toast(response?.data?.message);
-          setStateChange(false);
+          location.reload();
         } else {
           toast.error("Image Updation Failed");
         }
@@ -320,22 +289,7 @@ const MenteeProfile = () => {
                 Change Password
               </Link>
             </div>
-            <div className="px-1">
-              <div
-                className="rounded-full px-2 py-2 flex justify-center items-center"
-                onClick={changeState}
-              >
-                <Button
-                  variant="outlined"
-                  style={{ border: "1px black solid" }}
-                >
-                  <h1 className="text-black">Edit</h1>
-                  <EditIcon className="px-1 text-black" />
-                </Button>
-              </div>
-            </div>
           </div>
-
           {formData?.profile_img ? (
             ""
           ) : (
@@ -359,29 +313,31 @@ const MenteeProfile = () => {
               </span>
 
               <div className="px-6 md:px-0 w-full">
-                {stateChange === true ? (
-                  <>
-                    <Button
-                      id="img_btn"
-                      style={{
-                        background: "white",
-                        color: "black",
-                        border: "1px solid black",
-                      }}
-                      component="label"
-                      variant="contained"
-                      startIcon={<CloudUploadIcon />}
-                    >
-                      Upload Photo
-                      <VisuallyHiddenInput
-                        type="file"
-                        accept="image/*"
-                        onChange={onSelectFile}
-                        onClick={handleToggleAspectClick}
-                      />
-                    </Button>
+                <Button
+                  onClick={() => setControlCrop(true)}
+                  id="img_btn"
+                  style={{
+                    background: "white",
+                    color: "black",
+                    border: "1px solid black",
+                  }}
+                  component="label"
+                  variant="contained"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Upload Photo
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept="image/*"
+                    onChange={onSelectFile}
+                    onClick={handleToggleAspectClick}
+                  />
+                </Button>
+
+                {controlCrop ? (
+                  <div>
                     {!!imgSrc && (
-                      <div className="w-full">
+                      <div className="w-full bg-green-300">
                         <ReactCrop
                           crop={crop}
                           onChange={(_, percentCrop) => setCrop(percentCrop)}
@@ -400,6 +356,7 @@ const MenteeProfile = () => {
                         </ReactCrop>
                       </div>
                     )}
+
                     {!!completedCrop && (
                       <>
                         <div>
@@ -422,7 +379,7 @@ const MenteeProfile = () => {
                           </button>
                           <button
                             className="border-2 py-1 px-1 rounded-md bg-color-five"
-                            onClick={() => setStateChange(false)}
+                            onClick={() => setControlCrop(false)}
                           >
                             Discard
                           </button>
@@ -441,7 +398,7 @@ const MenteeProfile = () => {
                         </div>
                       </>
                     )}
-                  </>
+                  </div>
                 ) : (
                   ""
                 )}
@@ -460,7 +417,6 @@ const MenteeProfile = () => {
                   name="first_name"
                   onChange={onchange}
                   value={formData.first_name}
-                  disabled
                 />
               </label>
               <label className="mt-2 md:mt-0">
@@ -472,7 +428,6 @@ const MenteeProfile = () => {
                   name="last_name"
                   value={formData.last_name}
                   onChange={onchange}
-                  disabled
                 />
               </label>
             </div>
@@ -498,55 +453,9 @@ const MenteeProfile = () => {
                   name="job_title"
                   value={formData.job_title}
                   onChange={onchange}
-                  disabled
                 />
               </label>
             </div>
-
-            <div className="flex flex-col w-full md:flex-row justify-center">
-              <label className="mt-2">
-                Country & Region
-                <div className="mt-1 md:mt-1 flex flex-col md:flex-row">
-                  <div
-                    className="w-full md:w-full p-4 md:mr-4 overflow-hidden"
-                    style={{
-                      height: 45,
-                      width: 400,
-                      padding: "10px",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-                    }}
-                  >
-                    <CountryDropdown
-                      defaultOptionLabel={defaultCountry}
-                      value={country}
-                      onChange={(val) => setCountry(val)}
-                    />
-                  </div>
-
-                  <div
-                    className="mt-4 md:mt-0 w-full md:w-full"
-                    style={{
-                      height: 45,
-                      width: 360,
-                      padding: "10px",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-                    }}
-                  >
-                    <RegionDropdown
-                      defaultOptionLabel={defaultRegion}
-                      country={country}
-                      value={region}
-                      onChange={(val) => setRegion(val)}
-                    />
-                  </div>
-                </div>
-              </label>
-            </div>
-
             <div className="flex flex-col md:flex-row justify-center">
               <label className="mt-2">
                 LinkedIn
@@ -557,7 +466,6 @@ const MenteeProfile = () => {
                   name="linkedIn"
                   onChange={onchange}
                   value={formData.linkedIn}
-                  disabled
                 />
               </label>
               <label className="mt-2">
@@ -569,7 +477,6 @@ const MenteeProfile = () => {
                   name="twitter"
                   value={formData.twitter}
                   onChange={onchange}
-                  disabled
                 />
               </label>
             </div>
@@ -586,7 +493,6 @@ const MenteeProfile = () => {
                 name="goal"
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
-                disabled
                 className="placeholder:text-black field block mt-1 p-3 w-full text-sm bg-gray-50 rounded-lg border-2 focus:outline-none focus:ring-dark-500 focus:ring-1"
               ></textarea>
               <h1 className="mt-2 text-sm">
@@ -594,123 +500,14 @@ const MenteeProfile = () => {
                 of yours. This is shared with mentors.
               </h1>
             </div>
-
-            <div className="md:px-9 md:py-2">
-              <h1 className="font-bold">
-                In general, when do you prefer to meet your mentor?
-              </h1>
-              <div className="flex items-center mt-4" onClick={changeState}>
-                <input
-                  id="default-radio-1"
-                  type="radio"
-                  className="w-4 h-4"
-                  name="radio1"
-                  value="Early mornings (before 9am)"
-                  onChange={onchange}
-                  checked={radioDefault === "Early mornings (before 9am)"}
-                />
-                <label
-                  htmlFor="default-radio-1"
-                  className="ms-2 text-md font-medium text-gray-900"
-                >
-                  Early mornings (before 9am)
-                </label>
-              </div>
-
-              <div className="flex items-center mt-2" onClick={changeState}>
-                <input
-                  id="default-radio-2"
-                  type="radio"
-                  className="w-4 h-4"
-                  name="radio2"
-                  value="During the day (between 9am and 5pm)"
-                  onChange={onchange}
-                  checked={
-                    radioDefault === "During the day (between 9am and 5pm)"
-                  }
-                />
-                <label
-                  htmlFor="default-radio-2"
-                  className="ms-2 text-md font-medium text-gray-900"
-                >
-                  During the day (between 9am and 5pm)
-                </label>
-              </div>
-              <div className="flex items-center mt-2" onClick={changeState}>
-                <input
-                  id="default-radio-3"
-                  type="radio"
-                  className="w-4 h-4"
-                  name="radio"
-                  value="In the evenings (after 5pm)"
-                  onChange={onchange}
-                  checked={radioDefault === "In the evenings (after 5pm)"}
-                />
-                <label
-                  htmlFor="default-radio-3"
-                  className="ms-2 text-md font-medium text-gray-900"
-                >
-                  In the evenings (after 5pm)
-                </label>
-              </div>
-              <div className="flex items-center mt-2" onClick={changeState}>
-                <input
-                  id="default-radio-4"
-                  type="radio"
-                  className="w-4 h-4"
-                  value="I'm flexible"
-                  name="radio"
-                  onChange={onchange}
-                  checked={radioDefault === "I'm flexible"}
-                />
-                <label
-                  htmlFor="default-radio-4"
-                  className="ms-2 text-md font-medium text-gray-900"
-                >
-                  I'm Flexible
-                </label>
-              </div>
-              <div className="flex items-center mt-2" onClick={changeState}>
-                <input
-                  id="default-radio-5"
-                  type="radio"
-                  className="w-4 h-4"
-                  value="Other"
-                  name="radio"
-                  onChange={onchange}
-                  checked={radioDefault === "Other"}
-                />
-                <label
-                  htmlFor="default-radio-5"
-                  className="ms-2 text-md font-medium text-gray-900"
-                >
-                  Other
-                </label>
-              </div>
-            </div>
-
             <div className="mt-5 flex md:justify-end justify-center md:px-9">
-              {stateChange == true ? (
-                <>
-                  <button
-                    type="submit"
-                    id="saveBtn"
-                    className="border-2 px-1 py-1 md:px-2 md:py-2 rounded-md bg-color-five text-white mb-4"
-                    onClick={() => setStateChange(false)}
-                  >
-                    Discard
-                  </button>
-                  <button
-                    type="submit"
-                    id="saveBtn"
-                    className="border-2 px-1 py-1 md:px-2 md:py-2 rounded-md bg-color-one text-white mb-4"
-                  >
-                    Save Changes
-                  </button>
-                </>
-              ) : (
-                ""
-              )}
+              <button
+                type="submit"
+                id="saveBtn"
+                className="border-2 px-1 py-1 md:px-2 md:py-2 rounded-md bg-color-one text-white mb-4"
+              >
+                Save Changes
+              </button>
             </div>
           </form>
         </div>

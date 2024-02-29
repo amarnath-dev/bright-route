@@ -64,14 +64,7 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
                       </button>
                     ))}
                   </div>
-                  {/* Mentor payment setting is not done */}
                   <div className="w-full mt-6 flex justify-between items-center flex-col md:flex-row">
-                    <div className="mb-2 w-full">
-                      <h1 className="text-2xl md:text-3xl font-bold">
-                        $350 <small>/month</small>
-                      </h1>
-                    </div>
-
                     <div className="w-full">
                       <button
                         className="w-full border-2 rounded-md px-1 py-1 text-white bg-color-one text-lg font-bold md:h-10 md:w-96"

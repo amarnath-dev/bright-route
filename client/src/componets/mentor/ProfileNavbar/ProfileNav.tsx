@@ -9,6 +9,12 @@ export const ProfileNav = () => {
         <div className="flex justify-end items-center flex-1">
           <button
             className="mr-20 px-2 py-1 rounded-md font-bold"
+            onClick={() => navigate("/mentor/my-mentees")}
+          >
+            My Mentee
+          </button>
+          <button
+            className="mr-20 px-2 py-1 rounded-md font-bold"
             onClick={() => navigate("/mentor/plans")}
           >
             My Plans

@@ -57,7 +57,7 @@ const Reportmentor = ({ setOpen, mentor }) => {
         aria-hidden="true"
         className="overflow-y-auto md:fixed overflow-x-hidden flex z-50 justify-center items-center w-full h-full md:inset-0 max-h-full"
       >
-        <div className="relative p-4 w-full max-w-md max-h-full border-2 bg-color-one rounded-lg">
+        <div className="relative p-4 w-full max-w-md max-h-full border-2 rounded-lg">
           <div className="relative bg-white rounded-lg shadow">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-semibold">Report Mentor</h3>

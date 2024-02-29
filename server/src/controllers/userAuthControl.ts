@@ -340,6 +340,22 @@ export class MenteeAuthController {
       }
     }
   }
+
+  async checkToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const cookies = req.cookies;
+      if (cookies.refreshToken) {
+        res.json({ status: "exists" });
+      } else {
+        res.json({ status: "not exists" });
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        return next(error);
+      }
+    }
+  }
 }
 
 export class MentorAuthController {

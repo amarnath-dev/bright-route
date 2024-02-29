@@ -22,9 +22,6 @@ export const MenteeProfileCard = () => {
                 applications to. It is not indexed on search engines like
                 Google.
               </li>
-              <li className="text-md md:mt-3 font-bold">
-                * Click the edit button to change the values
-              </li>
             </ul>
           </div>
         </div>

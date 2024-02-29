@@ -15,7 +15,7 @@ const PaymentSuccess = () => {
           <h1 className="text-xl">Payment Successfull 🤝</h1>
           <div className="mt-4">
             <Link
-              to={""}
+              to={"/chat"}
               className="text-center border-2 px-2 py-1 mt-3 rounded"
             >
               Message Mentor

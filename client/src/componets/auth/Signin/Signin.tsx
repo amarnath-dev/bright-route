@@ -9,13 +9,46 @@ import GoogleAuth from "../GoogleAuth/GoogleAuth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SigninCredential } from "../../../datatypes/Datatypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MentorLogin } from "../../../services/authServices";
-// import { useAppSelector } from "../../../app/hooks";
+import useAxiosPrivate from "../../../app/useAxiosPrivate";
+import { useAppSelector } from "../../../app/hooks";
 
 const SigninForm: React.FC = () => {
   const [user, setUser] = useState(false);
-  // const { isLoading } = useAppSelector((state) => state.userAuth);
+  const axiosPrivate = useAxiosPrivate();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const userData = useAppSelector((state) => state.userAuth.user);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await axiosPrivate.get("/checkToken", {
+          withCredentials: true,
+        });
+        if (response.data.status === "exists") {
+          if (userData?.role === "mentee") {
+            navigate("/");
+            return;
+          }
+          if (userData?.role === "mentor") {
+            navigate("/mentor/home");
+            return;
+          }
+          if (userData?.role === "admin") {
+            navigate("/admin/dashboard");
+            return;
+          }
+        } else {
+          console.log("User not logged In");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
+    checkToken();
+  }, [axiosPrivate, navigate, userData?.role]);
 
   const {
     register,
@@ -24,9 +57,6 @@ const SigninForm: React.FC = () => {
   } = useForm<SigninCredential>({
     resolver: zodResolver(loginSchema),
   });
-
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   // Menteee
   const submitDataMentee = async (data: SigninCredential) => {
@@ -37,6 +67,7 @@ const SigninForm: React.FC = () => {
         if (payloadData.status === "success") {
           const user = payloadData.user;
           if (user.role === "mentee") {
+            console.log("Redirecting to home page");
             navigate("/");
           } else if (user.role === "mentor") {
             //error because mentor have seperate login page
@@ -75,7 +106,6 @@ const SigninForm: React.FC = () => {
 
   return (
     <>
-      {/* {isLoading ? <h1>Loading...</h1> : <h1>loading finished</h1>} */}
       {user ? (
         <>
           {/* Mentee Login  */}

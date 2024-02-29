@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema } from "../../../validations/menteeSignupSchema";
@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { AxiosError } from "axios";
 import { useAppSelector, useAppDispatch } from "../../../app/hooks";
 import { signupOtpSend } from "../../../services/authServices";
+import useAxiosPrivate from "../../../app/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
 
 export interface Credentials {
   first_name: string;
@@ -24,6 +26,38 @@ const SignupForm: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const { isLoading } = useAppSelector((state) => state.userAuth);
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.userAuth);
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await axiosPrivate.get("/checkToken", {
+          withCredentials: true,
+        });
+        if (response.data.status === "exists") {
+          if (user?.role === "mentee") {
+            navigate("/");
+            return;
+          }
+          if (user?.role === "mentor") {
+            navigate("/mentor/home");
+            return;
+          }
+          if (user?.role === "admin") {
+            navigate("/admin/dashboard");
+            return;
+          }
+        } else {
+          console.log("User not logged In");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
+    checkToken();
+  }, [axiosPrivate, navigate, user?.role]);
 
   const handleClose = (
     _event: React.SyntheticEvent | Event,
@@ -213,4 +247,3 @@ const SignupForm: React.FC = () => {
 };
 
 export default SignupForm;
-

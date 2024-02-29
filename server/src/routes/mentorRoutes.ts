@@ -20,6 +20,16 @@ router.post(
 router.post("/profile/update", verifyJWT, mentorController.updateProfile);
 router.post("/plans/create", verifyJWT, mentorController.createPlan);
 router.get("/plans", verifyJWT, mentorController.getPlans);
-router.delete("/plans/delete/:planId/:planType", verifyJWT, mentorController.deletePlan);
+router.delete(
+  "/plans/delete/:planId/:planType",
+  verifyJWT,
+  mentorController.deletePlan
+);
+router.get(
+  "/menteeApplications",
+  verifyJWT,
+  mentorController.menteeApllication
+);
+router.get("/paymentDetails/:paymentId", verifyJWT, mentorController.paymentDetails);
 
 export default router;

@@ -90,6 +90,7 @@ export interface IMentorProfile extends Document {
   skills: [];
   // reports: Report[];
   isPaymentDetails: boolean;
+  is_active: boolean;
   isBlocked: boolean;
   mentorPlans: [{}];
 }
