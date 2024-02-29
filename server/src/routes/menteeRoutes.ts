@@ -13,6 +13,7 @@ router.post("/signup", menteeAuthController.signup);
 router.post("/login", menteeAuthController.signin);
 router.get("/refresh", menteeAuthController.refreshToken);
 router.delete("/logout", menteeAuthController.logout);
+router.get("/checkToken", menteeAuthController.checkToken);
 
 router.post("/verifyOTP", menteeAuthController.verifyOTP);
 router.post("/resendOTP", menteeAuthController.resendOTP);

@@ -29,22 +29,14 @@ export const MentorPaymentCard = ({ mentorPlans, handleOpen, mentor }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // console.log("This is mentor plans", mentorPlans);
-
   const handleNavigate = (
     mentor_plan_id: string,
     mentor_id: string,
     mentor_plan_amount: string
   ) => {
-    console.log(mentor_plan_id);
-    console.log(mentor_id);
-    console.log(mentor_plan_amount);
-
     dispatch(submitPlanId({ mentor_plan_id }));
     dispatch(submitMentorId({ mentor_id }));
     dispatch(submitPlanAmount({ mentor_plan_amount }));
-
-    console.log("Dispatch Complete");
     navigate("/mentor-profile/apply");
   };
   return (

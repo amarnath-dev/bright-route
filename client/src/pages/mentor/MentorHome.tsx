@@ -5,18 +5,8 @@ const MentorHome: React.FC = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="w-screen h-screen bg-slate-400">
-        <div className="w-full md:w-screen h-16 bg-slate-900 text-white flex items-center justify-around">
-          {/* <div>
-            <h1>hello left</h1>
-          </div>
-          <div>
-            <h1>Hello right</h1>
-          </div>
-          <div>
-            <h1>Hello right</h1>
-          </div> */}
-        </div>
+      <div className="w-full h-screen bg-slate-400">
+        <div className="w-full md:w-full h-16 bg-slate-900 text-white flex items-center justify-around"></div>
         <div className="w-full h-80 bg-slate-900 flex justify-start">
           <div className="ml-3 md:ml-10">
             <h1 className="uppercase text-white text-5xl mt-10">welcome,</h1>

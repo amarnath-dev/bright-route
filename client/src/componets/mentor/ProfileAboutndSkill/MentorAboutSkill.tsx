@@ -3,7 +3,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Reportmentor from "../../mentee/ReportMentor/Reportmentor";
 import { useState } from "react";
 
-export const MentorAboutSkill = ({ mentor, user }) => {
+export const MentorAboutSkill = ({ mentor }) => {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -37,12 +37,13 @@ export const MentorAboutSkill = ({ mentor, user }) => {
 
         <div className="mt-5 rounded-md px-2 py-2">
           <h1 className="block mb-2 text-lg font-medium">Skills</h1>
-          <div className="mt-3 h-full flex-wrap">
-            {mentor?.skills.map((skill, index: number) => {
+          <div className="mt-3 h-full flex flex-wrap">
+            {mentor?.skills.map((skill: string, index: number) => {
               return (
                 <span
                   key={index}
-                  className="rounded-full bg-blue-200 px-6 py-1 ml-2"
+                  className="rounded-full bg-blue-200 px-6 py-1 ml-2 mb-2"
+                  style={{ whiteSpace: "nowrap" }} 
                 >
                   {skill}
                 </span>

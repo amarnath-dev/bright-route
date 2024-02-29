@@ -110,7 +110,6 @@ export const authSlice = createSlice({
         state.errorMessage = error?.message;
         state.status = error?.status;
       })
-      //Change Password mentee -> profile -> changePassword
       .addCase(changePassword.pending, (state) => {
         state.isLoading = true;
       })

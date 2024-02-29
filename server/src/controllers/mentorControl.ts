@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import MentorModel from "../models/mentorProfileModel";
+import MenteeModel from "../models/menteeProfileModel";
 import { ObjectId } from "mongodb";
 import Plans from "../models/mentorPlansModel";
+import Payment from "../models/PaymentModel";
 
 export class MentorController {
   async mentorprofileDetails(
@@ -244,6 +246,51 @@ export class MentorController {
     } catch (error) {
       console.error(error);
       return next(Error("Plan Creation failed"));
+    }
+  }
+
+  async menteeApllication(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user;
+      const mentorApplication = await Payment.aggregate([
+        {
+          $match: { mentor_id: user?.id },
+        },
+        {
+          $lookup: {
+            from: "menteeprofiles",
+            localField: "mentee_id",
+            foreignField: "mentee_id",
+            as: "menteeDetails",
+          },
+        },
+      ]);
+      if (mentorApplication) {
+        res.status(200).json({ status: "success", mentorApplication });
+      }
+    } catch (error) {
+      console.error(error);
+      return next(Error("Mentor Application fetch failed"));
+    }
+  }
+  async paymentDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const paymentId = req.params.paymentId;
+      const paymentDetails = await Payment.findById(paymentId);
+      if (paymentDetails?._id) {
+        res.status(200).json({ status: "success", paymentDetails });
+      }
+    } catch (error) {
+      console.error(error);
+      return next(Error("Mentor Application fetch failed"));
     }
   }
 }

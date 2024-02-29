@@ -85,7 +85,6 @@ const ChangePassword = () => {
     } catch (error) {
       const errorRes = (error as { response?: { status: number } }).response;
       if (errorRes?.status === 401) {
-        //here
         setCurrentError(true);
       } else {
         toast.error("Please Try Again");
@@ -101,8 +100,8 @@ const ChangePassword = () => {
       );
       if (response.data.status === "success") {
         setOtpSend(true);
-        setMinutes(3);
-        setSeconds(0);
+        setMinutes(1);
+        setSeconds(30);
         toast(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -139,7 +138,7 @@ const ChangePassword = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds]);
+  }, [seconds,minutes]);
 
   return (
     <>

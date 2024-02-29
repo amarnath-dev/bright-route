@@ -8,6 +8,7 @@ import sendEmailOtp from "../utils/sendEmail";
 import OTP from "../models/otpModel";
 import Plans from "../models/mentorPlansModel";
 import Report from "../models/mentorReportModel";
+import { ObjectId } from "mongodb";
 
 export interface mentorProfileObj {
   imageUrl: string;
@@ -204,43 +205,47 @@ export class MenteeController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const menteeId = new mongoose.Types.ObjectId(req.params.menteeId);
-      const mentee = await MenteeModel.aggregate([
-        { $match: { mentee_id: menteeId } },
+      const mentee_id = req.params.menteeId;
+      const mentee = await User.aggregate([
+        { $match: { _id: new ObjectId(mentee_id) } },
         {
           $lookup: {
-            from: "users",
-            foreignField: "_id",
-            localField: "mentee_id",
-            as: "menteeInfo",
+            from: "menteeprofiles",
+            let: { userId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$mentee_id", { $toString: "$$userId" }],
+                  },
+                },
+              },
+            ],
+            as: "menteeProfile",
           },
         },
-        {
-          $unwind: "$menteeInfo",
-        },
       ]);
-      const menteeData = mentee[0];
-      const menteeEmail = menteeData.menteeInfo;
+      const menteeEmail = mentee[0];
+      const menteeProfile = mentee[0]?.menteeProfile[0];
       const menteeDetails = {
-        mentee_id: menteeData.mentee_id,
-        profile_img: menteeData.profile_img ? menteeData.profile_img : "",
-        first_name: menteeData.first_name,
-        last_name: menteeData.last_name,
-        email: menteeEmail.email,
-        job_title: menteeData.job_title ? menteeData.job_title : "",
-        linkedIn: menteeData.linkedIn ? menteeData.linkedIn : "",
-        twitter: menteeData.twitter ? menteeData.twitter : "",
-        goal: menteeData.goal ? menteeData.goal : "",
-        available_time: menteeData.available_time
-          ? menteeData.available_time
+        mentee_id: menteeProfile?.mentee_id,
+        profile_img: menteeProfile?.profile_img
+          ? menteeProfile?.profile_img
           : "",
-        country: menteeData.country ? menteeData.country : "",
-        region: menteeData.region ? menteeData.region : "",
+        first_name: menteeProfile?.first_name,
+        last_name: menteeProfile?.last_name,
+        email: menteeEmail?.email,
+        job_title: menteeProfile.job_title ? menteeProfile.job_title : "",
+        linkedIn: menteeProfile.linkedIn ? menteeProfile?.linkedIn : "",
+        twitter: menteeProfile.twitter ? menteeProfile.twitter : "",
+        goal: menteeProfile.goal ? menteeProfile.goal : "",
+        available_time: menteeProfile.available_time
+          ? menteeProfile.available_time
+          : "",
+        country: menteeProfile.country ? menteeProfile.country : "",
+        region: menteeProfile.region ? menteeProfile.region : "",
         role: menteeEmail.role,
       };
-
-      console.log("this is mentee details", menteeDetails);
-
       if (menteeDetails) {
         res.status(200).json({ status: "success", menteeDetails });
       }
