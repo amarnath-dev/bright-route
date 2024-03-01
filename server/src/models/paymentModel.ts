@@ -35,7 +35,7 @@ const paymentSchema: Schema<IApplication> = new mongoose.Schema<IApplication>({
   },
   duration: {
     type: Number,
-    default: 2,
+    default: 1,
   },
 });
 

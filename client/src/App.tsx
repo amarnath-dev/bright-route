@@ -112,7 +112,7 @@ function App() {
                     element={<ApplySuccess />}
                   />
                   <Route path="/mentor/plans" element={<MentorPlans />} />
-                  <Route path="/mentor/plans/new" element={<CreatePlan />} />
+                  <Route path="/mentor/new-plan" element={<CreatePlan />} />
                   <Route
                     path="/mentor-profile/apply"
                     element={<MentorshipApplyDetails />}
@@ -121,6 +121,10 @@ function App() {
                   <Route
                     path="/mentor/my-mentees/paymentdetails/:paymentId/:profileImg"
                     element={<MenteePaymentDetails />}
+                  />
+                  <Route
+                    path="/mentor/managment/password"
+                    element={<ChangePassword />}
                   />
                 </Route>
 

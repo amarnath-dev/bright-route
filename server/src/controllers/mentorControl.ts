@@ -212,7 +212,10 @@ export class MentorController {
       const user = req.user;
       const plans = await Plans.findOne({ mentor_id: user?.id });
       if (plans?._id) {
+        console.log("Please", plans);
         res.status(200).json({ status: "success", plans });
+      } else {
+        res.status(200).json({ status: "Not plans Exists" });
       }
     } catch (error) {
       console.error(error);
@@ -232,20 +235,20 @@ export class MentorController {
       console.log(planType);
       if (planId) {
         const remove = await Plans.updateOne(
-          {},
+          { _id: planId },
           { $pull: { planDetails: { planType: planType } } }
         );
         if (remove.modifiedCount > 0) {
           res
             .status(200)
-            .json({ status: "success", message: "Plan Deleted Successfuly" });
+            .json({ status: "success", message: "Plan Deleted Successfully" });
         } else {
           res.status(404).json({ status: "failed", message: "Plan not found" });
         }
       }
     } catch (error) {
       console.error(error);
-      return next(Error("Plan Creation failed"));
+      return next(Error("Plan Deletion failed"));
     }
   }
 

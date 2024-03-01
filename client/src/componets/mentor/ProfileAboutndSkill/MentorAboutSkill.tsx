@@ -1,9 +1,18 @@
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import Tooltip from "@mui/material/Tooltip";
 import Reportmentor from "../../mentee/ReportMentor/Reportmentor";
-import { useState } from "react";
+import React, { useState } from "react";
+import { mentorProfileObj } from "../../../datatypes/Datatypes";
 
-export const MentorAboutSkill = ({ mentor }) => {
+interface MentorProfileCardProps {
+  mentor: mentorProfileObj | undefined;
+  user: string;
+}
+
+const MentorAboutSkill: React.FC<MentorProfileCardProps> = ({
+  mentor,
+  user,
+}) => {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -17,11 +26,15 @@ export const MentorAboutSkill = ({ mentor }) => {
       <div className="md:h-full py-5 md:px-8 md:py-8 rounded-md">
         <div className="px-2 md:px-0 relative">
           <div className="absolute top-0 right-3">
-            <span className="cursor-pointer" onClick={() => setOpen(true)}>
-              <Tooltip title={"Report"}>
-                <ReportGmailerrorredIcon />
-              </Tooltip>
-            </span>
+            {user === "mentee" ? (
+              <span className="cursor-pointer" onClick={() => setOpen(true)}>
+                <Tooltip title={"Report"}>
+                  <ReportGmailerrorredIcon />
+                </Tooltip>
+              </span>
+            ) : (
+              ""
+            )}
           </div>
           <label htmlFor="bio" className="block mb-2 text-sm font-medium">
             ABOUT ME
@@ -43,7 +56,7 @@ export const MentorAboutSkill = ({ mentor }) => {
                 <span
                   key={index}
                   className="rounded-full bg-blue-200 px-6 py-1 ml-2 mb-2"
-                  style={{ whiteSpace: "nowrap" }} 
+                  style={{ whiteSpace: "nowrap" }}
                 >
                   {skill}
                 </span>
@@ -55,3 +68,5 @@ export const MentorAboutSkill = ({ mentor }) => {
     </>
   );
 };
+
+export default MentorAboutSkill;

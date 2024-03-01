@@ -1,27 +1,68 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
-
 import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../../app/firebase";
 
 const NavBar = () => {
   const { user } = useAppSelector((state) => state.userAuth);
+  const [profileImg, setProfileImg] = useState<string>();
+  const [firebaseImgId, setFirebaseImgId] = useState("");
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
 
   const toProfile = () => {
-    navigate("/managment");
+    if (user?.role === "mentee") {
+      navigate("/managment");
+    }
+    if (user?.role === "mentor") {
+      navigate("/mentor/profile");
+    }
   };
-
   const handleLogout = async () => {
     const response = await axiosPrivate.delete("/logout", {
       withCredentials: true,
     });
-    console.log(response.data.status);
     if (response.data.status === "success") {
       Cookies.remove("accessToken");
       navigate("/signin");
+    }
+  };
+  useEffect(() => {
+    const getImg = async () => {
+      try {
+        const response = await axiosPrivate.get(`/getimage/${user?.role}`, {
+          withCredentials: true,
+        });
+        if (response.data.profileImageId) {
+          setProfileImg(response.data.profileImageId);
+        }
+      } catch (error) {
+        console.error("Error fetching profile image ID:", error);
+      }
+    };
+    getImg();
+  }, [axiosPrivate, user?.role]);
+
+  if (profileImg) {
+    const fetchImg = async () => {
+      try {
+        const imageId = profileImg;
+        const imageRef = ref(storage, imageId);
+        const url = await getDownloadURL(imageRef);
+        setFirebaseImgId(url);
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+      }
+    };
+    fetchImg();
+  }
+  const handleClickOne = () => {
+    if (user?.role === "mentor") {
+      navigate("/mentor/my-mentees");
     }
   };
   return (
@@ -39,7 +80,7 @@ const NavBar = () => {
                     label={
                       <Avatar
                         alt="User settings"
-                        img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                        img={firebaseImgId ? firebaseImgId : ""}
                         rounded
                       />
                     }
@@ -63,8 +104,8 @@ const NavBar = () => {
                   <Navbar.Toggle />
                 </div>
                 <Navbar.Collapse>
-                  <Navbar.Link href="#" active>
-                    Home
+                  <Navbar.Link active onClick={handleClickOne}>
+                    {user?.role === "mentor" ? "My Mentees" : "Home"}
                   </Navbar.Link>
                   <Navbar.Link href="#">About</Navbar.Link>
                   <Navbar.Link href="#">Services</Navbar.Link>

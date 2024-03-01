@@ -1,13 +1,23 @@
 import PublicIcon from "@mui/icons-material/Public";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import XIcon from "@mui/icons-material/X";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../../app/firebase";
 import { useNavigate } from "react-router-dom";
+import { mentorProfileObj } from "../../../datatypes/Datatypes";
 
-export const MentorProfileCard = ({ mentor, user }) => {
+interface MentorProfileCardProps {
+  mentor: mentorProfileObj | undefined;
+  user: string;
+}
+
+const MentorProfileCard: React.FC<MentorProfileCardProps> = ({
+  mentor,
+  user,
+}) => {
   const navigate = useNavigate();
+
   useEffect(() => {
     const imageId = mentor?.profile_img;
     if (imageId) {
@@ -43,7 +53,7 @@ export const MentorProfileCard = ({ mentor, user }) => {
         <h1 className="text-md font-bold">{mentor?.job_title}</h1>
       </div>
       <div className="flex justify-center">
-        <h1 className="text-md py-2">{mentor?.mentorEmail[0]?.email}</h1>
+        <h1 className="text-md py-2">{mentor?.mentorEmail}</h1>
       </div>
       <div className="text-center">
         <h1 className="underline">{mentor?.company}</h1>
@@ -78,3 +88,5 @@ export const MentorProfileCard = ({ mentor, user }) => {
     </div>
   );
 };
+
+export default MentorProfileCard;

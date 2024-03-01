@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
-export const ProfileNav = () => {
+const ProfileNav = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="w-full h-14 bg-transparent flex bg-slate-200 shadow-lg">
+      <div className="w-full h-14 bg-transparent flex bg-green-200 shadow-lg">
         <div className="flex-1"></div>
-        <div className="flex justify-end items-center flex-1">
+        <div className="flex justify-end items-center flex-2">
           <button
             className="mr-20 px-2 py-1 rounded-md font-bold"
             onClick={() => navigate("/mentor/my-mentees")}
@@ -21,7 +21,7 @@ export const ProfileNav = () => {
           </button>
           <button
             className="mr-20 px-2 py-1 rounded-md font-bold"
-            onClick={() => navigate("/managment/password")}
+            onClick={() => navigate("/mentor/managment/password")}
           >
             Password
           </button>
@@ -30,3 +30,5 @@ export const ProfileNav = () => {
     </>
   );
 };
+
+export default ProfileNav;

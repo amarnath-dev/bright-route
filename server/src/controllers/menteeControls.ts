@@ -432,6 +432,52 @@ export class MenteeController {
     }
   }
 
+  async getProfileImg(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user;
+      const userRole = req.params.userRole;
+      console.log(user);
+      if (user) {
+        if (userRole === "mentee") {
+          const menteeData = await MenteeModel.findOne({ mentee_id: user.id });
+          if (menteeData) {
+            res.status(200).json({
+              status: "success",
+              profileImageId: menteeData?.profile_img,
+            });
+          } else {
+            res
+              .status(404)
+              .json({ status: "error", message: "User not found" });
+          }
+        } else if (userRole === "mentor") {
+          const mentorData = await MentorModel.findOne({ mentor_id: user.id });
+          if (mentorData) {
+            res.status(200).json({
+              status: "success",
+              profileImageId: mentorData?.profile_img,
+            });
+          } else {
+            res
+              .status(404)
+              .json({ status: "error", message: "User not found" });
+          }
+        }
+      } else {
+        res
+          .status(401)
+          .json({ status: "error", message: "Unauthorized access" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Error retrieving profile image ID"));
+    }
+  }
+
   async mentorshipApply(
     req: Request,
     res: Response,

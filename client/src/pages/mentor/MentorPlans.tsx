@@ -1,47 +1,31 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import React from "react";
-import { MentorPaymentCard } from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-
-const style = {
-  position: "absolute" as const,
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
+const MentorPaymentCard = React.lazy(
+  () => import("../../componets/mentor/PaymentDetailsCard/MentorPaymentCard")
+);
 
 const MentorPlans = () => {
-  const [open, setOpen] = React.useState(false);
   const [mentorPlans, setMentorPlans] = useState([]);
   const [isPlan, setIsPlan] = useState(false);
   const axiosPrivate = useAxiosPrivate();
+  const [isDeleted, setIsDeleted] = useState<boolean | null>(null);
+  const [justMounted, setJustMounted] = useState<boolean | null>(null);
 
-  const [deleteSelected, setDeleteSelected] = useState("");
+  const handleChildData = () => {
+    setIsDeleted((state) => !state);
+  };
 
-  const handleOpen = (planType: string) => {
-    setDeleteSelected(planType);
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  if (justMounted) {
+    location.reload();
+  }
 
   useEffect(() => {
     const fetchPlans = async () => {
       const response = await axiosPrivate.get("/mentor/plans", {
         withCredentials: true,
       });
+      console.log("mentor plans", response.data.plans);
       if (response.data.status === "success") {
         const result = response.data.plans;
         if (result.planDetails.length > 0) {
@@ -55,64 +39,19 @@ const MentorPlans = () => {
       }
     };
     fetchPlans();
-  }, [axiosPrivate, deleteSelected]);
-
-  const handleDelete = async () => {
-    try {
-      const response = await axiosPrivate.delete(
-        `mentor/plans/delete/${mentorPlans._id}/${deleteSelected}`,
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.data.status === "success") {
-        toast(response.data.message);
-        setDeleteSelected("");
-        setOpen(false);
-      } else {
-        toast.error("Delete Failed");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  }, [isDeleted, setIsDeleted, axiosPrivate]);
 
   return (
     <>
-      <ToastContainer className="w-40 md:w-80" />
       <div className="w-full h-full md:h-screen mb-10 md:mb-0">
-        <div>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="parent-modal-title"
-            aria-describedby="parent-modal-description"
-          >
-            <Box sx={{ ...style, width: 400 }}>
-              <h2 id="parent-modal-title" className="text-xl font-bold">
-                Delete Plan
-              </h2>
-              <p id="parent-modal-description" className="font-semibold mt-1">
-                Are you sure you want to delete this Plan?
-              </p>
-              <div className="flex justify-end mt-3">
-                <button onClick={handleClose}>No</button>
-                <button className="text-red-500 ml-5" onClick={handleDelete}>
-                  Yes
-                </button>
-              </div>
-            </Box>
-          </Modal>
-        </div>
-
         {isPlan ? (
           <>
-            {mentorPlans?.planDetails?.length >= 2 ? (
+            {mentorPlans.planDetails.length >= 2 ? (
               ""
             ) : (
               <div className="w-full h-12 flex justify-end items-center">
                 <Link
-                  to={"/mentor/plans/new"}
+                  to={"/mentor/new-plan"}
                   className="mr-6 md:mr-40 border-2 px-1 py-1 rounded-md text-white bg-color-one"
                 >
                   Create Plans
@@ -120,11 +59,13 @@ const MentorPlans = () => {
               </div>
             )}
             <div className="w-full h-full flex justify-center items-center mt-6 md:mt-0">
-              <MentorPaymentCard
-                mentorPlans={mentorPlans}
-                handleOpen={handleOpen}
-                mentor={"mentor"}
-              />
+              <React.Suspense>
+                <MentorPaymentCard
+                  mentorPlans={isPlan ? mentorPlans : ""}
+                  mentor={"mentor"}
+                  onChildData={handleChildData}
+                />
+              </React.Suspense>
             </div>
           </>
         ) : (
@@ -139,7 +80,7 @@ const MentorPlans = () => {
                   purchase youre plan to Enroll for mentorship.
                 </p>
                 <div className="mt-5">
-                  <Link to={"/mentor/plans/new"}>
+                  <Link to={"/mentor/new-plan"}>
                     <div className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-color-one rounded-lg hover:bg-teal-900 focus:ring-1 focus:outline-none focus:ring-blue-300 dark:hover:bg-dark-700 cursor-pointer">
                       Create Plan
                       <svg
