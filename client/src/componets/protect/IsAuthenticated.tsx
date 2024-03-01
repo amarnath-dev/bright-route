@@ -35,10 +35,10 @@ export const IsAuthenticated: React.FC = () => {
           <div>
             <h1>Please Login to continue</h1>
             <div>
-              <Link to={"signin"} className="px-1 py-1">
+              <Link to={"/signin"} className="px-1 py-1">
                 Sign In
               </Link>
-              <Link to={"signup"} className="px-1 py-1">
+              <Link to={"/signup"} className="px-1 py-1">
                 Sign Up
               </Link>
             </div>

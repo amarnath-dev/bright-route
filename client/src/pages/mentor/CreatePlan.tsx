@@ -29,6 +29,7 @@ const CreatePlan = () => {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!planDetails.planAmount) {
       toast.error("Please select a plan amount");
       return;
@@ -47,9 +48,7 @@ const CreatePlan = () => {
       );
       if (response.data.status === "success") {
         toast(response.data.message);
-        setInterval(() => {
-          navigate("/mentor/plans");
-        }, 1000);
+        navigate("/mentor/plans");
       }
     } catch (error) {
       console.log(error);
@@ -64,7 +63,7 @@ const CreatePlan = () => {
   };
   return (
     <>
-      <ToastContainer className="w-40 md:w-80" />
+      <ToastContainer className="w-40 md:w-80 " />
       <div className="w-full h-screen fill-rule">
         <div
           id="crud-modal"
