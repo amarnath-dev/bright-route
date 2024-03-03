@@ -83,7 +83,22 @@ const MentorProfileCard: React.FC<MentorProfileCardProps> = ({
           </button>
         </div>
       ) : (
-        <div className="mb-10"></div>
+        <div className="mb-4">
+          <div className="px-5">
+            <button
+              className="bg-blue-500 w-full px-1 py-2 rounded-full mt-5 mb-5 text-white"
+              onClick={() => navigate(`/chat/${mentor?.mentor_id}`)}
+            >
+              Message Mentor
+            </button>
+          </div>
+          <div className="px-5">
+            <small className="w-full font-bold">
+              You can message {mentor?.first_name} to ask questions before
+              booking their services.
+            </small>
+          </div>
+        </div>
       )}
     </div>
   );

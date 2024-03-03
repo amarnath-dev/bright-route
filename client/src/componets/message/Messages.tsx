@@ -6,7 +6,6 @@ interface Messages {
   own: boolean;
   index: number;
 }
-
 export const Messages: React.FC<Messages> = ({ message, own, index }) => {
   return (
     <>

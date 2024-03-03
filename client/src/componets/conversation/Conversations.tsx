@@ -6,6 +6,7 @@ import { getDownloadURL, ref } from "firebase/storage";
 export const Conversations = ({ conversation, currentUser, index }) => {
   const axiosPrivate = useAxiosPrivate();
   const [user, setUser] = useState(null);
+  const [profileImg, setProfileImg] = useState("");
 
   useEffect(() => {
     const friendId = conversation.members.find((m) => {
@@ -23,25 +24,22 @@ export const Conversations = ({ conversation, currentUser, index }) => {
         console.log(error);
       }
     };
+    getUser();
     const fetchImg = async () => {
       const imageId = user?.profile_img;
       if (imageId) {
         const imageRef = ref(storage, imageId);
         getDownloadURL(imageRef)
-          .then((url) => {
-            const img = document.getElementById(
-              "profile_img"
-            ) as HTMLImageElement;
-            img.src = url;
+          .then((url: string) => {
+            setProfileImg(url);
           })
           .catch((error) => {
             console.log(error);
           });
       }
     };
-    getUser();
     fetchImg();
-  }, [conversation, currentUser]);
+  }, [axiosPrivate, conversation, currentUser, user?.profile_img]);
 
   return (
     <>
@@ -53,6 +51,11 @@ export const Conversations = ({ conversation, currentUser, index }) => {
           <img
             id="profile_img"
             alt="profileImg"
+            src={
+              profileImg
+                ? profileImg
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEYcD_ipeBQ6MAQRs9FvgKVBPV6D-8w7r2s10jUT_Go8Ji0UgRu_3XSBZlK-t85IoZlj4&usqp=CAU"
+            }
             className="h-14 w-14 rounded-full object-cover"
           />
         </div>

@@ -5,7 +5,6 @@ import React, { useEffect, useRef, useState } from "react";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { useAppSelector } from "../../app/hooks";
 import { Socket, io } from "socket.io-client";
-import { useParams } from "react-router-dom";
 
 interface Message {
   senderId: string;
@@ -23,10 +22,10 @@ const MentorMessages = () => {
   const [arrivalMessage, setArrivalMessage] = useState<Message | null>(null);
   const scrollRef = React.useRef<HTMLInputElement>(null);
   const socket = useRef<Socket | null>(null);
-  const { mentorId } = useParams();
 
   //Connecting to the server
   useEffect(() => {
+    console.log("New message arrived");
     socket.current = io("ws://localhost:3000");
     socket.current?.on("getMessage", (data) => {
       setArrivalMessage({
@@ -37,50 +36,49 @@ const MentorMessages = () => {
     });
   }, []);
 
-  //Adding the current user to socket.io server
-  useEffect(() => {
-    socket.current?.emit("addUser", user?._id);
-    socket.current?.on("getUsers", (users) => {
-      console.log(users);
-    });
-  }, [user, socket]);
-
-  useEffect(() => {
-    const createConversation = async () => {
-      try {
-        const create = await axiosPrivate.post(
-          "chat/conversation",
-          { receiverId: mentorId, senderId: user?._id },
-          { withCredentials: true }
-        );
-        setCurrentChat(create.data.conversation);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    createConversation();
-  }, [axiosPrivate, mentorId, user?._id]);
-
+  //Getting Current user all conversations
   useEffect(() => {
     const thisUserConversations = async () => {
       try {
-        const response = await axiosPrivate.get(
-          `chat/mentee/conversation/${user?._id}/${mentorId}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axiosPrivate.get("chat/conversation", {
+          withCredentials: true,
+        });
         setConversation(response.data.conversation);
       } catch (error) {
         console.log(error);
       }
     };
     thisUserConversations();
-  }, [axiosPrivate, mentorId, user?._id]);
+  }, [axiosPrivate]);
+
+  // Creating a new Conversation
+  const createConversation = async (conversation) => {
+    console.log("This is conversation", conversation);
+    try {
+      if (conversation.members && Array.isArray(conversation.members)) {
+        const menteeId = conversation.members.find(
+          (userId: string) => userId !== user?._id
+        );
+        if (menteeId !== undefined) {
+          await axiosPrivate.post(
+            "chat/conversation",
+            { receiverId: menteeId, senderId: user?._id },
+            { withCredentials: true }
+          );
+          setCurrentChat(conversation);
+        } else {
+          console.log("No mentee found.");
+        }
+      } else {
+        console.log("conversation.members is undefined or not an array.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //Fetching both users all conversations.
   useEffect(() => {
-    console.log("Running...!");
     try {
       const fetchConversationMessages = async () => {
         const response = await axiosPrivate.get(
@@ -94,20 +92,30 @@ const MentorMessages = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [axiosPrivate, currentChat?._id]);
+  }, [conversation, axiosPrivate, user?._id, currentChat?._id]);
 
   //Updating the new messages
   useEffect(() => {
-    console.log("sender id (mentor)", arrivalMessage?.senderId);
     arrivalMessage &&
       currentChat?.members.includes(arrivalMessage.senderId) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, conversation, currentChat?.members]);
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
+  //Adding the current user to socket.io server
+  useEffect(() => {
+    console.log("Running");
+    socket.current?.emit("addUser", user?._id);
+    socket.current?.on("getUsers", (users) => {
+      console.log(users);
+    });
+  }, [user, socket]);
 
-    const receiverId = mentorId;
+  //Sending the new message
+  const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const receiverId = currentChat?.members.find(
+      (userId: string) => userId !== user?._id
+    );
     if (receiverId !== undefined) {
       socket.current?.emit("sendMessage", {
         senderId: user?._id,
@@ -129,7 +137,7 @@ const MentorMessages = () => {
         console.log(error);
       }
     } else {
-      console.log("No Receiver ID found.");
+      console.log("No reciverId found.");
     }
   };
 
@@ -144,11 +152,15 @@ const MentorMessages = () => {
         <div className="col-span-3 px-1 py-1">
           <div className="w-full" id="chat_header">
             <div className="rounded-full bg-gray-200">
-              <h1 className="text-center text-xl font-bold">Mentor</h1>
+              <h1 className="text-center text-xl font-bold">Mentees</h1>
             </div>
             {conversation.map((c, index) => {
               return (
-                <div className="mt-3" key={index}>
+                <div
+                  onClick={() => createConversation(c)}
+                  className="mt-3"
+                  key={index}
+                >
                   <Conversations
                     conversation={c}
                     currentUser={user}

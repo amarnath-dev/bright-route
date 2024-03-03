@@ -1,11 +1,11 @@
-import { MentorAboutSkill } from "../../componets/mentor/ProfileAboutndSkill/MentorAboutSkill";
-import { MentorProfileCard } from "../../componets/mentor/ProfileCard/MentorProfileCard";
+import React from "react";
+import MentorAboutSkill from "../../componets/mentor/ProfileAboutndSkill/MentorAboutSkill";
+import MentorProfileCard from "../../componets/mentor/ProfileCard/MentorProfileCard";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MentorPaymentCard } from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
-import React from "react";
+import MentorPaymentCard from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
 
 const VisitMentorProfile = () => {
   const { mentorId } = useParams();
@@ -64,8 +64,8 @@ const VisitMentorProfile = () => {
       <div className="flex justify-center bg-slate-100">
         <MentorPaymentCard
           mentorPlans={mentorPlans}
-          handleOpen={""}
           mentor={""}
+          onChildData={""}
         />
       </div>
     </>

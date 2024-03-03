@@ -235,18 +235,19 @@ export class MenteeController {
         first_name: menteeProfile?.first_name,
         last_name: menteeProfile?.last_name,
         email: menteeEmail?.email,
-        job_title: menteeProfile.job_title ? menteeProfile.job_title : "",
-        linkedIn: menteeProfile.linkedIn ? menteeProfile?.linkedIn : "",
-        twitter: menteeProfile.twitter ? menteeProfile.twitter : "",
-        goal: menteeProfile.goal ? menteeProfile.goal : "",
-        available_time: menteeProfile.available_time
-          ? menteeProfile.available_time
+        job_title: menteeProfile?.job_title ? menteeProfile?.job_title : "",
+        linkedIn: menteeProfile?.linkedIn ? menteeProfile?.linkedIn : "",
+        twitter: menteeProfile?.twitter ? menteeProfile?.twitter : "",
+        goal: menteeProfile?.goal ? menteeProfile?.goal : "",
+        available_time: menteeProfile?.available_time
+          ? menteeProfile?.available_time
           : "",
-        country: menteeProfile.country ? menteeProfile.country : "",
-        region: menteeProfile.region ? menteeProfile.region : "",
-        role: menteeEmail.role,
+        country: menteeProfile?.country ? menteeProfile?.country : "",
+        region: menteeProfile?.region ? menteeProfile?.region : "",
+        role: menteeEmail?.role,
       };
       if (menteeDetails) {
+        console.log("Menteedetails", menteeDetails);
         res.status(200).json({ status: "success", menteeDetails });
       }
     } catch (error) {

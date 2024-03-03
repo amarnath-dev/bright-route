@@ -75,7 +75,7 @@ const MentorPaymentCard = ({ mentorPlans, mentor, onChildData }) => {
     dispatch(submitPlanId({ mentor_plan_id }));
     dispatch(submitMentorId({ mentor_id }));
     dispatch(submitPlanAmount({ mentor_plan_amount }));
-    navigate("/mentor-profile/apply");
+    navigate("/mentorship/apply");
   };
   return (
     <>
