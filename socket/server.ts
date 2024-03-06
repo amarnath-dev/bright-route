@@ -14,17 +14,17 @@ const io = new Server({
 let users: User[] = [];
 
 const addUser = (userId: string, socketId: string) => {
-  !users.some((user: User) => user.userId === userId) &&
+  if (!users.some((user) => user.userId === userId)) {
     users.push({ userId, socketId });
+  }
 };
 
 const removeUser = (socketId: string) => {
-  users = users.filter((user: User) => user.socketId !== socketId);
+  users = users.filter((user) => user.socketId !== socketId);
 };
 
 const getUser = (userId: string) => {
-  const result = users.find((user: any) => user.userId === userId);
-  return result;
+  return users.find((user) => user.userId === userId);
 };
 
 io.on("connection", (socket) => {
@@ -34,12 +34,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    console.log("New message received:", text);
     const user = getUser(receiverId);
-    const userSocketId = user?.socketId as string;
-    io.to(userSocketId).emit("getMessage", {
-      senderId,
-      text,
-    });
+    if (user) {
+      const { socketId } = user; 
+      io.to(socketId).emit("getMessage", { senderId, text });
+    } else {
+      console.error(`User with ID ${receiverId} not found`);
+    }
   });
 
   socket.on("disconnect", () => {

@@ -65,6 +65,11 @@ const NavBar = () => {
       navigate("/mentor/my-mentees");
     }
   };
+  const handleClickTwo = () => {
+    if (user?.role === "mentor") {
+      navigate("/mentor/chat");
+    }
+  };
   return (
     <>
       <div className="grid grid-cols-12 w-full items-center sticky shadow-lg">
@@ -107,7 +112,9 @@ const NavBar = () => {
                   <Navbar.Link active onClick={handleClickOne}>
                     {user?.role === "mentor" ? "My Mentees" : "Home"}
                   </Navbar.Link>
-                  <Navbar.Link href="#">About</Navbar.Link>
+                  <Navbar.Link onClick={handleClickTwo}>
+                    {user?.role === "mentor" ? "Messages" : "About"}
+                  </Navbar.Link>
                   <Navbar.Link href="#">Services</Navbar.Link>
                 </Navbar.Collapse>
               </Navbar>

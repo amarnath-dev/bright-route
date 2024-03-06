@@ -21,7 +21,6 @@ router.post("/google-auth", menteeAuthController.googleAuth);
 
 router.get("/browse-mentors", verifyJWT, menteeController.mentorProfile);
 router.get("/browse/filter", menteeController.mentorSearch);
-
 router.get("/managment/:menteeId", verifyJWT, menteeController.menteeProfile);
 router.post(
   "/managment/profie-update",

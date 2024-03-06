@@ -11,15 +11,28 @@ export class ChatControls {
     next: NextFunction
   ): Promise<void> {
     try {
-      const conversation = new Conversation({
-        members: [req.body.senderId, req.body.receiverId],
+      const senderId = req.body.senderId;
+      const receiverId = req.body.receiverId;
+      const existingConversation = await Conversation.findOne({
+        members: { $all: [senderId, receiverId] },
       });
-      await conversation.save();
-      res.status(200).json({
-        status: "success",
-        message: "Conversation created",
-        conversation,
-      });
+      if (existingConversation) {
+        res.status(200).json({
+          status: "success",
+          message: "Conversation already exists",
+          conversation: existingConversation,
+        });
+      } else {
+        const newConversation = new Conversation({
+          members: [senderId, receiverId],
+        });
+        await newConversation.save();
+        res.status(200).json({
+          status: "success",
+          message: "Conversation created",
+          conversation: newConversation,
+        });
+      }
     } catch (error) {
       console.log(error);
       return next(Error("Conversation creation failed"));
@@ -93,7 +106,6 @@ export class ChatControls {
   ): Promise<void> {
     try {
       const friendId = req.params.friendId;
-      console.log("FRIEND ID -> ", friendId);
       if (friendId) {
         const friendDetails = await Mentor.findOne({ mentor_id: friendId });
         if (friendDetails?._id) {
@@ -102,6 +114,27 @@ export class ChatControls {
           const friendDetails = await Mentee.findOne({ mentee_id: friendId });
           res.status(200).json({ status: "success", friendDetails });
         }
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Conversation creation failed"));
+    }
+  }
+  async getSingleConversation(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const menteeId = req.params.menteeId;
+      const mentorId = req.params.mentorId;
+      const conversation = await Conversation.find({
+        members: { $all: [menteeId, mentorId] },
+      });
+      if (conversation.length > 0) {
+        res.json({ conversation });
+      } else {
+        res.status(400).json({ message: "No conversation exists" });
       }
     } catch (error) {
       console.log(error);
