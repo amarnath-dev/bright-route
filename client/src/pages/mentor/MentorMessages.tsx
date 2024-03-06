@@ -5,6 +5,8 @@ import React, { useEffect, useRef, useState } from "react";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { useAppSelector } from "../../app/hooks";
 import { Socket, io } from "socket.io-client";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 
 interface Message {
   senderId: string;
@@ -23,9 +25,10 @@ const MentorMessages = () => {
   const scrollRef = React.useRef<HTMLInputElement>(null);
   const socket = useRef<Socket | null>(null);
 
-  //Connecting to the server
+  const [imoji, setImoji] = useState<boolean>(false);
+
+  //Connecting to the Server
   useEffect(() => {
-    console.log("New message arrived");
     socket.current = io("ws://localhost:3000");
     socket.current?.on("getMessage", (data) => {
       setArrivalMessage({
@@ -36,7 +39,7 @@ const MentorMessages = () => {
     });
   }, []);
 
-  //Getting Current user all conversations
+  //Getting Current user All conversations
   useEffect(() => {
     const thisUserConversations = async () => {
       try {
@@ -53,7 +56,6 @@ const MentorMessages = () => {
 
   // Creating a new Conversation
   const createConversation = async (conversation) => {
-    console.log("This is conversation", conversation);
     try {
       if (conversation.members && Array.isArray(conversation.members)) {
         const menteeId = conversation.members.find(
@@ -103,16 +105,18 @@ const MentorMessages = () => {
 
   //Adding the current user to socket.io server
   useEffect(() => {
-    console.log("Running");
     socket.current?.emit("addUser", user?._id);
     socket.current?.on("getUsers", (users) => {
-      console.log(users);
+      console.log("Chat Users", users);
     });
   }, [user, socket]);
 
   //Sending the new message
-  const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
+    if (!newMessage) {
+      return;
+    }
     const receiverId = currentChat?.members.find(
       (userId: string) => userId !== user?._id
     );
@@ -146,9 +150,43 @@ const MentorMessages = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const handleImojiClick = (emojiData: EmojiClickData) => {
+    const imoji = emojiData.emoji;
+    if (imoji) {
+      setNewMessage((prevMessage) => prevMessage + imoji);
+    } else {
+      console.log("emoji is not available");
+    }
+  };
+  const handleImoji = () => {
+    setImoji((state) => !state);
+  };
+  const handleOutsideClick = (event) => {
+    const emojiPickerButton = document.getElementById("imoji-btn");
+    const emojiPicker = document.getElementById("imoji-picker");
+
+    if (
+      emojiPickerButton &&
+      emojiPicker &&
+      !emojiPickerButton.contains(event.target) &&
+      !emojiPicker.contains(event.target)
+    ) {
+      setImoji(false);
+    }
+  };
+
+  useEffect(() => {
+    if (imoji) {
+      window.addEventListener("click", handleOutsideClick);
+    }
+    return () => {
+      window.removeEventListener("click", handleOutsideClick);
+    };
+  }, [imoji]);
+
   return (
     <>
-      <div className="grid grid-cols-12 h-full bg-gray-600">
+      <div className="grid grid-cols-12 h-full bg-gray-100">
         <div className="col-span-3 px-1 py-1">
           <div className="w-full" id="chat_header">
             <div className="rounded-full bg-gray-200">
@@ -171,6 +209,9 @@ const MentorMessages = () => {
             })}
           </div>
         </div>
+        <div id="imoji-picker">
+          {imoji && <EmojiPicker onEmojiClick={handleImojiClick} />}
+        </div>
         <div className="col-span-12 md:col-span-6 bg-white rounded-md">
           <div className="flex flex-col items-center justify-center w-full min-h-screen text-gray-800 rounded">
             <div className="flex flex-col flex-grow w-full shadow-xl rounded-lg overflow-hidden">
@@ -184,6 +225,8 @@ const MentorMessages = () => {
                             message={m}
                             own={m?.senderId === user?._id}
                             index={index}
+                            currentChat={currentChat}
+                            userId={user?._id}
                           />
                         </div>
                       );
@@ -197,6 +240,15 @@ const MentorMessages = () => {
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                     />
+                    <div>
+                      <span
+                        className="px-2 py-2"
+                        id="imoji-btn"
+                        onClick={handleImoji}
+                      >
+                        <SentimentSatisfiedIcon />
+                      </span>
+                    </div>
                     <div
                       className="bg-gray-200 rounded-r h-10 flex items-center px-2 cursor-pointer hover:bg-slate-300"
                       onClick={handleSubmit}

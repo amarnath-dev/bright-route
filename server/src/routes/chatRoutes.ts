@@ -12,7 +12,11 @@ router.get(
   verifyJWT,
   chatControls.getSingleConversation
 );
-
+router.get(
+  "/mentor/conversation/:mentorId/:menteeId",
+  verifyJWT,
+  chatControls.getSingleConversationMentor
+);
 router.post("/message", verifyJWT, chatControls.newMessage);
 router.get(
   "/allConversation/:conversationId",

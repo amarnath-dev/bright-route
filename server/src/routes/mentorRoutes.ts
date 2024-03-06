@@ -30,6 +30,11 @@ router.get(
   verifyJWT,
   mentorController.menteeApllication
 );
-router.get("/paymentDetails/:paymentId", verifyJWT, mentorController.paymentDetails);
+router.get(
+  "/paymentDetails/:paymentId",
+  verifyJWT,
+  mentorController.paymentDetails
+);
+router.get("/plan/:planId", verifyJWT, mentorController.planDetails);
 
 export default router;

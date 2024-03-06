@@ -441,7 +441,6 @@ export class MenteeController {
     try {
       const user = req.user;
       const userRole = req.params.userRole;
-      console.log(user);
       if (user) {
         if (userRole === "mentee") {
           const menteeData = await MenteeModel.findOne({ mentee_id: user.id });
@@ -450,6 +449,7 @@ export class MenteeController {
               status: "success",
               profileImageId: menteeData?.profile_img,
             });
+            return;
           } else {
             res
               .status(404)

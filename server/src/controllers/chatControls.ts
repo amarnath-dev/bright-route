@@ -22,6 +22,7 @@ export class ChatControls {
           message: "Conversation already exists",
           conversation: existingConversation,
         });
+        return;
       } else {
         const newConversation = new Conversation({
           members: [senderId, receiverId],
@@ -121,6 +122,28 @@ export class ChatControls {
     }
   }
   async getSingleConversation(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const menteeId = req.params.menteeId;
+      const mentorId = req.params.mentorId;
+      const conversation = await Conversation.find({
+        members: { $all: [menteeId, mentorId] },
+      });
+      if (conversation.length > 0) {
+        res.json({ conversation });
+      } else {
+        res.status(400).json({ message: "No conversation exists" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Conversation creation failed"));
+    }
+  }
+
+  async getSingleConversationMentor(
     req: Request,
     res: Response,
     next: NextFunction
