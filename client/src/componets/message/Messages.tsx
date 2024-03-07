@@ -18,10 +18,12 @@ export const Messages: React.FC<Messages> = ({
   currentChat,
   userId,
 }) => {
-  const [profileImg, setProfileImg] = useState("");
   const axiosPrivate = useAxiosPrivate();
+  const [profileImg, setProfileImg] = useState("");
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   useEffect(() => {
+    console.log("Running...");
     const frndId = currentChat?.members?.find(
       (user: string) => user !== userId
     );
@@ -51,6 +53,28 @@ export const Messages: React.FC<Messages> = ({
       }
     }
   }, [axiosPrivate, currentChat?.members, userId]);
+
+  useEffect(() => {
+    console.log("Running...");
+    if (message?.type && message?.type === "image") {
+      const imageId = message?.text;
+      if (imageId) {
+        const imageRef = ref(storage, imageId);
+        getDownloadURL(imageRef)
+          .then((url: string) => {
+            setImageUrls((prevUrls) => {
+              const newUrls = [...prevUrls];
+              newUrls[index] = url;
+              return newUrls;
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  }, [message, index]);
+
   return (
     <>
       {own ? (
@@ -60,9 +84,13 @@ export const Messages: React.FC<Messages> = ({
             className="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end"
           >
             <div>
-              <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                <p className="text-sm">{message?.text}</p>
-              </div>
+              {message.type === "text" ? (
+                <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
+                  <p className="text-sm">{message?.text}</p>
+                </div>
+              ) : (
+                <img id="chat_img" src={imageUrls[index]} alt="img" />
+              )}
               <span className="text-xs text-gray-500 leading-none">
                 {format(message?.createdAt)}
               </span>
@@ -84,9 +112,15 @@ export const Messages: React.FC<Messages> = ({
               />
             </div>
             <div>
-              <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                <p className="text-sm">{message?.text}</p>
-              </div>
+              {/* Now the real time has gone  */}
+              {message.type === "text" ? (
+                <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+                  <p className="text-sm">{message?.text}</p>
+                </div>
+              ) : (
+                <img id="chat_img" src={imageUrls[index]} alt="img" />
+              )}
+
               <span className="text-xs text-gray-500 leading-none">
                 {format(message?.createdAt)}
               </span>

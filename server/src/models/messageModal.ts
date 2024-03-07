@@ -12,6 +12,9 @@ const messageSchema: Schema<IMessage> = new mongoose.Schema<IMessage>(
     text: {
       type: String,
     },
+    type: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

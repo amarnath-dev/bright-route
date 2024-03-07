@@ -231,6 +231,7 @@ const MenteeProfile = () => {
 
     if (hiddenAnchorRef.current) {
       hiddenAnchorRef.current.href = blobUrlRef.current;
+      
       const imgId =
         Math.random().toString(16).slice(2) +
         (new Date().getTime() / 1000).toString();

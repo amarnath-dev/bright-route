@@ -15,6 +15,7 @@ export interface IMessage extends Document {
   conversationId: string;
   senderId: string;
   text: string;
+  type: string;
 }
 
 export interface IMenteeProfile extends Document {
