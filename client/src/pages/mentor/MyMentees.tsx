@@ -78,15 +78,15 @@ const MyMentees = () => {
 
   //Creating the chat Conversation
   useEffect(() => {
+    console.log("This is my mentees", myMentees);
     if (myMentees) {
       myMentees.map((menteeObj, index) => {
         const createConversation = async () => {
-          const conver = await axiosPrivate.post(
+          await axiosPrivate.post(
             "chat/conversation",
             { receiverId: menteeObj.mentee_id, senderId: user?._id },
             { withCredentials: true }
           );
-          console.log("Converstion created", conver);
         };
         createConversation();
       });
@@ -177,7 +177,7 @@ const MyMentees = () => {
                               <MessageIcon />
                             </Link>
                             <Link
-                              to={"/chat"}
+                              to={`/video/${plan?.mentee_id}`}
                               className="border-2 px-2 py-2 rounded-md text-white"
                             >
                               <VideoChatIcon className="text-black" />

@@ -25,7 +25,6 @@ const MentorPlans = () => {
       const response = await axiosPrivate.get("/mentor/plans", {
         withCredentials: true,
       });
-      console.log("mentor plans", response.data.plans);
       if (response.data.status === "success") {
         const result = response.data.plans;
         if (result.planDetails.length > 0) {
