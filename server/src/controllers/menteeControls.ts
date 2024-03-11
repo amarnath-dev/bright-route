@@ -9,6 +9,7 @@ import OTP from "../models/otpModel";
 import Plans from "../models/mentorPlansModel";
 import Report from "../models/mentorReportModel";
 import { ObjectId } from "mongodb";
+import Payment from "../models/PaymentModel";
 
 export interface mentorProfileObj {
   imageUrl: string;
@@ -47,7 +48,6 @@ export class MenteeController {
           },
         },
       ]);
-      console.log("This is all mentors ==> ", allMentors);
       if (allMentors) {
         res.status(200).json({ status: "sucess", allMentors: allMentors });
       }
@@ -418,7 +418,6 @@ export class MenteeController {
       console.log("Reached the server");
       if (user) {
         const userExists = await User.findById(user.id);
-        console.log("Reached at the otp send");
         if (!userExists?._id) {
           res.status(404).json({ message: "Can't find email" });
         }
@@ -441,7 +440,6 @@ export class MenteeController {
     try {
       const user = req.user;
       const userRole = req.params.userRole;
-      console.log(user);
       if (user) {
         if (userRole === "mentee") {
           const menteeData = await MenteeModel.findOne({ mentee_id: user.id });
@@ -450,6 +448,7 @@ export class MenteeController {
               status: "success",
               profileImageId: menteeData?.profile_img,
             });
+            return;
           } else {
             res
               .status(404)
@@ -488,6 +487,42 @@ export class MenteeController {
       const user = req.user;
       if (user) {
         console.log("This is the user --> ", user);
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Email send failed"));
+    }
+  }
+  async getMyMentors(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user;
+      const mentors = await Payment.aggregate([
+        {
+          $match: { mentee_id: user?.id },
+        },
+        {
+          $lookup: {
+            from: "mentorprofiles",
+            let: { mentorId: "$mentor_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: [{ $toString: "$mentor_id" }, "$$mentorId"],
+                  },
+                },
+              },
+            ],
+            as: "mentorProfile",
+          },
+        },
+      ]);
+      if (mentors) {
+        res.status(200).json({ status: true, mentors });
       }
     } catch (error) {
       console.log(error);

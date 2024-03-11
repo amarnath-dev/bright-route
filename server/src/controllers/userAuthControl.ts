@@ -170,7 +170,6 @@ export class MenteeAuthController {
       }
       res.clearCookie("refreshToken", {
         httpOnly: true,
-        // sameSite: "none",
         secure: false,
       });
       res
@@ -299,7 +298,6 @@ export class MenteeAuthController {
           token,
         });
       } else {
-        console.log("reached at google auth two");
         const userName = await generateUsername();
         const menteeDetails: IUser = new User({
           email,
@@ -308,15 +306,12 @@ export class MenteeAuthController {
         });
         const user: IUser = await menteeDetails.save();
         if (user) {
-          console.log("reached at google auth three");
           const userProfileDetails: IMenteeProfile = new Menteeprofile({
             mentee_id: user?._id,
             first_name: userName.toString(),
             last_name: "",
           });
           const profileData: IMenteeProfile = await userProfileDetails.save();
-          console.log(profileData);
-          console.log("reached at google auth four");
           if (profileData) {
             const token = generateJwt(user?._id, email);
             res.status(200).json({

@@ -54,7 +54,7 @@ export const Conversations = ({ conversation, currentUser, index }) => {
             src={
               profileImg
                 ? profileImg
-                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEYcD_ipeBQ6MAQRs9FvgKVBPV6D-8w7r2s10jUT_Go8Ji0UgRu_3XSBZlK-t85IoZlj4&usqp=CAU"
+                : "https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1395880969.1709424000&semt=ais"
             }
             className="h-14 w-14 rounded-full object-cover"
           />

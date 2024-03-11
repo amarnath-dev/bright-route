@@ -273,7 +273,6 @@ export class MentorController {
         },
       ]);
       if (mentorApplication) {
-        console.log("This is mentor applications", mentorApplication);
         res.status(200).json({ status: "success", mentorApplication });
       }
     } catch (error) {
@@ -291,6 +290,32 @@ export class MentorController {
       const paymentDetails = await Payment.findById(paymentId);
       if (paymentDetails?._id) {
         res.status(200).json({ status: "success", paymentDetails });
+      }
+    } catch (error) {
+      console.error(error);
+      return next(Error("Mentor Application fetch failed"));
+    }
+  }
+
+  async planDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const planId = req.params.planId;
+      if (planId) {
+        const plan = await Plans.find(
+          { "planDetails._id": planId },
+          { "planDetails.$": 1 }
+        );
+        if (plan) {
+          res.status(200).json({ plan: plan[0].planDetails[0] });
+        } else {
+          console.log("Plan not found in database");
+        }
+      } else {
+        console.log("Plan ID not found");
       }
     } catch (error) {
       console.error(error);

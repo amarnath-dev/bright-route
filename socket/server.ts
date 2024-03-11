@@ -33,12 +33,14 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
 
-  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+  socket.on("sendMessage", ({ senderId, receiverId, text, type }) => {
     console.log("New message received:", text);
+    console.log("New message received and type:", type);
     const user = getUser(receiverId);
+    console.log("This is reciver", user);
     if (user) {
-      const { socketId } = user; 
-      io.to(socketId).emit("getMessage", { senderId, text });
+      const { socketId } = user;
+      io.to(socketId).emit("getMessage", { senderId, text, type });
     } else {
       console.error(`User with ID ${receiverId} not found`);
     }

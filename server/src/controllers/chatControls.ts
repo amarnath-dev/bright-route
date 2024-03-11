@@ -22,6 +22,7 @@ export class ChatControls {
           message: "Conversation already exists",
           conversation: existingConversation,
         });
+        return;
       } else {
         const newConversation = new Conversation({
           members: [senderId, receiverId],
@@ -135,6 +136,50 @@ export class ChatControls {
         res.json({ conversation });
       } else {
         res.status(400).json({ message: "No conversation exists" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Conversation creation failed"));
+    }
+  }
+
+  async getSingleConversationMentor(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const menteeId = req.params.menteeId;
+      const mentorId = req.params.mentorId;
+      const conversation = await Conversation.find({
+        members: { $all: [menteeId, mentorId] },
+      });
+      if (conversation.length > 0) {
+        res.json({ conversation });
+      } else {
+        res.status(400).json({ message: "No conversation exists" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Conversation creation failed"));
+    }
+  }
+  async deleteMessage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const messageId = req.params.messageId;
+      if (messageId) {
+        const action = await Message.findByIdAndUpdate(messageId, {
+          $set: { IsDeleted: true },
+        });
+        if (action?._id) {
+          res.status(200).json({ status: "success" });
+        }
+      } else {
+        res.status(404).json({ message: "messageId is missing" });
       }
     } catch (error) {
       console.log(error);
