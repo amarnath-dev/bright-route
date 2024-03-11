@@ -13,6 +13,7 @@ export default {
         'color-three': '#ffffff',
         'color-four': '#f2f2f2',
         'color-five': '#52ab98',
+        'background': "#020914",
       },
     },
   },

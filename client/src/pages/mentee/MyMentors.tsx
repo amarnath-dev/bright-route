@@ -105,7 +105,7 @@ const MyMentors = () => {
                               <MessageIcon />
                             </Link>
                             <Link
-                              to={""}
+                              to={`/video/${mentor?.mentor_id}`}
                               className="border-2 px-2 py-2 rounded-md text-white"
                             >
                               <VideoChatIcon className="text-black" />

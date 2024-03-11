@@ -66,6 +66,7 @@ const VisitMenteeProfile = React.lazy(
   () => import("./pages/mentor/VisitMenteeProfile")
 );
 const MyMentors = React.lazy(() => import("./pages/mentee/MyMentors"));
+const VideoChat = React.lazy(() => import("./componets/VideoChat/VideoChat"));
 
 function App() {
   return (
@@ -76,7 +77,7 @@ function App() {
             <Routes>
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/signin" element={<SigninPage />} />
-
+              <Route path="/video/:roomId" element={<VideoChat />} />
               {/* Mentee Roles  */}
               <Route element={<IsAuthenticated />}>
                 <Route element={<ProtectedRoute allowedRole={"mentee"} />}>
@@ -113,6 +114,7 @@ function App() {
                     path="/my-mentors/mentor-profile/:mentorId"
                     element={<VisitMentorProfile />}
                   />
+                  {/* <Route path="/video/:roomId" element={<VideoChat />} /> */}
                 </Route>
 
                 {/* Mentor Routes  */}

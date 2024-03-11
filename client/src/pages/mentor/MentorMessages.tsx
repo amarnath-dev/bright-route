@@ -270,7 +270,6 @@ const MentorMessages = () => {
     const imageRef = ref(storage, currentImg);
     deleteObject(imageRef)
       .then(() => {
-        console.log("Image deleted from firebase");
         setOpenImg(false);
       })
       .catch((error: unknown) => {
