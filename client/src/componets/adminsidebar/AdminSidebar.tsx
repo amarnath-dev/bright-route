@@ -8,7 +8,6 @@ export const AdminSidebar = () => {
         <div className="text-center mt-10 font-bold text-gray-700">
           <h1>Bright Route Admin Panel</h1>
         </div>
-
         <div className="flex justify-start items-start flex-col mx-3 my-3">
           <button className="flex items-center px-4 py-2 rounded-md w-full mt-8">
             <FaUserTie className="text-gray-500" />

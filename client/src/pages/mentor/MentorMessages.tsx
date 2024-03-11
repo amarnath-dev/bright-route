@@ -7,11 +7,21 @@ import { useAppSelector } from "../../app/hooks";
 import { Socket, io } from "socket.io-client";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { storage } from "../../app/firebase";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 interface Message {
   senderId: string;
   text: string;
   createdAt: number;
+  type: string;
 }
 
 const MentorMessages = () => {
@@ -27,6 +37,9 @@ const MentorMessages = () => {
 
   const [imoji, setImoji] = useState<boolean>(false);
 
+  const [openImg, setOpenImg] = useState<boolean>();
+  const [currentImg, setCurrentImg] = useState("");
+
   //Connecting to the Server
   useEffect(() => {
     socket.current = io("ws://localhost:3000");
@@ -35,6 +48,7 @@ const MentorMessages = () => {
         senderId: data?.senderId,
         text: data?.text,
         createdAt: Date.now(),
+        type: data.type,
       });
     });
   }, []);
@@ -114,34 +128,70 @@ const MentorMessages = () => {
   //Sending the new message
   const handleSubmit = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (!newMessage) {
+    if (!newMessage && !currentImg) {
       return;
     }
-    const receiverId = currentChat?.members.find(
-      (userId: string) => userId !== user?._id
-    );
-    if (receiverId !== undefined) {
-      socket.current?.emit("sendMessage", {
-        senderId: user?._id,
-        receiverId,
-        text: newMessage,
-      });
-      try {
-        const message = {
+    if (openImg && currentImg) {
+      const receiverId = currentChat?.members.find(
+        (userId: string) => userId !== user?._id
+      );
+      if (receiverId !== undefined) {
+        socket.current?.emit("sendMessage", {
           senderId: user?._id,
-          text: newMessage,
-          conversationId: currentChat?._id,
-        };
-        const response = await axiosPrivate.post("chat/message", message, {
-          withCredentials: true,
+          receiverId,
+          text: currentImg,
+          type: "image",
         });
-        setMessages([...messages, response.data.savedMessage]);
-        setNewMessage("");
-      } catch (error) {
-        console.log(error);
+        try {
+          const message = {
+            senderId: user?._id,
+            text: currentImg,
+            conversationId: currentChat?._id,
+            type: "image",
+          };
+          const response = await axiosPrivate.post("chat/message", message, {
+            withCredentials: true,
+          });
+          setMessages([...messages, response.data.savedMessage]);
+          setNewMessage("");
+          setOpenImg(false);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        console.log("No reciverId found.");
       }
-    } else {
-      console.log("No reciverId found.");
+    }
+    if (newMessage) {
+      const receiverId = currentChat?.members.find(
+        (userId: string) => userId !== user?._id
+      );
+      if (receiverId !== undefined) {
+        socket.current?.emit("sendMessage", {
+          senderId: user?._id,
+          receiverId,
+          text: newMessage,
+          type: "text",
+        });
+        try {
+          const message = {
+            senderId: user?._id,
+            text: newMessage,
+            conversationId: currentChat?._id,
+            type: "text",
+          };
+          const response = await axiosPrivate.post("chat/message", message, {
+            withCredentials: true,
+          });
+          setMessages([...messages, response.data.savedMessage]);
+          setNewMessage("");
+          setOpenImg(false);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        console.log("No reciverId found.");
+      }
     }
   };
 
@@ -184,12 +234,56 @@ const MentorMessages = () => {
     };
   }, [imoji]);
 
+  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      const blob = new Blob([file], { type: file.type });
+      const imgId =
+        Math.random().toString(16).slice(2) +
+        (new Date().getTime() / 1000).toString();
+      const reference = ref(storage, imgId);
+      const snapshot = await uploadBytes(reference, blob);
+      if (snapshot) {
+        const imageId = snapshot.metadata?.fullPath;
+        console.log("Image saved in firebase");
+        setCurrentImg(imageId);
+        if (imageId) {
+          const imageRef = ref(storage, imageId);
+          setOpenImg(true);
+          getDownloadURL(imageRef)
+            .then((url: string) => {
+              const img = document.getElementById(
+                "chat_img_main"
+              ) as HTMLImageElement;
+              img.src = url;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      }
+      e.target.value = "";
+    }
+  };
+
+  const handleClose = () => {
+    const imageRef = ref(storage, currentImg);
+    deleteObject(imageRef)
+      .then(() => {
+        console.log("Image deleted from firebase");
+        setOpenImg(false);
+      })
+      .catch((error: unknown) => {
+        console.log("Error Occured", error);
+      });
+  };
+
   return (
     <>
       <div className="grid grid-cols-12 h-full bg-gray-100">
-        <div className="col-span-3 px-1 py-1">
+        <div className="col-span-full md:col-span-3 px-1 py-1">
           <div className="w-full" id="chat_header">
-            <div className="rounded-full bg-gray-200">
+            <div className="rounded-full">
               <h1 className="text-center text-xl font-bold">Mentees</h1>
             </div>
             {conversation.map((c, index) => {
@@ -209,11 +303,14 @@ const MentorMessages = () => {
             })}
           </div>
         </div>
-        <div id="imoji-picker">
-          {imoji && <EmojiPicker onEmojiClick={handleImojiClick} />}
-        </div>
+
         <div className="col-span-12 md:col-span-6 bg-white rounded-md">
-          <div className="flex flex-col items-center justify-center w-full min-h-screen text-gray-800 rounded">
+          <div className="flex flex-col items-center justify-center w-full min-h-screen text-gray-800 rounded relative">
+            <div className="w-full absolute bottom-15 left-36">
+              <div id="imoji-picker">
+                {imoji && <EmojiPicker onEmojiClick={handleImojiClick} />}
+              </div>
+            </div>
             <div className="flex flex-col flex-grow w-full shadow-xl rounded-lg overflow-hidden">
               {currentChat ? (
                 <div>
@@ -232,7 +329,41 @@ const MentorMessages = () => {
                       );
                     })}
                   </div>
+                  {openImg ? (
+                    <div className="bg-gray-100 border-2 flex justify-center px-3 py-3">
+                      <img
+                        id="chat_img_main"
+                        src=""
+                        className="object-cover h-40"
+                      />
+                      <span
+                        className="px-2 cursor-pointer"
+                        onClick={handleClose}
+                      >
+                        <CloseIcon className="border-2 rounded" />
+                      </span>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   <div className="flex items-center px-1 w-full mb-4">
+                    <div className="px-2 hover:bg-gray-300 rounded-full">
+                      <span className="hidden">
+                        <input
+                          type="file"
+                          src={currentImg ? currentImg : ""}
+                          id="imageFile"
+                          onChange={handleImage}
+                        />
+                      </span>
+                      <span
+                        onClick={() => {
+                          document.getElementById("imageFile")?.click();
+                        }}
+                      >
+                        <AttachFileIcon />
+                      </span>
+                    </div>
                     <input
                       type="text"
                       placeholder="Type a message..."
@@ -242,7 +373,7 @@ const MentorMessages = () => {
                     />
                     <div>
                       <span
-                        className="px-2 py-2"
+                        className="px-2 py-2 cursor-pointer"
                         id="imoji-btn"
                         onClick={handleImoji}
                       >
@@ -261,6 +392,10 @@ const MentorMessages = () => {
                 <div className="text-center mt-10">
                   <span className="font-bold text-xl">
                     Please Select a chat to start messaging
+                    <img
+                      src="https://www.csr-online.net/wp-content/uploads/2020/06/people-speech-bubbles-chatting-communication-concept-vector-illustration-141568372-450x350.jpg"
+                      alt=""
+                    />
                   </span>
                 </div>
               )}

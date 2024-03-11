@@ -15,6 +15,10 @@ const messageSchema: Schema<IMessage> = new mongoose.Schema<IMessage>(
     type: {
       type: String,
     },
+    IsDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

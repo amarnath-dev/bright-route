@@ -14,7 +14,6 @@ router.post("/login", menteeAuthController.signin);
 router.get("/refresh", menteeAuthController.refreshToken);
 router.delete("/logout", menteeAuthController.logout);
 router.get("/checkToken", menteeAuthController.checkToken);
-
 router.post("/verifyOTP", menteeAuthController.verifyOTP);
 router.post("/resendOTP", menteeAuthController.resendOTP);
 router.post("/google-auth", menteeAuthController.googleAuth);
@@ -58,11 +57,11 @@ router.get(
   verifyJWT,
   menteeController.getMentorPlans
 );
-
-router.get("/getimage/:userRole", verifyJWT, menteeController.getProfileImg);
-
 //using new controller class
 router.post("/create-payment-intent", verifyJWT, paymentController.payment);
 router.post("/payment-suceess", verifyJWT, paymentController.storePaymentData);
+
+router.get("/getimage/:userRole", verifyJWT, menteeController.getProfileImg);
+router.get("/my-mentors", verifyJWT, menteeController.getMyMentors);
 
 export default router;

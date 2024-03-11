@@ -65,6 +65,7 @@ const MentorMessages = React.lazy(
 const VisitMenteeProfile = React.lazy(
   () => import("./pages/mentor/VisitMenteeProfile")
 );
+const MyMentors = React.lazy(() => import("./pages/mentee/MyMentors"));
 
 function App() {
   return (
@@ -103,6 +104,15 @@ function App() {
                     element={<PaymentSuccess />}
                   />
                   <Route path="/chat/:mentorId" element={<MenteeMessages />} />
+                  <Route path="/my-mentors" element={<MyMentors />} />
+                  <Route
+                    path="/my-mentors/paymentDetails/:paymentId"
+                    element={<MenteePaymentDetails />}
+                  />
+                  <Route
+                    path="/my-mentors/mentor-profile/:mentorId"
+                    element={<VisitMentorProfile />}
+                  />
                 </Route>
 
                 {/* Mentor Routes  */}

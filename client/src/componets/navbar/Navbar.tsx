@@ -69,6 +69,9 @@ const NavBar = () => {
     if (user?.role === "mentor") {
       navigate("/mentor/chat");
     }
+    if (user?.role === "mentee") {
+      navigate("/my-mentors");
+    }
   };
   const handleClickThree = () => {
     if (user?.role === "mentor") {
@@ -118,7 +121,7 @@ const NavBar = () => {
                     {user?.role === "mentor" ? "My Mentees" : "Home"}
                   </Navbar.Link>
                   <Navbar.Link onClick={handleClickTwo}>
-                    {user?.role === "mentor" ? "Messages" : "About"}
+                    {user?.role === "mentor" ? "Messages" : "My Mentors"}
                   </Navbar.Link>
                   <Navbar.Link onClick={handleClickThree}>Services</Navbar.Link>
                 </Navbar.Collapse>

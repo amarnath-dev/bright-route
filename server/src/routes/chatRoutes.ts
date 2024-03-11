@@ -24,5 +24,10 @@ router.get(
   chatControls.getAllConversation
 );
 router.get("/getUser/:friendId", verifyJWT, chatControls.getFriendDetails);
+router.patch(
+  "/message/delete/:messageId",
+  verifyJWT,
+  chatControls.deleteMessage
+);
 
 export default router;

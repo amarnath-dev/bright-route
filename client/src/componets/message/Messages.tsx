@@ -3,6 +3,8 @@ import { format } from "timeago.js";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Swal from "sweetalert2";
 
 interface Messages {
   message: object;
@@ -21,6 +23,7 @@ export const Messages: React.FC<Messages> = ({
   const axiosPrivate = useAxiosPrivate();
   const [profileImg, setProfileImg] = useState("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     console.log("Running...");
@@ -55,7 +58,6 @@ export const Messages: React.FC<Messages> = ({
   }, [axiosPrivate, currentChat?.members, userId]);
 
   useEffect(() => {
-    console.log("Running...");
     if (message?.type && message?.type === "image") {
       const imageId = message?.text;
       if (imageId) {
@@ -75,6 +77,29 @@ export const Messages: React.FC<Messages> = ({
     }
   }, [message, index]);
 
+  const handleDelete = async (messageId: string) => {
+    Swal.fire({
+      title: "Delete Message",
+      text: "Do you want to delete this message ?",
+      icon: "warning",
+      confirmButtonText: "Yes",
+      showCancelButton: true,
+      cancelButtonText: "No",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await axiosPrivate.patch(
+          `/chat/message/delete/${messageId}`,
+          { withCredentials: true }
+        );
+        if (response.data) {
+          console.log("Message deleted successfully");
+        }
+      } else {
+        return;
+      }
+    });
+  };
+
   return (
     <>
       {own ? (
@@ -84,12 +109,50 @@ export const Messages: React.FC<Messages> = ({
             className="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end"
           >
             <div>
-              {message.type === "text" ? (
-                <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                  <p className="text-sm">{message?.text}</p>
-                </div>
+              {message?.type === "text" ? (
+                <>
+                  {message?.IsDeleted ? (
+                    <>
+                      <div className="bg-blue-400 text-white p-1 rounded-l-lg rounded-br-lg">
+                        <h1>You deleted this message</h1>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                      >
+                        <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
+                          <div className="flex">
+                            <p className="text-sm">{message?.text}</p>
+                            <>
+                              {isHovered ? (
+                                <span
+                                  className="flex cursor-pointer"
+                                  onClick={() => handleDelete(message?._id)}
+                                >
+                                  <DeleteIcon />
+                                </span>
+                              ) : (
+                                ""
+                              )}
+                            </>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </>
               ) : (
-                <img id="chat_img" src={imageUrls[index]} alt="img" />
+                <div>
+                  <img
+                    id="chat_img"
+                    src={imageUrls[index]}
+                    alt="img"
+                    className="rounded-md px-1 py-1 bg-gray-300"
+                  />
+                </div>
               )}
               <span className="text-xs text-gray-500 leading-none">
                 {format(message?.createdAt)}
@@ -111,16 +174,32 @@ export const Messages: React.FC<Messages> = ({
                 className="rounded-full"
               />
             </div>
-            <div>
-              {/* Now the real time has gone  */}
-              {message.type === "text" ? (
-                <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                  <p className="text-sm">{message?.text}</p>
-                </div>
-              ) : (
-                <img id="chat_img" src={imageUrls[index]} alt="img" />
-              )}
 
+            <div>
+              {message?.type === "text" ? (
+                <>
+                  {message?.IsDeleted ? (
+                    <>
+                      <div className="bg-gray-400 text-white p-1 rounded-l-lg rounded-br-lg">
+                        <h1>This messages has been deleted</h1>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+                      <p className="text-sm">{message?.text}</p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <img
+                    id="chat_img"
+                    src={imageUrls[index]}
+                    alt="img"
+                    className="border-2 px-1 py-1 bg-blue-300 rounded-md"
+                  />
+                </>
+              )}
               <span className="text-xs text-gray-500 leading-none">
                 {format(message?.createdAt)}
               </span>

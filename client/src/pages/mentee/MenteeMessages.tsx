@@ -245,7 +245,6 @@ const MenteeMessages = () => {
       const snapshot = await uploadBytes(reference, blob);
       if (snapshot) {
         const imageId = snapshot.metadata?.fullPath;
-        console.log("Image saved in firebase");
         setCurrentImg(imageId);
         if (imageId) {
           const imageRef = ref(storage, imageId);
@@ -324,6 +323,7 @@ const MenteeMessages = () => {
                   );
                 })}
               </div>
+
               {openImg ? (
                 <div className="bg-gray-100 border-2 flex justify-center px-3 py-3">
                   <img
@@ -338,6 +338,8 @@ const MenteeMessages = () => {
               ) : (
                 ""
               )}
+
+
               <div className="flex items-center px-1 w-full mb-4">
                 <div className="px-2 hover:bg-gray-300 rounded-full">
                   <span className="hidden">

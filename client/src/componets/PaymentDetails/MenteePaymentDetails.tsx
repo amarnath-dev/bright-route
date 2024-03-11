@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import copy from "copy-to-clipboard";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 
 const MenteePaymentDetails = () => {
   const { paymentId } = useParams();
@@ -15,6 +16,7 @@ const MenteePaymentDetails = () => {
   const [menteeId, setMenteeId] = useState();
 
   const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.userAuth);
 
   useEffect(() => {
     const fetchPaymetData = async () => {
@@ -60,23 +62,28 @@ const MenteePaymentDetails = () => {
       <div className="w-full h-full">
         <div className="w-full h-full flex justify-center px-3 py-2">
           <figure className="w-full bg-slate-100 rounded-xl p-8 md:w-1/2 mt-10">
-            <div className="pt-6 space-y-4">
-              <blockquote>
-                <p className="text-lg font-medium">
-                  {paymentDetails?.goal_of_mentorship}
-                </p>
-                <p className="text-lg font-medium mt-2">
-                  {paymentDetails?.time_to_reach_goal}
-                  <div>
-                    <small className="text-gray-700 uppercase underline">
-                      Message:
-                    </small>{" "}
-                    <br />
-                    <p className="">{paymentDetails?.message_to_mentor}</p>
-                  </div>
-                </p>
-              </blockquote>
-            </div>
+            {user?.role === "mentor" ? (
+              <div className="pt-6 space-y-4">
+                <blockquote>
+                  <p className="text-lg font-medium">
+                    {paymentDetails?.goal_of_mentorship}
+                  </p>
+                  <p className="text-lg font-medium mt-2">
+                    {paymentDetails?.time_to_reach_goal}
+                    <div>
+                      <small className="text-gray-700 uppercase underline">
+                        Message:
+                      </small>{" "}
+                      <br />
+                      <p className="">{paymentDetails?.message_to_mentor}</p>
+                    </div>
+                  </p>
+                </blockquote>
+              </div>
+            ) : (
+              ""
+            )}
+
             <div className="flex justify-center h-96 py-5 mt-2">
               <div className="w-full rounded-md px-2 py-2 shadow-lg bg-white">
                 <h1 className="uppercase">Payment Details</h1>
@@ -147,14 +154,29 @@ const MenteePaymentDetails = () => {
               </div>
             </div>
             <div className="text-center">
-              <button
-                className="bg-color-one text-white px-5 py-2 border rounded"
-                onClick={() => {
-                  navigate(`/mentor/mentee-profile/${menteeId}`);
-                }}
-              >
-                Mentee Profile
-              </button>
+              {user?.role === "mentor" ? (
+                <button
+                  className="bg-color-one text-white px-5 py-2 border rounded"
+                  onClick={() => {
+                    navigate(`/mentor/mentee-profile/${menteeId}`);
+                  }}
+                >
+                  Mentee Profile
+                </button>
+              ) : (
+                <>
+                  <button
+                    className="bg-color-one text-white px-5 py-2 border rounded"
+                    onClick={() => {
+                      navigate(
+                        `/my-mentors/mentor-profile/${paymentDetails?.mentor_id}`
+                      );
+                    }}
+                  >
+                    Mentor Profile
+                  </button>
+                </>
+              )}
             </div>
           </figure>
         </div>

@@ -16,6 +16,7 @@ export interface IMessage extends Document {
   senderId: string;
   text: string;
   type: string;
+  IsDeleted: boolean;
 }
 
 export interface IMenteeProfile extends Document {

@@ -164,4 +164,26 @@ export class ChatControls {
       return next(Error("Conversation creation failed"));
     }
   }
+  async deleteMessage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const messageId = req.params.messageId;
+      if (messageId) {
+        const action = await Message.findByIdAndUpdate(messageId, {
+          $set: { IsDeleted: true },
+        });
+        if (action?._id) {
+          res.status(200).json({ status: "success" });
+        }
+      } else {
+        res.status(404).json({ message: "messageId is missing" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Conversation creation failed"));
+    }
+  }
 }

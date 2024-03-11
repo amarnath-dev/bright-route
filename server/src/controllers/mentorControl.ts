@@ -273,7 +273,6 @@ export class MentorController {
         },
       ]);
       if (mentorApplication) {
-        console.log("This is mentor applications", mentorApplication);
         res.status(200).json({ status: "success", mentorApplication });
       }
     } catch (error) {
