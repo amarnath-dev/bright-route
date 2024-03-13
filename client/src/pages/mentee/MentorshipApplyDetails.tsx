@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { Form, submitForm } from "../../redux/applyForm/applySlice";
@@ -53,7 +53,6 @@ export const MentorshipApplyDetails = () => {
 
   return (
     <>
-      <ToastContainer className="w-40 md:w-80" />
       <div className="w-full h-screen">
         <div className="w-full h-screen flex justify-center items-center px-2 py-5">
           <div className="w-full h-full md:w-3/4 rounded-lg md:px-4">

@@ -60,7 +60,7 @@ const MyMentees = () => {
 
   useEffect(() => {
     if (myMentees) {
-      myMentees.map((menteeObj, index) => {
+      myMentees?.map((menteeObj) => {
         const imageId = menteeObj?.menteeDetails[0]?.profile_img;
         if (imageId) {
           const imageRef = ref(storage, imageId);
@@ -78,9 +78,8 @@ const MyMentees = () => {
 
   //Creating the chat Conversation
   useEffect(() => {
-    console.log("This is my mentees", myMentees);
     if (myMentees) {
-      myMentees.map((menteeObj, index) => {
+      myMentees?.map((menteeObj) => {
         const createConversation = async () => {
           await axiosPrivate.post(
             "chat/conversation",
@@ -95,105 +94,103 @@ const MyMentees = () => {
 
   return (
     <>
-      <div className="w-full h-screen">
+      <div className="w-full h-full md:h-screen">
         {isApplication === true ? (
           <div className="w-full h-screen flex justify-center items-center flex-col">
-            <h1 className="text-2xl font-bold">You have no mentors yet</h1>
+            <h1 className="text-2xl font-bold">No Mentees have Applied Yet</h1>
             <img
               src="https://cdnl.iconscout.com/lottie/premium/thumb/empty-box-5708298-4748209.gif"
               className="w-40"
               alt="empty_img"
             />
-            <Link
-              to={"/mentor/browse"}
-              className="mt-5 rounded bg-color-one text-white border px-2 py-1"
-            >
-              Find Mentors
-            </Link>
           </div>
         ) : (
-          <div className="px-10 py-10">
-            <div className="py-5 font-bold text-2xl">
-              <h1>My Mentees</h1>
-            </div>
-            <hr />
-
-            <div className="flex max-w-full flex-wrap">
-              {myMentees.map((plan, index: number) => {
-                return (
-                  <div>
-                    <figure
-                      key={index}
-                      className="w-96 min-h-full rounded-xl p-8 shadow-lg mt-2 ml-2"
-                    >
-                      <div className="flex">
-                        <img
-                          className="w-24 h-24 rounded-full object-cover"
-                          id="profile_img"
-                          alt="profile_img"
-                          src={plan?.newProfileImg}
-                        />
-                        <div className="px-2 py-2 font-bold">
-                          <h1 className="text-xl">
-                            {plan?.menteeDetails[0]?.first_name}
-                            {plan?.menteeDetails[0]?.last_name}
-                          </h1>
-                          <h1 className="mt-2 uppercase text-sm text-gray-600">
-                            {plan?.menteeDetails[0]?.job_title}
-                          </h1>
+          <>
+            <div className="px-2 md:px-10 md:py-10 w-full">
+              <div className="py-5 font-bold text-2xl">
+                <h1>My Mentees</h1>
+              </div>
+              <hr />
+              <div className="flex w-full h-full flex-wrap py-3">
+                {myMentees.map((plan, index: number) => {
+                  return (
+                    <div>
+                      <figure
+                        key={index}
+                        className="md:w-96 min-h-full rounded-xl p-8 shadow-md md:shadow-lg mt-2 ml-2"
+                      >
+                        <div className="flex">
+                          <img
+                            className="w-24 h-24 rounded-full object-cover"
+                            id="profile_img"
+                            alt="profile_img"
+                            src={plan?.newProfileImg}
+                          />
+                          <div className="px-2 py-2 font-bold">
+                            <h1 className="text-xl">
+                              {plan?.menteeDetails[0]?.first_name}
+                              {plan?.menteeDetails[0]?.last_name}
+                            </h1>
+                            <h1 className="mt-2 uppercase text-sm text-gray-600">
+                              {plan?.menteeDetails[0]?.job_title}
+                            </h1>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex justify-center">
-                        <a href={plan?.menteeDetails[0]?.linkedIn}>
-                          <LinkedInIcon className="text-blue-600" />
-                        </a>
-                        <a
-                          href={plan?.menteeDetails[0]?.twitter}
-                          className="ml-10"
-                        >
-                          <XIcon />
-                        </a>
-                      </div>
-                      <div className="pt-6 space-y-4">
-                        <blockquote>
-                          <p className="text-lg">{plan?.goal_of_mentorship}</p>
-                        </blockquote>
-                        <figcaption>
-                          <div className="flex justify-around">
-                            <button
-                              className="border-2 px-2 py-2 rounded-md text-black"
-                              onClick={() => {
-                                navigate(
-                                  `/mentor/mentees/paymentdetails/${plan?._id}`
-                                );
-                              }}
-                            >
-                              <PaymentsIcon />
-                            </button>
-                            <Link
-                              to={`/mentor/chat/${plan?.mentee_id}`}
-                              className="border-2 px-2 py-2 rounded-md text-black"
-                            >
-                              <MessageIcon />
-                            </Link>
-                            <Link
-                              to={`/video/${plan?.mentee_id}`}
-                              className="border-2 px-2 py-2 rounded-md text-white"
-                            >
-                              <VideoChatIcon className="text-black" />
-                            </Link>
-                          </div>
-                          <div className="px-3">
-                            <h1 className="py-2">{format(plan.createdAt)}</h1>
-                          </div>
-                        </figcaption>
-                      </div>
-                    </figure>
-                  </div>
-                );
-              })}
+                        <div className="flex justify-center">
+                          <a href={plan?.menteeDetails[0]?.linkedIn}>
+                            <LinkedInIcon className="text-blue-600" />
+                          </a>
+                          <a
+                            href={plan?.menteeDetails[0]?.twitter}
+                            className="ml-10"
+                          >
+                            <XIcon />
+                          </a>
+                        </div>
+                        <div className="pt-6 space-y-4">
+                          <blockquote>
+                            <p className="text-lg">
+                              {plan?.goal_of_mentorship}
+                            </p>
+                          </blockquote>
+                          <figcaption>
+                            <div className="flex justify-around">
+                              <button
+                                className="border-2 px-2 py-2 rounded-md text-black"
+                                onClick={() => {
+                                  navigate(
+                                    `/mentor/mentees/paymentdetails/${plan?._id}`
+                                  );
+                                }}
+                              >
+                                <PaymentsIcon />
+                              </button>
+                              <Link
+                                to={`/mentor/chat/${plan?.mentee_id}`}
+                                className="border-2 px-2 py-2 rounded-md text-black"
+                              >
+                                <MessageIcon />
+                              </Link>
+                              <Link
+                                to={`/video/${plan?.mentee_id}`}
+                                className="border-2 px-2 py-2 rounded-md text-white"
+                                target="_blank"
+                              >
+                                <VideoChatIcon className="text-black" />
+                              </Link>
+                            </div>
+                            <div className="px-3">
+                              <h1 className="py-2">{format(plan.createdAt)}</h1>
+                            </div>
+                          </figcaption>
+                        </div>
+                      </figure>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </>

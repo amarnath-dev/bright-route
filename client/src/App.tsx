@@ -75,6 +75,7 @@ function App() {
         <Router>
           <React.Suspense fallback={<Spinner />}>
             <Routes>
+              <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/signin" element={<SigninPage />} />
               <Route path="/video/:roomId" element={<VideoChat />} />
@@ -101,7 +102,7 @@ function App() {
                     element={<RazorpayPayment />}
                   />
                   <Route
-                    path="/mentor-profile/apply/checkout/success"
+                    path="/mentor-profile/apply/checkout/success/:mentorId"
                     element={<PaymentSuccess />}
                   />
                   <Route path="/chat/:mentorId" element={<MenteeMessages />} />
@@ -159,7 +160,6 @@ function App() {
 
                 {/* Admin Routes  */}
                 <Route element={<ProtectedRoute allowedRole={"admin"} />}>
-                  <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/admin/dashboard" element={<Dashboard />} />
                   <Route
                     path="/admin/mentor-application"

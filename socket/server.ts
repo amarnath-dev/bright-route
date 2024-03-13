@@ -29,15 +29,13 @@ const getUser = (userId: string) => {
 
 io.on("connection", (socket) => {
   socket.on("addUser", (userId) => {
+    console.log("User Added");
     addUser(userId, socket.id);
     io.emit("getUsers", users);
   });
 
   socket.on("sendMessage", ({ senderId, receiverId, text, type }) => {
-    console.log("New message received:", text);
-    console.log("New message received and type:", type);
     const user = getUser(receiverId);
-    console.log("This is reciver", user);
     if (user) {
       const { socketId } = user;
       io.to(socketId).emit("getMessage", { senderId, text, type });
@@ -46,8 +44,23 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("sendNotification", ({ senderId, receiverId, content, type }) => {
+    const user = getUser(receiverId);
+    if (user) {
+      const { socketId } = user;
+      io.to(socketId).emit("getNotification", {
+        senderId,
+        content,
+        type,
+      });
+    } else {
+      console.error(`User with ID ${receiverId} not found`);
+    }
+  });
+
   socket.on("disconnect", () => {
     removeUser(socket.id);
+    console.log("User removed");
     io.emit("getUsers", users);
   });
 });

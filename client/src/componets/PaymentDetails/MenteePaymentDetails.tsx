@@ -27,7 +27,6 @@ const MenteePaymentDetails = () => {
             withCredentials: true,
           }
         );
-        console.log("==>", response.data.paymentDetails);
         setMenteeId(response.data?.paymentDetails?.mentee_id);
         setPaymentDetails(response.data.paymentDetails);
       } catch (error) {

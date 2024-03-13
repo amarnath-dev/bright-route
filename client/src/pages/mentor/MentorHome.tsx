@@ -16,7 +16,7 @@ const MentorHome: React.FC = () => {
               Share your'e knowledge, Grow yourself
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg"
-                alt=""
+                alt="logo"
                 className="w-12 h-12 mt-3"
               />
             </h1>

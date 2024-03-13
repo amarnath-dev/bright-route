@@ -6,7 +6,7 @@ const PaymentSuccess = () => {
       <div className="w-full h-screen flex justify-center items-center flex-col">
         <div>
           <img
-            className="h-52  w-68"
+            className="h-52 w-68"
             src="https://i.pinimg.com/originals/32/b6/f2/32b6f2aeeb2d21c5a29382721cdc67f7.gif"
             alt="paymen_successfull"
           />
@@ -15,10 +15,10 @@ const PaymentSuccess = () => {
           <h1 className="text-xl">Payment Successfull 🤝</h1>
           <div className="mt-4">
             <Link
-              to={"/chat"}
+              to={"/my-mentors"}
               className="text-center border-2 px-2 py-1 mt-3 rounded"
             >
-              Message Mentor
+              My Mentors
             </Link>
           </div>
         </div>

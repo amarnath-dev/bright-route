@@ -339,7 +339,6 @@ const MenteeMessages = () => {
                 ""
               )}
 
-
               <div className="flex items-center px-1 w-full mb-4">
                 <div className="px-2 hover:bg-gray-300 rounded-full">
                   <span className="hidden">

@@ -53,6 +53,7 @@ export interface IApplication extends Document {
   paymentDone: boolean;
   duration: Number;
   plan_price: Number;
+  isExpired: boolean;
 }
 
 export interface IReport extends Document {
@@ -107,4 +108,11 @@ export interface IPlans extends Document {
   mentor_id: string;
   planDetails: [{}];
   planLimit: number;
+}
+
+export interface INotification extends Document {
+  userId: string;
+  content: string;
+  isDeleted: boolean;
+  role: string;
 }
