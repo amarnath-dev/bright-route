@@ -16,7 +16,17 @@ const notificationSchema: Schema<INotification> =
         type: Boolean,
         default: false,
       },
+      isVisited: {
+        type: Boolean,
+        default: false,
+      },
       role: {
+        type: String,
+      },
+      messageType: {
+        type: String,
+      },
+      senderId: {
         type: String,
       },
     },

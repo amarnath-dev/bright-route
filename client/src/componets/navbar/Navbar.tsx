@@ -19,12 +19,6 @@ interface NotType {
   createdAt: number;
   type: string;
 }
-interface Message {
-  senderId: string;
-  text: string;
-  createdAt: number;
-  type: string;
-}
 
 const NavBar = () => {
   const { user } = useAppSelector((state) => state.userAuth);
@@ -36,7 +30,6 @@ const NavBar = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<NotType | null>(null);
   const socket = useRef<Socket | null>(null);
-  const [mentorMessages, setMentorMessages] = useState<Message | null>(null);
 
   //Connecting to the Server
   useEffect(() => {
@@ -47,15 +40,6 @@ const NavBar = () => {
         content: data?.content,
         type: data?.type,
         createdAt: Date.now(),
-      });
-    });
-    //check for new mentor messages
-    socket.current?.on("getMessage", (data) => {
-      setMentorMessages({
-        senderId: data?.senderId,
-        text: data?.text,
-        createdAt: Date.now(),
-        type: data?.type,
       });
     });
   }, []);
@@ -105,7 +89,7 @@ const NavBar = () => {
         const url = await getDownloadURL(imageRef);
         setFirebaseImgId(url);
       } catch (error) {
-        console.error("Error fetching profile image:", error);
+        console.error(error);
       }
     };
     fetchImg();
@@ -121,6 +105,18 @@ const NavBar = () => {
     }
     if (user?.role === "mentee") {
       navigate("/my-mentors");
+    }
+  };
+
+  const toPlans = () => {
+    if (user?.role === "mentor") {
+      navigate("/mentor/plans");
+    }
+  };
+
+  const toPassword = () => {
+    if (user?.role === "mentor") {
+      navigate("/mentor/managment/password");
     }
   };
 
@@ -162,8 +158,12 @@ const NavBar = () => {
                     <Dropdown.Item onClick={toProfile}>
                       My Profile
                     </Dropdown.Item>
-                    <Dropdown.Item>Settings</Dropdown.Item>
-                    <Dropdown.Item>Earnings</Dropdown.Item>
+                    <Dropdown.Item onClick={toPlans}>
+                      {user?.role === "mentor" ? "My Plans" : ""}
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={toPassword}>
+                      {user?.role === "mentor" ? "Password" : ""}
+                    </Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogout}>
                       Log out
@@ -184,7 +184,7 @@ const NavBar = () => {
                       <IoChatboxEllipsesOutline className="text-3xl" />
                     ) : (
                       <>
-                        <FaChalkboardTeacher className="text-3xl" />{" "}
+                        <FaChalkboardTeacher className="text-3xl" />
                       </>
                     )}
                   </Navbar.Link>
@@ -199,7 +199,7 @@ const NavBar = () => {
                 </Navbar.Collapse>
               </Navbar>
               {open ? (
-                <Notification setOpen={setOpen} notData={notifications} mentorMessages={mentorMessages} />
+                <Notification setOpen={setOpen} notData={notifications} />
               ) : (
                 ""
               )}

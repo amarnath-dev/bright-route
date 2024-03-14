@@ -13,6 +13,7 @@ export class NotificationControl {
         userId: user?.id,
         content: req.body?.text,
         role: "mentee",
+        messageType: "payment successful",
       });
       await newNotification.save();
       res.status(200).json({ status: "success" });
@@ -73,10 +74,31 @@ export class NotificationControl {
         userId: mentorId,
         content: req.body.mentorText,
         role: "mentor",
+        messageType: "plan purchased",
       });
       notification.save();
-      // sendNotification(mentorId);
       res.status(200).json({ status: "success" });
+    } catch (error) {
+      console.log(error);
+      return next(Error());
+    }
+  }
+  
+  async mentorChatNotification(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const newChatMessage = new Notification(req.body?.ChatMessage);
+      if (newChatMessage) {
+        await newChatMessage.save();
+        res.status(200).json({ status: "success" });
+      } else {
+        res
+          .status(400)
+          .json({ status: "failed", message: "Data fields are missing" });
+      }
     } catch (error) {
       console.log(error);
       return next(Error());

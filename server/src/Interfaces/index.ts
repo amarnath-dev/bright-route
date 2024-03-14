@@ -114,5 +114,8 @@ export interface INotification extends Document {
   userId: string;
   content: string;
   isDeleted: boolean;
+  isVisited: boolean;
   role: string;
+  messageType: string;
+  senderId: string;
 }

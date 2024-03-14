@@ -37,8 +37,7 @@ const MenteeMessages = () => {
   const [currentChat, setCurrentChat] = useState<CurrentChat | null>(null);
   const { user } = useAppSelector((state) => state.userAuth);
 
-  const { mentorId } = useParams();
-  const { menteeID } = useParams();
+  const { mentorId, menteeID } = useParams();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -115,7 +114,7 @@ const MenteeMessages = () => {
   //Updating the new messages
   useEffect(() => {
     arrivalMessage &&
-      currentChat?.members.includes(arrivalMessage?.senderId) &&
+      currentChat?.members.includes(arrivalMessage?.senderId as never) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
 
@@ -189,6 +188,37 @@ const MenteeMessages = () => {
         });
         setMessages([...messages, response.data.savedMessage]);
         setNewMessage("");
+      }
+
+      //chat notification sending
+      try {
+        const receiverId = currentChat?.members.find(
+          (userId: string) => userId !== user?._id
+        );
+        const ChatMessage = {
+          userId: receiverId,
+          content: "You have one new Message!!🔔",
+          role: "mentor",
+          messageType: "new chat",
+          senderId: user?._id,
+        };
+        const response = await axiosPrivate.post(
+          `/notification/chatNotification/${user?._id}`,
+          { ChatMessage },
+          { withCredentials: true }
+        );
+        if (response) {
+          socket.current?.emit("sendNotification", {
+            senderId: user?._id,
+            receiverId: receiverId,
+            content: "You have a new message 🔔",
+            type: "chat message",
+          });
+        } else {
+          console.log("Chat notification send failed");
+        }
+      } catch (error) {
+        console.log(error);
       }
     } catch (error) {
       console.log(error);
@@ -269,7 +299,6 @@ const MenteeMessages = () => {
     const imageRef = ref(storage, currentImg);
     deleteObject(imageRef)
       .then(() => {
-        console.log("Image deleted from firebase");
         setOpenImg(false);
       })
       .catch((error: unknown) => {

@@ -5,19 +5,23 @@ import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
+import { useNavigate } from "react-router-dom";
 
 export interface Props {
   setOpen: boolean;
 }
-const Notification = ({ setOpen, notData, mentorMessages }) => {
+
+const Notification = ({ setOpen, notData }) => {
   const [notifications, setNotifications] = useState();
   const { user } = useAppSelector((state) => state.userAuth);
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setOpen(false);
   };
 
   useEffect(() => {
+    console.log("This is not data", notData);
     const fetchMessages = async () => {
       try {
         const response = await axiosPrivate.get(
@@ -57,6 +61,14 @@ const Notification = ({ setOpen, notData, mentorMessages }) => {
     }
   };
 
+  const messageClick = (notification) => {
+    if (notification?.messageType === "new chat" && user?.role === "mentee") {
+      navigate(`/chat/${notification?.senderId}`);
+    } else {
+      navigate(`/mentor/chat/${notification?.senderId}`);
+    }
+  };
+
   return (
     <>
       <div className="w-96 h-screen shadow-lg rounded-lg bg-slate-200 overflow-y-scroll">
@@ -82,18 +94,24 @@ const Notification = ({ setOpen, notData, mentorMessages }) => {
                       ""
                     ) : (
                       <>
-                        <span className="flex justify-end">
-                          <MdDelete
-                            className="text-xl text-gray-700 hover:bg-gray-800 hover:text-white rounded-full"
-                            onClick={() => handleDelete(notification?._id)}
-                          />
-                        </span>
-                        <p className="text-black rounded-md px-2" key={index}>
-                          {notification?.content}
-                        </p>
-                        <small className="text-black px-2">
-                          {format(notification?.createdAt)}
-                        </small>
+                        <div>
+                          <span className="flex justify-end">
+                            <MdDelete
+                              className="text-xl text-gray-700 hover:bg-gray-800 hover:text-white rounded-full"
+                              onClick={() => handleDelete(notification?._id)}
+                            />
+                          </span>
+                          <p
+                            className="text-black rounded-md px-2"
+                            key={index}
+                            onClick={() => messageClick(notification)}
+                          >
+                            {notification?.content}
+                          </p>
+                          <small className="text-black px-2">
+                            {format(notification?.createdAt)}
+                          </small>
+                        </div>
                       </>
                     )}
                   </div>
@@ -110,15 +128,6 @@ const Notification = ({ setOpen, notData, mentorMessages }) => {
             </>
           )}
         </div>
-        {mentorMessages ? (
-          <>
-            <div>
-              <p>You have one new message!🔔</p>
-            </div>
-          </>
-        ) : (
-          ""
-        )}
       </div>
     </>
   );

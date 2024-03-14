@@ -26,7 +26,6 @@ export const Messages: React.FC<Messages> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    console.log("Running...");
     const frndId = currentChat?.members?.find(
       (user: string) => user !== userId
     );

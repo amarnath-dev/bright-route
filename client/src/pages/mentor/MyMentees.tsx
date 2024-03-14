@@ -67,6 +67,10 @@ const MyMentees = () => {
           getDownloadURL(imageRef)
             .then((url) => {
               menteeObj["newProfileImg"] = url;
+              const img = document.getElementById(
+                "profile_img"
+              ) as HTMLImageElement;
+              img.src = url;
             })
             .catch((error) => {
               console.log(error);
@@ -92,6 +96,12 @@ const MyMentees = () => {
     }
   }, [axiosPrivate, myMentees, user?._id]);
 
+  useEffect(() => {
+    if (myMentees) {
+      console.log("This is my mentees", myMentees);
+    }
+  }, [myMentees]);
+
   return (
     <>
       <div className="w-full h-full md:h-screen">
@@ -112,7 +122,7 @@ const MyMentees = () => {
               </div>
               <hr />
               <div className="flex w-full h-full flex-wrap py-3">
-                {myMentees.map((plan, index: number) => {
+                {myMentees?.map((plan, index: number) => {
                   return (
                     <div>
                       <figure

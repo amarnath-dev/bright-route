@@ -8,6 +8,8 @@ import MessageIcon from "@mui/icons-material/Message";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../../app/firebase";
 
 const MyMentors = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -34,11 +36,39 @@ const MyMentors = () => {
     };
     fetchApplications();
   }, [axiosPrivate]);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        myMentors?.map((mentor) => {
+          const imageId = mentor.mentorProfile[0]?.profile_img;
+          if (imageId) {
+            const imageRef = ref(storage, imageId);
+            getDownloadURL(imageRef)
+              .then((url) => {
+                mentor["newProfileImg"] = url;
+                const img = document.getElementById(
+                  "profile_img"
+                ) as HTMLImageElement;
+                img.src = url;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchImage();
+  }, [myMentors]);
+
   return (
     <>
       <div className="w-full h-full md:h-screen">
         {isMentor === true ? (
-          <div className="w-full h-screen flex justify-center items-center">
+          <div className="w-full h-screen flex justify-center items-center flex-col">
             <h1 className="text-2xl font-bold">Please Apply to a Mentor</h1>
             <Link
               to={"/mentor/browse"}

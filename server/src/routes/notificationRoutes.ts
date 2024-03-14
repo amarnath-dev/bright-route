@@ -19,6 +19,7 @@ router.post(
 
 router.post(
   "/mentorNotification/:mentorId",
+  verifyJWT,
   notificationController.mentorNotification
 );
 
@@ -26,6 +27,12 @@ router.delete(
   "/delete/:notificationId",
   verifyJWT,
   notificationController.deleteNotification
+);
+
+router.post(
+  "/chatNotification/:mentorId",
+  verifyJWT,
+  notificationController.mentorChatNotification
 );
 
 export default router;
