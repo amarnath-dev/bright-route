@@ -38,6 +38,10 @@ const paymentSchema: Schema<IApplication> = new mongoose.Schema<IApplication>(
       type: Number,
       default: 1,
     },
+    isExpired: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

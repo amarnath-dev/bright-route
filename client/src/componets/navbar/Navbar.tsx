@@ -3,9 +3,22 @@ import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
+import { IoNotifications } from "react-icons/io5";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import Notification from "../Notifications/Notification";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
+import { BsPersonLinesFill } from "react-icons/bs";
+import { Socket, io } from "socket.io-client";
+
+interface NotType {
+  senderId: string;
+  content: string;
+  createdAt: number;
+  type: string;
+}
 
 const NavBar = () => {
   const { user } = useAppSelector((state) => state.userAuth);
@@ -13,6 +26,27 @@ const NavBar = () => {
   const [firebaseImgId, setFirebaseImgId] = useState("");
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
+
+  const [open, setOpen] = useState<boolean>(false);
+  const [notifications, setNotifications] = useState<NotType | null>(null);
+  const socket = useRef<Socket | null>(null);
+
+  //Connecting to the Server
+  useEffect(() => {
+    socket.current = io("ws://localhost:3000");
+    socket.current?.on("getNotification", (data) => {
+      setNotifications({
+        senderId: data?.senderId,
+        content: data?.content,
+        type: data?.type,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.current?.emit("addUser", user?._id);
+  }, [user]);
 
   const toProfile = () => {
     if (user?.role === "mentee") {
@@ -55,7 +89,7 @@ const NavBar = () => {
         const url = await getDownloadURL(imageRef);
         setFirebaseImgId(url);
       } catch (error) {
-        console.error("Error fetching profile image:", error);
+        console.error(error);
       }
     };
     fetchImg();
@@ -73,19 +107,36 @@ const NavBar = () => {
       navigate("/my-mentors");
     }
   };
-  const handleClickThree = () => {
+
+  const toPlans = () => {
     if (user?.role === "mentor") {
-      navigate("/mentor/services");
+      navigate("/mentor/plans");
     }
+  };
+
+  const toPassword = () => {
+    if (user?.role === "mentor") {
+      navigate("/mentor/managment/password");
+    }
+  };
+
+  const handleNotification = () => {
+    setOpen((state) => !state);
   };
   return (
     <>
       <div className="grid grid-cols-12 w-full items-center sticky shadow-lg">
-        <div className="col-span-4 bg-gray-800 h-16 flex items-center"></div>
+        <div className="col-span-4 bg-gray-800 h-16 flex items-center">
+          {/* <img
+            src={logoFinal}
+            className="bg-transparent w-32 text-white font-white cursor-pointer"
+            alt="logo"
+          /> */}
+        </div>
         <div className="col-span-8 bg-gray-800 h-16">
           <div className="flex justify-end items-center text-white">
             <div>
-              <Navbar fluid rounded>
+              <Navbar fluid rounded className={open ? "hidden" : "block"}>
                 <div className="flex md:order-2 px-10">
                   <Dropdown
                     arrowIcon={false}
@@ -107,8 +158,12 @@ const NavBar = () => {
                     <Dropdown.Item onClick={toProfile}>
                       My Profile
                     </Dropdown.Item>
-                    <Dropdown.Item>Settings</Dropdown.Item>
-                    <Dropdown.Item>Earnings</Dropdown.Item>
+                    <Dropdown.Item onClick={toPlans}>
+                      {user?.role === "mentor" ? "My Plans" : ""}
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={toPassword}>
+                      {user?.role === "mentor" ? "Password" : ""}
+                    </Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogout}>
                       Log out
@@ -118,14 +173,36 @@ const NavBar = () => {
                 </div>
                 <Navbar.Collapse>
                   <Navbar.Link active onClick={handleClickOne}>
-                    {user?.role === "mentor" ? "My Mentees" : "Home"}
+                    {user?.role === "mentor" ? (
+                      <BsPersonLinesFill className="text-3xl text-gray-400" />
+                    ) : (
+                      ""
+                    )}
                   </Navbar.Link>
                   <Navbar.Link onClick={handleClickTwo}>
-                    {user?.role === "mentor" ? "Messages" : "My Mentors"}
+                    {user?.role === "mentor" ? (
+                      <IoChatboxEllipsesOutline className="text-3xl" />
+                    ) : (
+                      <>
+                        <FaChalkboardTeacher className="text-3xl" />
+                      </>
+                    )}
                   </Navbar.Link>
-                  <Navbar.Link onClick={handleClickThree}>Services</Navbar.Link>
+                  <Navbar.Link>
+                    <span className="bg-red-400 cursor-pointer">
+                      <IoNotifications
+                        className="text-3xl"
+                        onClick={handleNotification}
+                      />
+                    </span>
+                  </Navbar.Link>
                 </Navbar.Collapse>
               </Navbar>
+              {open ? (
+                <Notification setOpen={setOpen} notData={notifications} />
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

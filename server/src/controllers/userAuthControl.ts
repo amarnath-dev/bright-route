@@ -72,7 +72,7 @@ export class MenteeAuthController {
               },
             },
             process.env.ACCESS_TOKEN_SECRETE as string,
-            { expiresIn: "30m" }
+            { expiresIn: "3d" }
           );
 
           const refreshToken = Jwt.sign(
@@ -86,7 +86,6 @@ export class MenteeAuthController {
           res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: false,
-            // sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
           res.status(200).json({
@@ -147,7 +146,7 @@ export class MenteeAuthController {
             },
           },
           process.env.ACCESS_TOKEN_SECRETE as string,
-          { expiresIn: "30m" }
+          { expiresIn: "3d" }
         );
         res.json({ accessToken });
       } catch (err) {

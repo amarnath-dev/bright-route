@@ -9,9 +9,6 @@ const MentorProfileCard = React.lazy(
 const MentorAboutSkill = React.lazy(
   () => import("../../componets/mentor/ProfileAboutndSkill/MentorAboutSkill")
 );
-const ProfileNav = React.lazy(
-  () => import("../../componets/mentor/ProfileNavbar/ProfileNav")
-);
 
 const MentorProfile = () => {
   const [mentor, setMentor] = useState<mentorProfileObj>();
@@ -24,7 +21,6 @@ const MentorProfile = () => {
           withCredentials: true,
         });
         if (response.data) {
-          console.log("Profile details", response.data?.mentorDetails);
           setMentor(response.data?.mentorDetails);
         }
       } catch (error) {
@@ -36,9 +32,6 @@ const MentorProfile = () => {
 
   return (
     <>
-      <React.Suspense>
-        <ProfileNav />
-      </React.Suspense>
       <div className="h-full grid grid-cols-12 bg-slate-200">
         <div className="col-span-12  md:col-span-4 px-10 py-10">
           <React.Suspense>

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
 import { useAppSelector } from "../../app/hooks";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
@@ -10,11 +10,17 @@ import {
   submitPlanAmount,
   submitPlanId,
 } from "../../redux/applyForm/applySlice";
+import { Socket, io } from "socket.io-client";
 
 export const RazorPay = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.userAuth);
   const dispatch = useDispatch();
+  const socket = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:3000");
+  }, []);
 
   const { form, planId, mentorId, planAmount } = useAppSelector(
     (state) => state.applySlice
@@ -27,12 +33,11 @@ export const RazorPay = () => {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID as string,
       amount: parseInt(planAmount?.mentor_plan_amount || "0", 10) * 100,
       currency: "INR",
-      name: "Bright Route.prvt",
+      name: "Bright Route",
       description: "Test Transaction",
       image:
         "https://t3.ftcdn.net/jpg/02/17/18/84/360_F_217188426_smgwnDFnQC5DHQ8mKGkdsMO7oDDP5nZn.jpg",
       handler: (res) => {
-        console.log(res);
         const sentDetails = async () => {
           try {
             const paymentObj = {
@@ -50,13 +55,40 @@ export const RazorPay = () => {
               paymentObj,
               { withCredentials: true }
             );
-            console.log("response of payment data sending", sendData.data);
             if (sendData.data.status === "success") {
+              const text = "Payment Completed Successfully!🤝🤝";
+              const mentorText = `${user?.first_name} has purchased your mentorship plan!🎉`;
+              await axiosPrivate.post(
+                "/notification/paymentMessage",
+                { text },
+                {
+                  withCredentials: true,
+                }
+              );
+              await axiosPrivate.post(
+                `/notification/mentorNotification/${mentorId?.mentor_id}`,
+                { mentorText },
+                { withCredentials: true }
+              );
+              socket.current?.emit("sendNotification", {
+                senderId: user?._id,
+                receiverId: user?._id,
+                content: text,
+                type: "mentee",
+              });
+              socket.current?.emit("sendNotification", {
+                senderId: user?._id,
+                receiverId: mentorId?.mentor_id,
+                content: mentorText,
+                type: "mentor",
+              });
               dispatch(submitForm(null));
               dispatch(submitMentorId(null));
               dispatch(submitPlanAmount(null));
               dispatch(submitPlanId(null));
-              navigate("/mentor-profile/apply/checkout/success");
+              navigate(
+                `/mentor-profile/apply/checkout/success/${mentorId?.mentor_id}`
+              );
             }
           } catch (error) {
             console.log(error);
@@ -78,7 +110,21 @@ export const RazorPay = () => {
     };
     const rzpay = new Razorpay(options);
     rzpay.open();
-  }, [Razorpay]);
+  }, [
+    Razorpay,
+    axiosPrivate,
+    dispatch,
+    form?.mentorship_goal,
+    form?.message_to_mentor,
+    form?.time_to_reach,
+    mentorId,
+    navigate,
+    planAmount?.mentor_plan_amount,
+    planId?.mentor_plan_id,
+    user?._id,
+    user?.email,
+    user?.first_name,
+  ]);
 
   return (
     <div className="w-full h-screen flex justify-center items-center">

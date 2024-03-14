@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
-
 import { useNavigate } from "react-router-dom";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import XIcon from "@mui/icons-material/X";
@@ -9,6 +8,8 @@ import MessageIcon from "@mui/icons-material/Message";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../../app/firebase";
 
 const MyMentors = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -23,7 +24,7 @@ const MyMentors = () => {
         const response = await axiosPrivate.get("/my-mentors", {
           withCredentials: true,
         });
-        console.log(response);
+        console.log("My Mentors", response.data?.mentors);
         if (response.data?.mentors.length > 0) {
           setMyMentors(response.data?.mentors);
         } else {
@@ -35,27 +36,60 @@ const MyMentors = () => {
     };
     fetchApplications();
   }, [axiosPrivate]);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        myMentors?.map((mentor) => {
+          const imageId = mentor.mentorProfile[0]?.profile_img;
+          if (imageId) {
+            const imageRef = ref(storage, imageId);
+            getDownloadURL(imageRef)
+              .then((url) => {
+                mentor["newProfileImg"] = url;
+                const img = document.getElementById(
+                  "profile_img"
+                ) as HTMLImageElement;
+                img.src = url;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchImage();
+  }, [myMentors]);
+
   return (
     <>
-      <div className="w-full h-screen">
+      <div className="w-full h-full md:h-screen">
         {isMentor === true ? (
-          <div className="w-full h-screen flex justify-center items-center">
-            <h1 className="text-2xl font-bold">No Mentees have Applied Yet</h1>
+          <div className="w-full h-screen flex justify-center items-center flex-col">
+            <h1 className="text-2xl font-bold">Please Apply to a Mentor</h1>
+            <Link
+              to={"/mentor/browse"}
+              className="mt-5 rounded bg-color-one text-white border px-2 py-1"
+            >
+              Find Mentors
+            </Link>
           </div>
         ) : (
-          <div className="px-10 py-10">
+          <div className="px-5 md:px-10 md:py-10">
             <div className="py-5 font-bold text-2xl">
               <h1>My Mentors</h1>
             </div>
             <hr />
-
-            <div className="flex max-w-full flex-wrap">
+            <div className="flex w-full flex-wrap">
               {myMentors?.map((mentor, index: number) => {
                 return (
-                  <div>
+                  <div key={index}>
                     <figure
                       key={index}
-                      className="w-96 min-h-full rounded-xl p-8 shadow-lg mt-2 ml-2"
+                      className="md:w-96 min-h-full rounded-xl p-8 shadow-lg mt-2 ml-2"
                     >
                       <div className="flex">
                         <img
@@ -107,6 +141,7 @@ const MyMentors = () => {
                             <Link
                               to={`/video/${mentor?.mentor_id}`}
                               className="border-2 px-2 py-2 rounded-md text-white"
+                              target="_blank"
                             >
                               <VideoChatIcon className="text-black" />
                             </Link>

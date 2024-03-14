@@ -121,13 +121,14 @@ const MentorMessages = () => {
   useEffect(() => {
     socket.current?.emit("addUser", user?._id);
     socket.current?.on("getUsers", (users) => {
-      console.log("Chat Users", users);
+      console.log(users);
     });
   }, [user, socket]);
 
   //Sending the new message
   const handleSubmit = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
+    console.log("Button Clicked");
     if (!newMessage && !currentImg) {
       return;
     }
@@ -193,6 +194,36 @@ const MentorMessages = () => {
         console.log("No reciverId found.");
       }
     }
+    //chat notification sending
+    try {
+      const receiverId = currentChat?.members.find(
+        (userId: string) => userId !== user?._id
+      );
+      const ChatMessage = {
+        userId: receiverId,
+        content: "You have one new Message!!🔔",
+        role: "mentee",
+        messageType: "new chat",
+        senderId: user?._id,
+      };
+      const response = await axiosPrivate.post(
+        `/notification/chatNotification/${user?._id}`,
+        { ChatMessage },
+        { withCredentials: true }
+      );
+      if (response) {
+        socket.current?.emit("sendNotification", {
+          senderId: user?._id,
+          receiverId: receiverId,
+          content: "You have a new message 🔔",
+          type: "chat message",
+        });
+      } else {
+        console.log("Chat notification send failed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //To Scroll Down to the Bottom
@@ -245,7 +276,6 @@ const MentorMessages = () => {
       const snapshot = await uploadBytes(reference, blob);
       if (snapshot) {
         const imageId = snapshot.metadata?.fullPath;
-        console.log("Image saved in firebase");
         setCurrentImg(imageId);
         if (imageId) {
           const imageRef = ref(storage, imageId);
