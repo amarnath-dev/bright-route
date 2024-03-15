@@ -234,14 +234,14 @@ const MenteeMessages = () => {
     setImoji((state) => !state);
   };
 
-  const handleOutsideClick = (event) => {
+  const handleOutsideClick = (event: MouseEvent) => {
     const emojiPickerButton = document.getElementById("imoji-btn");
     const emojiPicker = document.getElementById("imoji-picker");
     if (
       emojiPickerButton &&
       emojiPicker &&
-      !emojiPickerButton.contains(event?.target) &&
-      !emojiPicker.contains(event?.target)
+      !emojiPickerButton.contains(event?.target as HTMLButtonElement) &&
+      !emojiPicker.contains(event?.target as HTMLButtonElement)
     ) {
       setImoji(false);
     }

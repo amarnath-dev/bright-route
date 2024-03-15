@@ -14,7 +14,7 @@ interface IUser {
 
 interface ConversationProps {
   conversation: Conversation;
-  currentUser: CurrentUser;
+  currentUser: CurrentUser | null;
   index: number;
 }
 

@@ -23,11 +23,17 @@ interface Message {
   createdAt: number;
   type: string;
 }
+interface Conversation {
+  _id: string;
+  createdAt: string;
+  members: string[];
+  updatedAt: string;
+}
 
 const MentorMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChat, setCurrentChat] = useState<Conversation>();
   const { user } = useAppSelector((state) => state.userAuth);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -69,10 +75,11 @@ const MentorMessages = () => {
   }, [axiosPrivate]);
 
   // Creating a new Conversation
-  const createConversation = async (conversation) => {
+  const createConversation = async (conversation: Conversation) => {
+    console.log("This is the conversation", conversation);
     try {
       if (conversation.members && Array.isArray(conversation.members)) {
-        const menteeId = conversation.members.find(
+        const menteeId = conversation?.members.find(
           (userId: string) => userId !== user?._id
         );
         if (menteeId !== undefined) {
@@ -128,7 +135,6 @@ const MentorMessages = () => {
   //Sending the new message
   const handleSubmit = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log("Button Clicked");
     if (!newMessage && !currentImg) {
       return;
     }
@@ -242,15 +248,14 @@ const MentorMessages = () => {
   const handleImoji = () => {
     setImoji((state) => !state);
   };
-  const handleOutsideClick = (event) => {
+  const handleOutsideClick = (event: MouseEvent) => {
     const emojiPickerButton = document.getElementById("imoji-btn");
     const emojiPicker = document.getElementById("imoji-picker");
-
     if (
       emojiPickerButton &&
       emojiPicker &&
-      !emojiPickerButton.contains(event.target) &&
-      !emojiPicker.contains(event.target)
+      !emojiPickerButton.contains(event.target as HTMLInputElement) &&
+      !emojiPicker.contains(event.target as HTMLInputElement)
     ) {
       setImoji(false);
     }

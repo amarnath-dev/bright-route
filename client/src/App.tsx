@@ -37,6 +37,7 @@ const CreatePlan = React.lazy(() => import("./pages/mentor/CreatePlan"));
 const VisitMentorProfile = React.lazy(
   () => import("./pages/mentee/VisitMentorProfile")
 );
+
 const MentorshipApplyDetails = React.lazy(
   () => import("./pages/mentee/MentorshipApplyDetails")
 );
