@@ -1,16 +1,35 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { storage } from "../../app/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
+import { Conversation } from "../../datatypes/PropsTypes";
+import { CurrentUser } from "../../datatypes/PropsTypes";
 
-export const Conversations = ({ conversation, currentUser, index }) => {
+interface IUser {
+  first_name: string;
+  last_name: string;
+  job_title: string;
+  profile_img: string;
+}
+
+interface ConversationProps {
+  conversation: Conversation;
+  currentUser: CurrentUser;
+  index: number;
+}
+
+export const Conversations: React.FC<ConversationProps> = ({
+  conversation,
+  currentUser,
+  index,
+}) => {
   const axiosPrivate = useAxiosPrivate();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<IUser>();
   const [profileImg, setProfileImg] = useState("");
 
   useEffect(() => {
-    const friendId = conversation.members.find((m) => {
-      return m !== currentUser._id;
+    const friendId = conversation?.members.find((m: string) => {
+      return m !== currentUser?._id;
     });
     const getUser = async () => {
       try {

@@ -1,7 +1,6 @@
 import { z, ZodType } from "zod";
 
 interface aboutYouSchema {
-  //   profile_img: File;
   first_name: string;
   last_name: string;
   email: string;

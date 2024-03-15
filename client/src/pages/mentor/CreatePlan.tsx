@@ -54,8 +54,11 @@ const CreatePlan = () => {
       console.log(error);
     }
   };
-
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     setPlanDetails({
       ...planDetails,
       [e.target.name]: e.target?.value,

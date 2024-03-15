@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
-const MentorPaymentCard = React.lazy(
-  () => import("../../componets/mentor/PaymentDetailsCard/MentorPaymentCard")
-);
+import MentorPaymentCard from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
+import { MentorPlan } from "../../datatypes/PropsTypes";
 
 const MentorPlans = () => {
-  const [mentorPlans, setMentorPlans] = useState([]);
+  const [mentorPlans, setMentorPlans] = useState<MentorPlan | null>(null);
   const [isPlan, setIsPlan] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const [isDeleted, setIsDeleted] = useState<boolean | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [justMounted, setJustMounted] = useState<boolean | null>(null);
 
   const handleChildData = () => {
@@ -29,6 +29,7 @@ const MentorPlans = () => {
         const result = response.data.plans;
         if (result.planDetails.length > 0) {
           setIsPlan(true);
+          console.log("mentor Plans", response?.data?.plans);
           setMentorPlans(response?.data?.plans);
         } else {
           setIsPlan(false);
@@ -45,7 +46,7 @@ const MentorPlans = () => {
       <div className="w-full h-full md:h-screen mb-10 md:mb-0">
         {isPlan ? (
           <>
-            {mentorPlans.planDetails.length >= 2 ? (
+            {mentorPlans?.planDetails && mentorPlans.planDetails.length >= 2 ? (
               ""
             ) : (
               <div className="w-full h-12 flex justify-end items-center">
@@ -58,13 +59,11 @@ const MentorPlans = () => {
               </div>
             )}
             <div className="w-full h-full flex justify-center items-center mt-6 md:mt-0">
-              <React.Suspense>
-                <MentorPaymentCard
-                  mentorPlans={isPlan ? mentorPlans : ""}
-                  mentor={"mentor"}
-                  onChildData={handleChildData}
-                />
-              </React.Suspense>
+              <MentorPaymentCard
+                mentorPlans={isPlan ? mentorPlans : null}
+                mentor={"mentor"}
+                onChildData={handleChildData}
+              />
             </div>
           </>
         ) : (

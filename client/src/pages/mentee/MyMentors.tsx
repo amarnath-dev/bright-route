@@ -10,10 +10,11 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
+import { PaymentDetails } from "../../datatypes/PropsTypes";
 
 const MyMentors = () => {
   const axiosPrivate = useAxiosPrivate();
-  const [myMentors, setMyMentors] = useState();
+  const [myMentors, setMyMentors] = useState<PaymentDetails[]>([]);
   const [isMentor, setIsMentor] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const MyMentors = () => {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        myMentors?.map((mentor) => {
+        myMentors?.map((mentor: PaymentDetails) => {
           const imageId = mentor.mentorProfile[0]?.profile_img;
           if (imageId) {
             const imageRef = ref(storage, imageId);

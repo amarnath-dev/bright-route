@@ -5,11 +5,13 @@ import useAxiosPrivate from "../../app/useAxiosPrivate";
 import "react-image-crop/dist/ReactCrop.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { MenteeProfileDetails } from "../../datatypes/PropsTypes";
 
 const MenteeProfile = () => {
   const axiosPrivate = useAxiosPrivate();
   const { menteeId } = useParams();
-  const [menteeDetails, setMenteeDetails] = useState();
+  const [menteeDetails, setMenteeDetails] =
+    useState<MenteeProfileDetails | null>(null);
   const [profileImg, setProfileImg] = useState("");
 
   useEffect(() => {
@@ -18,7 +20,6 @@ const MenteeProfile = () => {
         const response = await axiosPrivate.get(`/managment/${menteeId}`, {
           withCredentials: true,
         });
-        console.log("===", response.data);
         setMenteeDetails(response.data.menteeDetails);
         setProfileImg(response.data?.menteeDetails?.profile_img);
       } catch (error) {

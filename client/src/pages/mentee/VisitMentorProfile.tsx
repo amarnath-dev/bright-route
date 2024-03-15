@@ -6,6 +6,7 @@ import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MentorPaymentCard from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
+import { MentorPlan } from "../../datatypes/PropsTypes";
 
 const VisitMentorProfile = () => {
   const { mentorId } = useParams();
@@ -13,7 +14,7 @@ const VisitMentorProfile = () => {
   const axiosPrivate = useAxiosPrivate();
   const scrollRef = React.useRef<HTMLInputElement>(null);
 
-  const [mentorPlans, setMentorPlans] = useState([]);
+  const [mentorPlans, setMentorPlans] = useState<MentorPlan | null>(null);
 
   useEffect(() => {
     const fetchMentorData = async () => {
@@ -65,7 +66,7 @@ const VisitMentorProfile = () => {
         <MentorPaymentCard
           mentorPlans={mentorPlans}
           mentor={""}
-          onChildData={""}
+          onChildData={() => {}}
         />
       </div>
     </>

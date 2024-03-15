@@ -79,7 +79,6 @@ const ChangePassword = () => {
           }
         }, 1000);
       } else {
-        console.log("Error");
         toast.error(response.data.message);
       }
     } catch (error) {

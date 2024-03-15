@@ -18,7 +18,7 @@ export type MentorID = {
 };
 
 export type PlanAmount = {
-  mentor_plan_amount: string;
+  plan_amount: string;
 };
 
 interface Credentials {
@@ -43,15 +43,12 @@ export const applySlice = createSlice({
       state.form = action.payload;
     },
     submitPlanId: (state, action: PayloadAction<PlanID | null>) => {
-      console.log("Plan id -> ", action.payload);
       state.planId = action.payload;
     },
     submitMentorId: (state, action: PayloadAction<MentorID | null>) => {
-      console.log("Mentod id ->", action.payload);
       state.mentorId = action.payload;
     },
     submitPlanAmount: (state, action: PayloadAction<PlanAmount | null>) => {
-      console.log("Plan Amount -> ", action.payload);
       state.planAmount = action.payload;
     },
   },

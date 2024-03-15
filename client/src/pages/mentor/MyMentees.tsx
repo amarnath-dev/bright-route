@@ -11,30 +11,10 @@ import MessageIcon from "@mui/icons-material/Message";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { format } from "timeago.js";
 import { useAppSelector } from "../../app/hooks";
-
-interface Mentee {
-  _id: string;
-  mentor_id: string;
-  mentee_id: string;
-  razorPay_id: string;
-  plan_price: number;
-  mentor_plan_id: string;
-  goal_of_mentorship: string;
-  time_to_reach_goal: string;
-  message_to_mentor: string;
-  paymentDone: boolean;
-  duration: number;
-  __v: number;
-  menteeDetails: {
-    first_name: string;
-    last_name: string;
-    job_title: string;
-    profile_img: string;
-  }[];
-}
+import { MyMenteePayment } from "../../datatypes/PropsTypes";
 
 const MyMentees = () => {
-  const [myMentees, setMyMentees] = useState<Mentee>([]);
+  const [myMentees, setMyMentees] = useState<MyMenteePayment[]>([]);
   const [isApplication, setIsApplication] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
@@ -66,7 +46,7 @@ const MyMentees = () => {
           const imageRef = ref(storage, imageId);
           getDownloadURL(imageRef)
             .then((url) => {
-              menteeObj["newProfileImg"] = url;
+              // menteeObj["newProfileImg"] = url;
               const img = document.getElementById(
                 "profile_img"
               ) as HTMLImageElement;
@@ -96,12 +76,6 @@ const MyMentees = () => {
     }
   }, [axiosPrivate, myMentees, user?._id]);
 
-  useEffect(() => {
-    if (myMentees) {
-      console.log("This is my mentees", myMentees);
-    }
-  }, [myMentees]);
-
   return (
     <>
       <div className="w-full h-full md:h-screen">
@@ -124,17 +98,14 @@ const MyMentees = () => {
               <div className="flex w-full h-full flex-wrap py-3">
                 {myMentees?.map((plan, index: number) => {
                   return (
-                    <div>
-                      <figure
-                        key={index}
-                        className="md:w-96 min-h-full rounded-xl p-8 shadow-md md:shadow-lg mt-2 ml-2"
-                      >
+                    <div key={index}>
+                      <figure className="md:w-96 min-h-full rounded-xl p-8 shadow-md md:shadow-lg mt-2 ml-2">
                         <div className="flex">
                           <img
                             className="w-24 h-24 rounded-full object-cover"
                             id="profile_img"
                             alt="profile_img"
-                            src={plan?.newProfileImg}
+                            // src={plan?.newProfileImg}
                           />
                           <div className="px-2 py-2 font-bold">
                             <h1 className="text-xl">
@@ -190,7 +161,9 @@ const MyMentees = () => {
                               </Link>
                             </div>
                             <div className="px-3">
-                              <h1 className="py-2">{format(plan.createdAt)}</h1>
+                              <h1 className="py-2">
+                                {format(plan?.createdAt)}
+                              </h1>
                             </div>
                           </figcaption>
                         </div>

@@ -20,10 +20,13 @@ export const MentorshipApplyDetails = () => {
     message_to_mentor: "",
   });
 
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleChange: React.ChangeEventHandler<
+    HTMLSelectElement | HTMLTextAreaElement
+  > = (e) => {
+    const target = e.target as HTMLSelectElement | HTMLTextAreaElement;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [target.name]: target.value,
     });
   };
 
@@ -40,8 +43,7 @@ export const MentorshipApplyDetails = () => {
     setFormData({
       mentor_plan_id: form?.mentor_plan_id as string,
       mentor_id: form?.mentor_id as string,
-      mentor_plan_amount: planAmount?.mentor_plan_amount as string,
-
+      mentor_plan_amount: planAmount?.plan_amount as string,
       mentorship_goal: "",
       time_to_reach: "",
       message_to_mentor: "",
