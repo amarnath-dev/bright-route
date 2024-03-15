@@ -43,7 +43,7 @@ export const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        Cookies.set("token", action.payload.token, { expires: 3 });
+        // Cookies.set("token", action.payload.token, { expires: 3 });
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;

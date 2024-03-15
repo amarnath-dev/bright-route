@@ -7,11 +7,11 @@ export function useDebounceEffect(
 ) {
   useEffect(() => {
     const t = setTimeout(() => {
-      fn.apply(undefined, deps); //saying to use the spread instead of apply() ??
+      fn.apply(undefined, deps);
     }, waitTime);
 
     return () => {
       clearTimeout(t);
     };
-  }, deps);
+  }, [deps, fn, waitTime]);
 }

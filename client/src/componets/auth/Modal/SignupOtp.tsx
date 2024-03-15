@@ -3,7 +3,6 @@ import { Button, Label, Modal } from "flowbite-react";
 import { Dispatch, SetStateAction, useRef } from "react";
 import { signup } from "../../../services/authServices";
 import { useAppDispatch } from "../../../app/hooks";
-// import { authActions } from "../../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import API from "../../../api";
 import Snackbar from "@mui/material/Snackbar";
@@ -69,7 +68,6 @@ const SignupOtp = ({
               } else if (payloadData.status == 400) {
                 toast.error(payloadData.message);
               } else {
-                // dispatch(authActions.setUser(payloadData));
                 if (payloadData?.user?.role === "mentee") {
                   navigate("/");
                 }
@@ -190,7 +188,7 @@ const SignupOtp = ({
               className="text-blue-700 mt-4 underline"
               onClick={resendOtp}
             >
-              Re-send OTP
+              Re-Send OTP
             </button>
           </div>
         </div>

@@ -10,24 +10,21 @@ import {
   submitPlanAmount,
 } from "../../../redux/applyForm/applySlice";
 import useAxiosPrivate from "../../../app/useAxiosPrivate";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { MentorPlan } from "../../../datatypes/PropsTypes";
+import { PlanService } from "../../../datatypes/PropsTypes";
 
-interface PlanServices {
-  serviceName: string;
-  serviceCount: number | null;
+interface MentorPaymentCardProps {
+  mentorPlans: MentorPlan | null;
+  mentor: string | "";
+  onChildData: () => void | "";
 }
 
-interface MentorPlan {
-  planType: string;
-  planAmount: number;
-  planDescription: string;
-  planServices: Array<{
-    serviceName: string;
-    serviceCount: number | null;
-  }>;
-}
-
-const MentorPaymentCard = ({ mentorPlans, mentor, onChildData }) => {
+const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
+  mentorPlans,
+  mentor,
+  onChildData,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const axiosPrivate = useAxiosPrivate();
@@ -35,7 +32,7 @@ const MentorPaymentCard = ({ mentorPlans, mentor, onChildData }) => {
   const [deleteSelected, setDeleteSelected] = useState("");
 
   const sendDataToParent = () => {
-    onChildData(true);
+    onChildData();
   };
 
   const handleOpen = (planType: string) => {
@@ -50,7 +47,7 @@ const MentorPaymentCard = ({ mentorPlans, mentor, onChildData }) => {
   const handleDelete = async () => {
     try {
       const response = await axiosPrivate.delete(
-        `/mentor/plans/delete/${mentorPlans._id}/${deleteSelected}`,
+        `/mentor/plans/delete/${mentorPlans?._id}/${deleteSelected}`,
         {
           withCredentials: true,
         }
@@ -70,13 +67,21 @@ const MentorPaymentCard = ({ mentorPlans, mentor, onChildData }) => {
   const handleNavigate = (
     mentor_plan_id: string,
     mentor_id: string,
-    mentor_plan_amount: string
+    mentor_plan_amount: number
   ) => {
+    const plan_amount = mentor_plan_amount.toString();
     dispatch(submitPlanId({ mentor_plan_id }));
     dispatch(submitMentorId({ mentor_id }));
-    dispatch(submitPlanAmount({ mentor_plan_amount }));
+    dispatch(submitPlanAmount({ plan_amount }));
     navigate("/mentorship/apply");
   };
+
+  useEffect(() => {
+    if (mentorPlans) {
+      console.log("mentor plans plan details", mentorPlans?.planDetails);
+    }
+  }, [mentorPlans]);
+
   return (
     <>
       <div className="w-full h-full flex-col px-6 md:px-0 md:flex-row md:w-3/4 md:h-4/5 flex justify-around items-center rounded-lg md:mb-10">
@@ -154,85 +159,83 @@ const MentorPaymentCard = ({ mentorPlans, mentor, onChildData }) => {
           </div>
         ) : (
           <>
-            {mentorPlans?.planDetails?.map(
-              (plan: MentorPlan, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className="w-full mt-5 md:mt-0 md:w-1/3 h-full rounded shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]"
-                  >
-                    <div className="px-3 py-3 relative">
-                      <button className="md:px-3 md:py-3 rounded-md">
-                        <h1 className="text-xl font-bold">{plan.planType}</h1>
-                      </button>
-                      <span
-                        className="flex justify-end absolute top-0 right-2 mt-3"
-                        onClick={() => handleOpen(plan.planType)}
-                      >
-                        {mentor ? (
-                          <DeleteOutlineIcon className="cursor-pointer" />
-                        ) : (
-                          ""
-                        )}
-                      </span>
-                    </div>
-                    <div className="px-3 py-3">
-                      <h1 className="text-4xl font-extrabold text-green-800">
-                        {plan.planAmount}
-                        <small className="font-semibold text-2xl text-gray-700">
-                          /month
-                        </small>
-                      </h1>
-                    </div>
-                    <div className="flex-wrap px-3 mb-2">
-                      <h1 className="text-gray-700 text-lg">
-                        {plan.planDescription}
-                      </h1>
-                    </div>
-
-                    <div className="px-3 py-3">
-                      <h2 className="text-lg font-semibold">Plan Services:</h2>
-                      <ul>
-                        {plan.planServices.map(
-                          (service: PlanServices, serviceIndex: number) => (
-                            <li key={serviceIndex} className="mt-3">
-                              {service.serviceName && (
-                                <>
-                                  {serviceIndex === 0 && <CallIcon />}
-                                  {serviceIndex === 1 && <ChatIcon />}
-                                  {serviceIndex === 2 && <StarsIcon />}
-                                </>
-                              )}
-                              <span className="ml-2">
-                                {service.serviceName} {service.serviceCount}
-                              </span>
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    </div>
-                    {mentor ? (
-                      ""
-                    ) : (
-                      <div className="mt-10 px-2 py-2">
-                        <button
-                          className="border-2 w-full bg-color-one text-white py-2 rounded-md shadow-lg"
-                          onClick={() =>
-                            handleNavigate(
-                              mentorPlans.planDetails[index]._id,
-                              mentorPlans.mentor_id,
-                              mentorPlans.planDetails[index].planAmount
-                            )
-                          }
-                        >
-                          Get Started
-                        </button>
-                      </div>
-                    )}
+            {mentorPlans?.planDetails?.map((plan, index) => {
+              return (
+                <div
+                  key={index}
+                  className="w-full mt-5 md:mt-0 md:w-1/3 h-full rounded shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]"
+                >
+                  <div className="px-3 py-3 relative">
+                    <button className="md:px-3 md:py-3 rounded-md">
+                      <h1 className="text-xl font-bold">{plan?.planType}</h1>
+                    </button>
+                    <span
+                      className="flex justify-end absolute top-0 right-2 mt-3"
+                      onClick={() => handleOpen(plan?.planType)}
+                    >
+                      {mentor ? (
+                        <DeleteOutlineIcon className="cursor-pointer" />
+                      ) : (
+                        ""
+                      )}
+                    </span>
                   </div>
-                );
-              }
-            )}
+                  <div className="px-3 py-3">
+                    <h1 className="text-4xl font-extrabold text-green-800">
+                      {plan?.planAmount}
+                      <small className="font-semibold text-2xl text-gray-700">
+                        /month
+                      </small>
+                    </h1>
+                  </div>
+                  <div className="flex-wrap px-3 mb-2">
+                    <h1 className="text-gray-700 text-lg">
+                      {plan?.planDescription}
+                    </h1>
+                  </div>
+
+                  <div className="px-3 py-3">
+                    <h2 className="text-lg font-semibold">Plan Services:</h2>
+                    <ul>
+                      {plan?.planServices.map(
+                        (service: PlanService, serviceIndex: number) => (
+                          <li key={serviceIndex} className="mt-3">
+                            {service.serviceName && (
+                              <>
+                                {serviceIndex === 0 && <CallIcon />}
+                                {serviceIndex === 1 && <ChatIcon />}
+                                {serviceIndex === 2 && <StarsIcon />}
+                              </>
+                            )}
+                            <span className="ml-2">
+                              {service?.serviceName} {service?.serviceCount}
+                            </span>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                  {mentor ? (
+                    ""
+                  ) : (
+                    <div className="mt-10 px-2 py-2">
+                      <button
+                        className="border-2 w-full bg-color-one text-white py-2 rounded-md shadow-lg"
+                        onClick={() =>
+                          handleNavigate(
+                            mentorPlans.planDetails[index]?._id,
+                            mentorPlans?.mentor_id,
+                            mentorPlans.planDetails[index]?.planAmount
+                          )
+                        }
+                      >
+                        Get Started
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </>
         )}
       </div>

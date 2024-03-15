@@ -78,7 +78,6 @@ export const AdminModalReject: FC<AdminModalRejectProps> = ({
   openModalTwo,
   handleCloseTwo,
   mentor,
-  // handleOpenTwo,
   handleReject,
 }) => {
   return (

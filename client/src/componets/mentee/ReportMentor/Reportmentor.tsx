@@ -1,9 +1,14 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
 import useAxiosPrivate from "../../../app/useAxiosPrivate";
+import { mentorProfileObj } from "../../../datatypes/Datatypes";
 
-const Reportmentor = ({ setOpen, mentor }) => {
+interface ReportmentorProps {
+  setOpen: (open: boolean) => void;
+  mentor: mentorProfileObj | undefined;
+}
+
+const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
   const [reportData, setReportData] = useState({
     issueFaced: "",
     issueDescription: "",
@@ -11,11 +16,14 @@ const Reportmentor = ({ setOpen, mentor }) => {
   });
 
   const axiosPrivate = useAxiosPrivate();
-
-  const handleChage = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleChage = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     setReportData({
       ...reportData,
-      [e.target.name]: e.target?.value,
+      [e.target.name]: (e.target as HTMLInputElement).value,
     });
   };
 
@@ -30,7 +38,7 @@ const Reportmentor = ({ setOpen, mentor }) => {
       return;
     }
     const response = await axiosPrivate.post(
-      `/report/mentor/${mentor.mentor_id}`,
+      `/report/mentor/${mentor?.mentor_id}`,
       reportData,
       {
         withCredentials: true,
@@ -50,7 +58,6 @@ const Reportmentor = ({ setOpen, mentor }) => {
 
   return (
     <>
-      <ToastContainer className="w-40 md:w-80" />
       <div
         id="crud-modal"
         tabIndex={-1}
