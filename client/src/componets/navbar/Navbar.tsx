@@ -143,7 +143,7 @@ const NavBar = () => {
                     inline
                     label={
                       <Avatar
-                        alt="User settings"
+                        alt="User_settings"
                         img={firebaseImgId ? firebaseImgId : ""}
                         rounded
                       />
@@ -184,14 +184,14 @@ const NavBar = () => {
                       <IoChatboxEllipsesOutline className="text-3xl" />
                     ) : (
                       <>
-                        <FaChalkboardTeacher className="text-3xl" />
+                        <FaChalkboardTeacher className="text-3xl hover:text-blue-600 text-white" />
                       </>
                     )}
                   </Navbar.Link>
                   <Navbar.Link>
-                    <span className="bg-red-400 cursor-pointer">
+                    <span className="cursor-pointer">
                       <IoNotifications
-                        className="text-3xl"
+                        className="text-3xl hover:text-blue-600 text-white"
                         onClick={handleNotification}
                       />
                     </span>

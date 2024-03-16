@@ -8,8 +8,8 @@ const MentorHome: React.FC = () => {
     <>
       <div className="w-full h-screen bg-slate-400">
         <NavBar />
-        <div className="w-full md:w-full h-16 bg-slate-900 text-white flex items-center justify-around"></div>
-        <div className="w-full h-80 bg-slate-900 flex justify-start">
+        <div className="w-full md:w-full h-16 bg-background-two text-white flex items-center justify-around"></div>
+        <div className="w-full h-80 bg-background-two flex justify-start">
           <div className="ml-3 md:ml-10">
             <h1 className="uppercase text-white text-5xl mt-10">welcome,</h1>
             <h1 className="text-white mt-3 md:text-xl">

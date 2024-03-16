@@ -1,24 +1,50 @@
-import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
+import AnimatedText from "../AnimatedText/AnimatedText";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import AnimatedTextTwo from "../AnimatedTextTwo/AnimatedTextTwo";
 
 const Header = () => {
-  const { user } = useAppSelector((state) => state.userAuth);
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [replay, setReplay] = useState(true);
+
+  const placeholderText = [
+    { type: "heading1", text: `Welcome to Bright Route.` },
+  ];
+
+  const container = {
+    visible: {
+      transition: {
+        staggerChildren: 0.025,
+      },
+    },
+  };
 
   return (
     <>
-      <div className="w-full h-96 bg-slate-900 shadow-2xl">
-        <div className="h-96 flex justify-center items-center flex-col">
-          <h1 className="font-bold text-4xl ml-5 text-gray-200">
-            Welcome, {user?.first_name}
-          </h1>
-          <h3 className="mt-5 font-bold text-xl ml-5 text-gray-200">
-            Start connecting with mentors and get ready to take your career to
-            the next level!
-          </h3>
-          <div>
+      <div className="w-full h-screen bg-background-two">
+        <div className="flex justify-center items-center flex-col">
+          <div className="font-bold text-2xl text-white mt-40">
+            <motion.div
+              className="App"
+              initial="hidden"
+              animate={replay ? "visible" : "hidden"}
+              variants={container}
+            >
+              <div className="container">
+                {placeholderText.map((item, index) => {
+                  return <AnimatedText {...item} key={index} />;
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+        <div className="text-white text-center">
+          <AnimatedTextTwo />
+          <div className="mt-3">
             <button
-              className="underline hover:text-blue-500 mt-5 py-2 px-3 rounded-lg text-gray-200 font-medium"
+              className="text-md text-white hover:bg-background-two bg-gray-800 py-2 px-3 mt-5 rounded-md font-medium"
               onClick={() => {
                 navigate("/mentor/browse");
               }}

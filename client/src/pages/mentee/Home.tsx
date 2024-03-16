@@ -6,10 +6,12 @@ const LazyHeader = lazy(() => import("../../componets/header/Header"));
 
 const Home = () => {
   return (
-    <Suspense fallback={<Spinner />}>
-      <LazyNavBar />
-      <LazyHeader />
-    </Suspense>
+    <div className="w-full h-screen bg-background-two">
+      <Suspense fallback={<Spinner />}>
+        <LazyNavBar />
+        <LazyHeader />
+      </Suspense>
+    </div>
   );
 };
 
