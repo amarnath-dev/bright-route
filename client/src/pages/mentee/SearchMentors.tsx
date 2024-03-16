@@ -6,6 +6,7 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { MentorListCard } from "../../componets/mentorListCard/MentorListCard";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
+import "../../app/GlobalStyles.css";
 
 const SearchMentors = () => {
   const [allMentors, setAllMentors] = useState<mentorProfileObj[]>([]);
@@ -85,17 +86,17 @@ const SearchMentors = () => {
 
   return (
     <>
-      <div className="w-full h-full">
-        <div className="w-full h-72 border-2 flex justify-center items-center px-3 py-3">
+      <div className="w-full h-full bg-background-two">
+        <div className="w-full h-72 flex justify-center items-center px-3 py-3">
           <div className="w-full h-full md:w-1/2 md:flex md:justify-center md:items-center md:flex-col">
             <label className="relative flex justify-center items-center">
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
                 options={topTechnicalJobPositions}
-                sx={{ width: 350, marginTop: 3, padding: 1 }}
+                className="custom-autocomplete"
                 renderInput={(params) => (
-                  <TextField {...params} label="Search by Job title" />
+                  <TextField {...params} label="Search by Job Title" />
                 )}
                 onChange={(event, value) => setJobTitle(value?.label || "")}
               />
@@ -106,6 +107,7 @@ const SearchMentors = () => {
                 disablePortal
                 id="combo-box-demo"
                 options={topTechnicalSkills}
+                className="custom-autocomplete"
                 sx={{ width: 300, marginTop: 3, padding: 1 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Search by Skills" />
@@ -117,6 +119,7 @@ const SearchMentors = () => {
                 disablePortal
                 id="combo-box-demo"
                 options={topTechnicalCompanies}
+                className="custom-autocomplete"
                 sx={{ width: 300, marginTop: 3, padding: 1 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Search by Company" />
