@@ -3,7 +3,7 @@ import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { useNavigate } from "react-router-dom";
 
 interface MentorListCardProps {
-  filtered: mentorProfileObj[];
+  filtered: mentorProfileObj[] | null;
 }
 
 export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
@@ -11,7 +11,7 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
   return (
     <>
       <div className="w-full h-full flex justify-center items-center flex-col px-4 py-4 mt-2 md:mt-10 md:py-0 md:px-0 bg-background-two">
-        {filtered.map((mentor, index) => (
+        {filtered?.map((mentor, index) => (
           <div
             key={index}
             className="w-full mt-5 border-2 border-gray-700 rounded-lg px-4 py-4 md:px-2 md:py-2 md:w-9/12 md:mt-10"

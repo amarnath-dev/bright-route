@@ -64,4 +64,5 @@ router.post("/payment-suceess", verifyJWT, paymentController.storePaymentData);
 router.get("/getimage/:userRole", verifyJWT, menteeController.getProfileImg);
 router.get("/my-mentors", verifyJWT, menteeController.getMyMentors);
 
+router.post("/sort", verifyJWT, menteeController.getSorted);
 export default router;

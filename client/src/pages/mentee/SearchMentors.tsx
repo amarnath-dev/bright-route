@@ -1,15 +1,14 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { useEffect, useState } from "react";
 import { storage } from "../../app/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { MentorListCard } from "../../componets/mentorListCard/MentorListCard";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
+import { useEffect, useState } from "react";
 import "../../app/GlobalStyles.css";
 
 const SearchMentors = () => {
-  const [allMentors, setAllMentors] = useState<mentorProfileObj[]>([]);
   const [filtered, setFiltered] = useState<mentorProfileObj[]>([]);
 
   const [jobTitle, setJobTitle] = useState("");
@@ -17,14 +16,12 @@ const SearchMentors = () => {
   const [company, setCompany] = useState("");
 
   const axiosPrivate = useAxiosPrivate();
-
   useEffect(() => {
     const mentorProfile = async () => {
       try {
         const response = await axiosPrivate.get("/browse-mentors");
         if (response.data) {
           const mentorProfile = response.data;
-          setAllMentors(mentorProfile.allMentors);
           setFiltered(mentorProfile.allMentors);
         }
       } catch (error) {
@@ -35,6 +32,7 @@ const SearchMentors = () => {
   }, [axiosPrivate]);
 
   useEffect(() => {
+    console.log("Runnign..");
     const fetchImages = async () => {
       try {
         await Promise.all(
@@ -43,7 +41,7 @@ const SearchMentors = () => {
             if (imageId) {
               const imageRef = ref(storage, imageId);
               const url = await getDownloadURL(imageRef);
-              setAllMentors((prevMentors) =>
+              setFiltered((prevMentors) =>
                 prevMentors.map((prevMentor) =>
                   prevMentor.profile_img === imageId
                     ? { ...prevMentor, imageUrl: url }
@@ -59,30 +57,31 @@ const SearchMentors = () => {
       }
     };
     fetchImages();
-  }, [filtered.length]);
+  }, [filtered?.length]);
 
   useEffect(() => {
-    const filterMentors = () => {
-      let filteredMentors = allMentors;
-      if (jobTitle.trim() !== "") {
-        filteredMentors = filteredMentors.filter(
-          (mentor) => mentor.job_title.toLowerCase() === jobTitle.toLowerCase()
+    const filterAndSortMentors = async () => {
+      try {
+        const response = await axiosPrivate.post(
+          "/sort",
+          {
+            jobTitle,
+            skill,
+            company,
+          },
+          { withCredentials: true }
         );
+        if (response.data.status === "success") {
+          setFiltered(response.data?.allMentors);
+        } else {
+          setFiltered([]);
+        }
+      } catch (error) {
+        console.error("Error filtering and sorting mentors:", error);
       }
-      if (company.trim() !== "") {
-        filteredMentors = filteredMentors.filter(
-          (mentor) => mentor.company.toLowerCase() === company.toLowerCase()
-        );
-      }
-      if (skill.trim() !== "") {
-        filteredMentors = filteredMentors.filter((mentor) =>
-          mentor.skills.some((s) => s.includes(skill))
-        );
-      }
-      setFiltered(filteredMentors);
     };
-    filterMentors();
-  }, [jobTitle, skill, company, allMentors]);
+    filterAndSortMentors();
+  }, [jobTitle, skill, company, axiosPrivate]);
 
   return (
     <>
@@ -129,7 +128,7 @@ const SearchMentors = () => {
             </div>
           </div>
         </div>
-        <MentorListCard filtered={filtered} />
+        <MentorListCard filtered={filtered?.length > 0 ? filtered : null} />
       </div>
     </>
   );

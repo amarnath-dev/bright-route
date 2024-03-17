@@ -248,10 +248,18 @@ const SigninForm: React.FC = () => {
                 <div className="flex justify-center">
                   <button
                     type="submit"
-                    className="border-1 border-slate-300 mt-2 bg-color-five text-white rounded-md font-bold py-2 w-72 md:w-96 sm:text-lg"
+                    className="border-1 border-slate-300 bg-color-five text-white rounded-md font-bold py-2 w-72 md:w-96 sm:text-lg"
                   >
                     Signin
                   </button>
+                </div>
+                <div className="mt-2">
+                  <Link
+                    to={"/forgotpassword"}
+                    className="text-blue-500 underline"
+                  >
+                    Forgot Password ?
+                  </Link>
                 </div>
 
                 <div className="mt-3 flex justify-center items-center">

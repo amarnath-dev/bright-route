@@ -270,6 +270,7 @@ export class MenteeAuthController {
 
   async googleAuth(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log("Reached at the google auth");
       if (!req.body.userData) {
         res.status(400);
         return next(Error("Invalid credentials"));

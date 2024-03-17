@@ -24,7 +24,6 @@ const sendEmailOtp = async (
       },
     });
 
-    //Getting the otp number and saving it to the new model
     const otpnum: number = generateOTP();
     const hashedOTP: string = cryptojs.AES.encrypt(
       otpnum.toString(),

@@ -68,6 +68,7 @@ const VisitMenteeProfile = React.lazy(
 );
 const MyMentors = React.lazy(() => import("./pages/mentee/MyMentors"));
 const VideoChat = React.lazy(() => import("./componets/VideoChat/VideoChat"));
+const NewPassword = React.lazy(() => import("./pages/mentee/NewPassword"));
 
 function App() {
   return (
@@ -80,6 +81,8 @@ function App() {
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/signin" element={<SigninPage />} />
               <Route path="/video/:roomId" element={<VideoChat />} />
+              <Route path="/forgotpassword" element={<NewPassword />} />
+
               {/* Mentee Roles  */}
               <Route element={<IsAuthenticated />}>
                 <Route element={<ProtectedRoute allowedRole={"mentee"} />}>
