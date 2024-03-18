@@ -81,9 +81,7 @@ const SigninForm: React.FC = () => {
         }
       }
     } catch (error) {
-      if (typeof error == "string") {
-        console.log(error);
-      }
+      console.log(error);
     }
   };
 
@@ -118,14 +116,14 @@ const SigninForm: React.FC = () => {
               >
                 <div className="flex">
                   <h1 className="text-md px-4 py-1 md:py-0 md:px-0 md:text-2xl font-bold mb-5 text-white">
-                    Log in as mentor
+                    Log in as Mentor
                   </h1>
                   <button
                     onClick={() => setUser(false)}
                     type="button"
                     className="text-md px-5 py-1 md:px-0 md:py-0 md:text-xl h-8 font-bold text-color-five md:ml-12 underline"
                   >
-                    I am a mentee
+                    I am a Mentee
                   </button>
                 </div>
                 <label className="flex justify-center">
@@ -194,14 +192,14 @@ const SigninForm: React.FC = () => {
               >
                 <div className="flex">
                   <h1 className="text-md px-4 py-1 md:py-0 md:px-0 md:text-2xl font-bold mb-5 text-white">
-                    Log in as mentee
+                    Log in as Mentee
                   </h1>
                   <button
                     type="button"
                     className="text-md px-5 py-1 md:px-0 md:py-0 md:text-xl h-8 font-bold text-color-five md:ml-12 underline"
                     onClick={() => setUser(true)}
                   >
-                    I am a mentor
+                    I am a Mentor
                   </button>
                 </div>
                 <label className="flex justify-center">
