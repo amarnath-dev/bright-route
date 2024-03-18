@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 interface FormData {
   password: string;
@@ -38,7 +38,7 @@ const ForgotPassword = () => {
         return;
       }
       setEmailExists(true);
-    //   toast.success(response.data.message); //This was the error
+      toast.success("Email sent successfully");
     } catch (error) {
       console.log(error);
     }
@@ -59,7 +59,6 @@ const ForgotPassword = () => {
         setOtpError(true);
       }
     } catch (error) {
-      console.log(error);
       toast.error("Resend OTP and Try Again");
     }
   };
@@ -87,7 +86,7 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       if (response.data.status === "success") {
-        // toast.success(response.data?.message);
+        toast.success(response.data?.message);
         navigate("/signin");
       } else {
         toast.error(response.data.message);
@@ -109,7 +108,7 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       if (response.data.status === "success") {
-        toast.success(response.data.message);
+        toast.success(response.data?.message);
       }
     } catch (error) {
       console.log(error);
@@ -117,6 +116,7 @@ const ForgotPassword = () => {
   };
   return (
     <>
+      <ToastContainer className="w-40 md:w-80" />
       <div className="w-full h-screen flex justify-center items-center bg-background-two">
         {otpVerified === false ? (
           <>
