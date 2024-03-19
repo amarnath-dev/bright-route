@@ -4,7 +4,6 @@ import API from "../api";
 import { FormData } from "../datatypes/Datatypes";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../app/firebase";
-import Cookies from "js-cookie";
 import { Credentials } from "../componets/auth/Signup/Signup";
 
 //Mentee Services
@@ -171,12 +170,12 @@ export const adminLogin = createAsyncThunk(
   "auth/adminLogin",
   async (adminData: UserWithEmailAndPassword, thunkAPI) => {
     try {
-      const response = await API.post("/admin/admin-login", { adminData });
-      if (response) {
-        const serverRes = response.data;
-        Cookies.set("token", serverRes.admin.token, { expires: 3 });
-        return serverRes;
-      }
+      const response = await API.post(
+        "/admin/admin-login",
+        { adminData },
+        { withCredentials: true }
+      );
+      return response.data;
     } catch (error) {
       const err = error as AxiosError<{ status?: string; message?: string }>;
       const payload = {

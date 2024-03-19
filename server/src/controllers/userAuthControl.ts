@@ -61,8 +61,8 @@ export class MenteeAuthController {
           userExists.password,
           process.env.HASH_KEY as string
         ).toString(CryptoJS.enc.Utf8);
-
         if (password === dbPassword) {
+          console.log("Inside the check");
           const accessToken = Jwt.sign(
             {
               UserInfo: {
@@ -438,7 +438,6 @@ export class MentorAuthController {
           userExists.password,
           process.env.HASH_KEY as string
         ).toString(CryptoJS.enc.Utf8);
-
         if (password === dbPassword) {
           const accessToken = Jwt.sign(
             {
@@ -451,7 +450,6 @@ export class MentorAuthController {
             process.env.ACCESS_TOKEN_SECRETE as string,
             { expiresIn: "30m" }
           );
-
           const refreshToken = Jwt.sign(
             { email: userExists.email },
             process.env.REFRESH_TOKEN_SECRETE as string,
@@ -465,7 +463,6 @@ export class MentorAuthController {
           res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: false,
-            // sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
           res.status(200).json({

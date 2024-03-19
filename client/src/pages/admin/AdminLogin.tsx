@@ -28,13 +28,10 @@ const AdminLogin: React.FC = () => {
   const submitData = async (data: Credentials) => {
     try {
       const response = await dispatch(adminLogin(data));
-      console.log("response", response.payload);
       if (response.payload) {
         const payload = response.payload;
         if (payload.status == "success") {
-          toast(payload.message);
           navigate("/admin/dashboard");
-          // navigate("/admin/mentor-application");
         }
         if (payload.status === 400) {
           toast.error(payload.message);
@@ -50,16 +47,18 @@ const AdminLogin: React.FC = () => {
   return (
     <>
       <ToastContainer className="w-40 md:w-80" />
-      <div className="w-screen h-screen flex justify-center">
+      <div className="w-screen h-screen flex justify-center bg-background-two">
         <div className="mt-40 md:mt-36">
           <form
             onSubmit={handleSubmit(submitData)}
-            className="border-2 px-4 py-4 rounded-md shadow-lg"
+            className="border px-4 py-4 rounded-md shadow-lg"
           >
-            <h1 className="px-2 py-2 font-bold">Express Administration</h1>
+            <h1 className="px-2 py-2 font-bold text-gray-400">
+              Express Administration
+            </h1>
             <label>
               <input
-                className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 mt-2 md:w-96 sm:text-lg"
+                className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 mt-2 md:w-96 sm:text-lg"
                 placeholder="Email"
                 type="email"
                 {...register("email")}
@@ -72,7 +71,7 @@ const AdminLogin: React.FC = () => {
             </label>
             <label>
               <input
-                className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 mt-4 md:w-96 sm:text-lg"
+                className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 mt-4 md:w-96 sm:text-lg"
                 placeholder="Password"
                 type="text"
                 {...register("password")}
@@ -83,7 +82,7 @@ const AdminLogin: React.FC = () => {
                 </small>
               )}
             </label>
-            <div className="flex justify-center mt-8 border px-2 py-2 rounded text-white bg-color-one">
+            <div className="flex justify-center mt-8 px-2 py-2 rounded text-white bg-color-one">
               <button type="submit">Submit</button>
             </div>
           </form>

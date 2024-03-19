@@ -4,6 +4,7 @@ import {
   signin,
   MentorLogin,
   MultiFromApply,
+  adminLogin,
 } from "../../services/authServices";
 import { changePassword } from "../../services/profileService";
 import Cookies from "js-cookie";
@@ -43,7 +44,6 @@ export const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        // Cookies.set("token", action.payload.token, { expires: 3 });
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
@@ -84,6 +84,24 @@ export const authSlice = createSlice({
         Cookies.set("accessToken", action.payload.accessToken);
       })
       .addCase(MentorLogin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        const error = action.payload as {
+          message: string;
+          status: number;
+        };
+        state.errorMessage = error?.message;
+        state.status = error?.status;
+      })
+      .addCase(adminLogin.pending, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(adminLogin.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        Cookies.set("accessToken", action.payload.accessToken);
+      })
+      .addCase(adminLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         const error = action.payload as {
