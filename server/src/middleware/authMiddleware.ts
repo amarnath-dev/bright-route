@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import mongoose, { Document } from "mongoose";
-import Admin from "../models/adminModal";
+import adminModal from "../models/adminModal";
 import userModel from "../models/userModel";
 
 declare module "express" {
@@ -16,22 +16,18 @@ export const protect = async (
   next: NextFunction
 ) => {
   const token = req.cookies;
-  console.log("--->", token);
   if (token) {
     try {
-
       const decode = Jwt.verify(
         token,
         process.env.JWT_SECRETE as string
       ) as JwtPayload;
-
-      console.log("this is decoded token", decode);
       // const userId = new mongoose.Types.ObjectId(decode.id);
       const user = await userModel.findOne({ email: decode.UserInfo.email });
       if (!user) {
         res.status(401);
         next(Error("Unauthorized user"));
-      } else if (user.is_blocked) {
+      } else if (user?.is_blocked) {
         res.status(401);
         next(new Error("Account has been blocked"));
       } else {
@@ -65,7 +61,7 @@ export const protectAdmin = async (
     try {
       const decoded = Jwt.verify(token, "jwtsecrete") as JwtPayload;
       const adminId = new mongoose.Types.ObjectId(decoded.id);
-      const admin = await Admin.findById(adminId);
+      const admin = await adminModal.findById(adminId);
       if (!admin || admin.role !== "admin") {
         res.status(401);
         throw new Error("Unauthorized Admin");

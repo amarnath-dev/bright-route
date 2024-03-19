@@ -130,8 +130,23 @@ export class AdminControls {
     next: NextFunction
   ): Promise<void> {
     try {
-      const mentees = await MenteeProfile.find();
-      res.status(200).json({ status: "success", mentees });
+      const mentees = await User.aggregate([
+        { $match: { role: "mentee" } },
+        {
+          $lookup: {
+            from: "menteeprofiles",
+            foreignField: "mentee_id",
+            localField: "_id",
+            as: "profileDetails",
+          },
+        },
+        {
+          $unwind: "$profileDetails",
+        },
+      ]);
+      if (mentees) {
+        res.status(200).json({ status: "success", mentees });
+      }
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);

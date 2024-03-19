@@ -34,6 +34,6 @@ router.patch(
   adminControls.rejectApplication
 );
 
-router.get("/get-all-mentee", verifyJWT, adminControls.getMentors);
+router.get("/mentee", verifyJWT, adminControls.getMentors);
 
 export default router;

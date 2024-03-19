@@ -54,18 +54,17 @@ const MentorApplication = () => {
 
   return (
     <>
-      <div className="grid grid-cols-12 w-screen h-screen">
+      <div className="grid grid-cols-12 h-screen bg-background-two">
         <div className="hidden md:block col-span-3">
           <AdminSidebar />
         </div>
-
         <div className="col-span-9 h-screen">
           <div className="mt-4">
-            <h1 className="font-bold">
+            <h1 className="font-bold text-gray-400">
               Dashboard / <small>Applications</small>
             </h1>
           </div>
-          <div className="w-screen ml-3 mr-3 md:w-full mt-10 rounded-md">
+          <div className="w-screen mr-3 md:w-full mt-10 rounded-md">
             {details.length > 0 ? (
               <DataGrid
                 rows={details}
@@ -74,7 +73,7 @@ const MentorApplication = () => {
               />
             ) : (
               <div>
-                <h1 className="text-xl md:text-2xl font-bold">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-400">
                   No Applications are Pending
                 </h1>
               </div>
