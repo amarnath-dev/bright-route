@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import CryptoJS from "crypto-js";
 import Admin from "../models/adminModal";
-import generateJWT from "../utils/generateJWT";
+import Jwt from "jsonwebtoken";
 
 export class AdminAuthControls {
   async adminLogin(
@@ -16,23 +16,43 @@ export class AdminAuthControls {
         return next(Error("Invalid Credentials"));
       }
       const emailExists = await Admin.findOne({ email });
-      if (emailExists?._id) {
+      if (emailExists) {
         const dbPassword = CryptoJS.AES.decrypt(
           emailExists?.password,
           process.env.HASH_KEY as string
         ).toString(CryptoJS.enc.Utf8);
-        if (password == dbPassword) {
-          const token = generateJWT(emailExists?._id, emailExists?.email);
-          console.log("tokene", token);
+        if (password === dbPassword) {
+          const accessToken = Jwt.sign(
+            {
+              UserInfo: {
+                id: emailExists?._id,
+                email: emailExists?.email,
+                roles: emailExists?.role,
+              },
+            },
+            process.env.ACCESS_TOKEN_SECRETE as string,
+            { expiresIn: "3d" }
+          );
+
+          const refreshToken = Jwt.sign(
+            { email: emailExists?.email },
+            process.env.REFRESH_TOKEN_SECRETE as string,
+            { expiresIn: "7d" }
+          );
+          res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: false,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+          });
           res.status(200).json({
             status: "success",
-            message: "Admin Login Successfull",
-            admin: {
+            user: {
               _id: emailExists?._id,
+              first_name: "admin",
               email: emailExists?.email,
-              role: emailExists.role,
-              token: token,
+              role: emailExists?.role,
             },
+            accessToken,
           });
         } else {
           res.status(400).json({ message: "Incorrect Password" });

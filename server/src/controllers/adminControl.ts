@@ -130,8 +130,61 @@ export class AdminControls {
     next: NextFunction
   ): Promise<void> {
     try {
-      const mentees = await MenteeProfile.find();
-      res.status(200).json({ status: "success", mentees });
+      const mentees = await User.aggregate([
+        { $match: { role: "mentee" } },
+        {
+          $lookup: {
+            from: "menteeprofiles",
+            foreignField: "mentee_id",
+            localField: "_id",
+            as: "profileDetails",
+          },
+        },
+        {
+          $unwind: "$profileDetails",
+        },
+      ]);
+      if (mentees) {
+        res.status(200).json({ status: "success", mentees });
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+        return next(error);
+      }
+    }
+  }
+  async blockUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req.params?.userId;
+      const update = await User.findByIdAndUpdate(userId, { is_blocked: true });
+      if (update) {
+        res.status(200).json({ status: "success", message: "User Blocked" });
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+        return next(error);
+      }
+    }
+  }
+  async unBlock(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req.params?.userId;
+      const update = await User.findByIdAndUpdate(userId, {
+        is_blocked: false,
+      });
+      if (update) {
+        res.status(200).json({ status: "success", message: "User UnBlocked" });
+      }
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);

@@ -105,7 +105,7 @@ export interface IAdmin extends Document {
 }
 
 export interface IPlans extends Document {
-  mentor_id: string;
+  mentor_id: ObjectId;
   planDetails: [{}];
   planLimit: number;
 }
