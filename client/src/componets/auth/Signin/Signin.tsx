@@ -145,7 +145,7 @@ const SigninForm: React.FC = () => {
                   <input
                     className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md mt-4 py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
                     placeholder="Password"
-                    type="text"
+                    type="password"
                     {...register("password")}
                   />
                 </label>
@@ -221,7 +221,7 @@ const SigninForm: React.FC = () => {
                   <input
                     className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md mt-4 py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
                     placeholder="Password"
-                    type="text"
+                    type="password"
                     {...register("password")}
                   />
                 </label>

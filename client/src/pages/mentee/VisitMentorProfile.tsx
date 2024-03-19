@@ -7,13 +7,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MentorPaymentCard from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
 import { MentorPlan } from "../../datatypes/PropsTypes";
+import NavBar from "../../componets/navbar/Navbar";
 
 const VisitMentorProfile = () => {
   const { mentorId } = useParams();
   const [mentor, setMentor] = useState<mentorProfileObj>();
   const axiosPrivate = useAxiosPrivate();
   const scrollRef = React.useRef<HTMLInputElement>(null);
-
   const [mentorPlans, setMentorPlans] = useState<MentorPlan | null>(null);
 
   useEffect(() => {
@@ -53,8 +53,12 @@ const VisitMentorProfile = () => {
 
   return (
     <>
-      <div className="h-full grid grid-cols-12 bg-slate-100" ref={scrollRef}>
-        <div className="col-span-12  md:col-span-4 px-10 py-10">
+      <NavBar />
+      <div
+        className="h-full grid grid-cols-12 bg-background-two"
+        ref={scrollRef}
+      >
+        <div className="col-span-12 px-3 py-3 md:col-span-4 md:px-10 md:py-10">
           <MentorProfileCard mentor={mentor} user={"mentee"} />
         </div>
 
@@ -62,7 +66,7 @@ const VisitMentorProfile = () => {
           <MentorAboutSkill mentor={mentor} user={"mentee"} />
         </div>
       </div>
-      <div className="flex justify-center bg-slate-100">
+      <div className="flex justify-center bg-background-two">
         <MentorPaymentCard
           mentorPlans={mentorPlans}
           mentor={""}

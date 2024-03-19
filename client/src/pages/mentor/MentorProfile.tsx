@@ -32,7 +32,7 @@ const MentorProfile = () => {
 
   return (
     <>
-      <div className="h-full grid grid-cols-12 bg-slate-200">
+      <div className="h-full grid grid-cols-12 bg-background-two">
         <div className="col-span-12  md:col-span-4 px-10 py-10">
           <React.Suspense>
             <MentorProfileCard

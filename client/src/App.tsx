@@ -82,6 +82,8 @@ function App() {
               <Route path="/signin" element={<SigninPage />} />
               <Route path="/video/:roomId" element={<VideoChat />} />
               <Route path="/forgotpassword" element={<NewPassword />} />
+              <Route path="/mentor/apply" element={<ContainerForm />} />
+              <Route path="/mentor/login" element={<SigninPage />} />
 
               {/* Mentee Roles  */}
               <Route element={<IsAuthenticated />}>
@@ -135,8 +137,6 @@ function App() {
                     path="/mentor/profile/update"
                     element={<MentorProfileEdit />}
                   />
-                  <Route path="/mentor/apply" element={<ContainerForm />} />
-                  <Route path="/mentor/login" element={<SigninPage />} />
                   <Route
                     path="/mentor/apply-success"
                     element={<ApplySuccess />}

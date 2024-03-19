@@ -10,7 +10,7 @@ import {
   submitPlanAmount,
 } from "../../../redux/applyForm/applySlice";
 import useAxiosPrivate from "../../../app/useAxiosPrivate";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MentorPlan } from "../../../datatypes/PropsTypes";
 import { PlanService } from "../../../datatypes/PropsTypes";
 
@@ -75,12 +75,6 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
     dispatch(submitPlanAmount({ plan_amount }));
     navigate("/mentorship/apply");
   };
-
-  useEffect(() => {
-    if (mentorPlans) {
-      console.log("mentor plans plan details", mentorPlans?.planDetails);
-    }
-  }, [mentorPlans]);
 
   return (
     <>
@@ -163,7 +157,7 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
               return (
                 <div
                   key={index}
-                  className="w-full mt-5 md:mt-0 md:w-1/3 h-full rounded shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]"
+                  className="w-full mt-5 md:mt-0 md:w-1/3 h-full shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] bg-gray-800 rounded-md"
                 >
                   <div className="px-3 py-3 relative">
                     <button className="md:px-3 md:py-3 rounded-md">
@@ -181,25 +175,25 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
                     </span>
                   </div>
                   <div className="px-3 py-3">
-                    <h1 className="text-4xl font-extrabold text-green-800">
+                    <h1 className="text-4xl font-extrabold text-gray-400">
                       {plan?.planAmount}
-                      <small className="font-semibold text-2xl text-gray-700">
+                      <small className="font-semibold text-2xl text-gray-400">
                         /month
                       </small>
                     </h1>
                   </div>
                   <div className="flex-wrap px-3 mb-2">
-                    <h1 className="text-gray-700 text-lg">
+                    <h1 className="text-gray-400 text-lg">
                       {plan?.planDescription}
                     </h1>
                   </div>
 
                   <div className="px-3 py-3">
-                    <h2 className="text-lg font-semibold">Plan Services:</h2>
+                    <h2 className="text-lg font-semibold text-gray-400">Plan Services:</h2>
                     <ul>
                       {plan?.planServices.map(
                         (service: PlanService, serviceIndex: number) => (
-                          <li key={serviceIndex} className="mt-3">
+                          <li key={serviceIndex} className="mt-3 text-gray-400">
                             {service.serviceName && (
                               <>
                                 {serviceIndex === 0 && <CallIcon />}
@@ -220,7 +214,7 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
                   ) : (
                     <div className="mt-10 px-2 py-2">
                       <button
-                        className="border-2 w-full bg-color-one text-white py-2 rounded-md shadow-lg"
+                        className="w-full bg-color-five text-white py-2 rounded-md shadow-lg"
                         onClick={() =>
                           handleNavigate(
                             mentorPlans.planDetails[index]?._id,

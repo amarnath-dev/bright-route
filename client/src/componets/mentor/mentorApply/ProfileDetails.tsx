@@ -24,7 +24,6 @@ export function ProfileDetails({
   ) => {
     updateFields({ skills: newSkills.map((skill) => skill.title) }); 
   };
-
   return (
     <>
       <div className="w-screen mt-5 flex justify-center items-center">

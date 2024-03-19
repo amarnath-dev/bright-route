@@ -5,11 +5,12 @@ import { MenteeProfileCard } from "../../componets/mentee/MenteeProfileCard";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
+import NavBar from "../../componets/navbar/Navbar";
 
 import ReactCrop, {
   centerCrop,
@@ -124,7 +125,7 @@ const MenteeProfile = () => {
       if (response) {
         const reqRes = response.data;
         if (reqRes.status == "success") {
-          toast(reqRes.message);
+          toast.success(reqRes.message);
         }
       }
     } catch (error) {
@@ -231,7 +232,7 @@ const MenteeProfile = () => {
 
     if (hiddenAnchorRef.current) {
       hiddenAnchorRef.current.href = blobUrlRef.current;
-      
+
       const imgId =
         Math.random().toString(16).slice(2) +
         (new Date().getTime() / 1000).toString();
@@ -245,7 +246,7 @@ const MenteeProfile = () => {
           { withCredentials: true }
         );
         if (response?.data?.status === "success") {
-          toast(response?.data?.message);
+          toast.success(response?.data?.message);
           location.reload();
         } else {
           toast.error("Image Updation Failed");
@@ -271,16 +272,16 @@ const MenteeProfile = () => {
 
   return (
     <>
-      <ToastContainer className="w-40 md:w-80" />
-      <div className="w-full h-full flex justify-center mb-28">
-        <div className="w-full md:w-2/3 h-full border-2 mt-10 rounded-md">
+      {/* <ToastContainer className="w-40 md:w-80" /> */}
+      <NavBar />
+      <div className="w-full h-full flex justify-center bg-background-two">
+        <div className="w-full md:w-2/3 h-full border border-gray-500 mt-10 rounded-md">
           <div className="w-full h-full flex justify-center flex-col">
-            <h1 className="text-center mt-4 text-md md:text-lg font-bold">
+            <h1 className="text-center mt-4 text-md md:text-lg font-bold text-white">
               Personal Information
             </h1>
             <MenteeProfileCard />
           </div>
-
           <div className="flex justify-between px-2">
             <div className="flex justify-center px-4 items-center">
               <Link
@@ -318,8 +319,8 @@ const MenteeProfile = () => {
                   onClick={() => setControlCrop(true)}
                   id="img_btn"
                   style={{
-                    background: "white",
-                    color: "black",
+                    background: "rgb(31 41 55)",
+                    color: "white",
                     border: "1px solid black",
                   }}
                   component="label"
@@ -338,7 +339,7 @@ const MenteeProfile = () => {
                 {controlCrop ? (
                   <div>
                     {!!imgSrc && (
-                      <div className="w-full bg-green-300">
+                      <div className="w-full">
                         <ReactCrop
                           crop={crop}
                           onChange={(_, percentCrop) => setCrop(percentCrop)}
@@ -410,10 +411,10 @@ const MenteeProfile = () => {
           <form onSubmit={handleSubmit} className="w-full px-3 md:px-0">
             <div className="flex flex-col w-full md:flex-row justify-center">
               <label>
-                First name
+                <span className="text-gray-400">First Name</span>
                 <input
                   id="first_name"
-                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
                   name="first_name"
                   onChange={onchange}
@@ -421,10 +422,10 @@ const MenteeProfile = () => {
                 />
               </label>
               <label className="mt-2 md:mt-0">
-                Last name
+                <span className="text-gray-400">Last name</span>
                 <input
                   id="last_name"
-                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
                   type="text"
                   name="last_name"
                   value={formData.last_name}
@@ -434,22 +435,21 @@ const MenteeProfile = () => {
             </div>
             <div className="flex flex-col md:flex-row justify-center">
               <label className="mt-2">
-                Email
+                <span className="text-gray-400">Email</span>
                 <input
                   id="email"
-                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
                   name="email"
                   value={formData.email}
                   onChange={onchange}
                 />
-                <h1>(Email only visible to you)</h1>
               </label>
               <label className="mt-2">
-                Job Title
+                <span className="text-gray-400">Job Title</span>
                 <input
                   id="job_title"
-                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm md:ml-3"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm md:ml-3"
                   type="text"
                   name="job_title"
                   value={formData.job_title}
@@ -459,10 +459,10 @@ const MenteeProfile = () => {
             </div>
             <div className="flex flex-col md:flex-row justify-center">
               <label className="mt-2">
-                LinkedIn
+                <span className="text-gray-400">LinkedIn</span>
                 <input
                   id="linkedIn"
-                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
                   name="linkedIn"
                   onChange={onchange}
@@ -470,10 +470,10 @@ const MenteeProfile = () => {
                 />
               </label>
               <label className="mt-2">
-                Twitter
+                <span className="text-gray-400">Twitter</span>
                 <input
                   id="twitter"
-                  className="placeholder:text-black field mt-1 block bg-white border border-slate-300 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 border-gray-800 text-white rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
                   type="text"
                   name="twitter"
                   value={formData.twitter}
@@ -487,25 +487,25 @@ const MenteeProfile = () => {
                 htmlFor="message"
                 className="block mt-4 mb-2 text-sm font-medium"
               ></label>
-              Goal
+              <span className="text-gray-400">Goal</span>
               <textarea
                 id="goal"
                 rows={4}
                 name="goal"
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
-                className="placeholder:text-black field block mt-1 p-3 w-full text-sm bg-gray-50 rounded-lg border-2 focus:outline-none focus:ring-dark-500 focus:ring-1"
+                className="placeholder:text-black field block mt-1 p-3 w-full text-sm bg-gray-800 text-white rounded-lg border border-gray-800 focus:outline-none focus:ring-dark-500 focus:ring-1"
               ></textarea>
-              <h1 className="mt-2 text-sm">
+              <h1 className="mt-2 text-sm text-gray-400">
                 It's good practice to build mentorship around a long-term goal
                 of yours. This is shared with mentors.
               </h1>
             </div>
-            <div className="mt-5 flex md:justify-end justify-center md:px-9">
+            <div className="flex md:justify-end justify-center md:px-9">
               <button
                 type="submit"
                 id="saveBtn"
-                className="border-2 px-1 py-1 md:px-2 md:py-2 rounded-md bg-color-one text-white mb-4"
+                className="px-2 py-2 md:px-2 md:py-2 rounded-md bg-color-five text-white mb-4"
               >
                 Save Changes
               </button>
