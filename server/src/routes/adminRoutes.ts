@@ -35,5 +35,7 @@ router.patch(
 );
 
 router.get("/mentee", verifyJWT, adminControls.getMentors);
+router.patch("/mentee/:userId", verifyJWT, adminControls.blockUser);
+router.patch("/mentee/unblock/:userId", verifyJWT, adminControls.unBlock);
 
 export default router;

@@ -1,6 +1,7 @@
 import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Mentee {
   _id: string;
@@ -43,9 +44,41 @@ const MenteeManagement = () => {
     fetchMentors();
   }, [axiosPrivate]);
 
-  const handleClick = async () => {
+  const handleClick = async (menteeId: string, type: string) => {
     try {
-      console.log("Error");
+      if (type === "block") {
+        const response = await axiosPrivate.patch(
+          `/admin/mentee/${menteeId}`,
+          {},
+          { withCredentials: true }
+        );
+        if (response.data.status === "success") {
+          const updatedUsers = mentee.map((user) => {
+            if (user?._id === menteeId) {
+              return { ...user, is_blocked: true };
+            }
+            return user;
+          });
+          setMentee(updatedUsers);
+          toast.success(response.data.message);
+        }
+      } else {
+        const response = await axiosPrivate.patch(
+          `/admin/mentee/unblock/${menteeId}`,
+          {},
+          { withCredentials: true }
+        );
+        if (response.data.status === "success") {
+          const updatedUsers = mentee.map((user) => {
+            if (user?._id === menteeId) {
+              return { ...user, is_blocked: false };
+            }
+            return user;
+          });
+          setMentee(updatedUsers);
+          toast.success(response.data.message);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -122,12 +155,25 @@ const MenteeManagement = () => {
                               </button>
                             </td>
                             <td className="px-6 py-4">
-                              <button
-                                className="py-1 px-5 rounded bg-red-600 hover:bg-red-500 text-black"
-                                onClick={handleClick}
-                              >
-                                Block
-                              </button>
+                              {mentee.is_blocked ? (
+                                <button
+                                  className="py-1 px-5 rounded bg-color-five text-black"
+                                  onClick={() =>
+                                    handleClick(mentee?._id, "unblock")
+                                  }
+                                >
+                                  Unblock
+                                </button>
+                              ) : (
+                                <button
+                                  className="py-1 px-5 rounded bg-red-600 hover:bg-red-500 text-black"
+                                  onClick={() =>
+                                    handleClick(mentee?._id, "block")
+                                  }
+                                >
+                                  Block
+                                </button>
+                              )}
                             </td>
                           </tr>
                         </>
