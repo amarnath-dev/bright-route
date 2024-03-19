@@ -3,36 +3,39 @@ import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { useNavigate } from "react-router-dom";
 
 interface MentorListCardProps {
-  filtered: mentorProfileObj[];
+  filtered: mentorProfileObj[] | null;
 }
 
 export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="w-full h-full flex justify-center items-center flex-col px-4 py-4 mt-2 md:mt-10 md:py-0 md:px-0">
-        {filtered.map((mentor, index) => (
+      <div className="w-full h-full flex justify-center items-center flex-col px-4 py-4 mt-2 md:mt-10 md:py-0 md:px-0 bg-background-two">
+        {filtered?.map((mentor, index) => (
           <div
             key={index}
-            className="w-full mt-5 border-2 rounded-lg px-4 py-4 md:px-2 md:py-2 md:w-9/12 md:mt-10"
+            className="w-full mt-5 border-2 border-gray-700 rounded-lg px-4 py-4 md:px-2 md:py-2 md:w-9/12 md:mt-10"
           >
-            <div className="flex flex-col px-4 py-4 md:flex-row">
+            <div className="flex flex-col px-4 py-4 md:flex-row text-gray-400">
               <div className="relative flex justify-center h-full">
                 <img
                   alt="mentor_img"
-                  className="rounded-lg shadow-md md:w-60 md:h-80"
+                  className="rounded-lg md:w-60 md:h-80"
                   id="mentor_img"
-                  src={mentor.imageUrl || "default_image_url"}
+                  src={
+                    mentor?.imageUrl ||
+                    "https://st4.depositphotos.com/3265223/21282/v/450/depositphotos_212821870-stock-illustration-default-avatar-photo-placeholder-profile.jpg"
+                  }
                 />
                 <div className="bg-gradient-to-t from-gray-600 to-transparent w-full h-full px-5 py-5 rounded-lg absolute top-0 md:w-60 md:h-80">
                   <div className="md:hidden mt-36 absolute bottom-5">
-                    <h1 className="text-xl font-semibold text-white md:text-gray-800 md:text-3xl md:px-5 md:py-2">
-                      {mentor.first_name} {mentor.last_name}
+                    <h1 className="text-xl font-semibold text-white md:text-3xl md:px-5 md:py-2">
+                      {mentor?.first_name} {mentor?.last_name}
                     </h1>
-                    <h1 className="md:px-5 mt-2 md:mt-0 text-sm md:text-xl md:text-gray-800 text-white">
-                      {mentor.job_title}
-                      <strong className="md:text-gray-800 text-white ml-1">
-                        {mentor.company}
+                    <h1 className="md:px-5 mt-2 md:mt-0 text-sm md:text-xl md:text-gray-800">
+                      {mentor?.job_title}
+                      <strong className="md:text-gray-800 ml-1">
+                        {mentor?.company}
                       </strong>
                     </h1>
                   </div>
@@ -41,24 +44,22 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
 
               <div className="px-5 md:px-0">
                 <div className="hidden md:block">
-                  <h1 className="text-xl mt-2 font-semibold text-gray-800 md:text-3xl md:px-5 md:py-2">
-                    {mentor.first_name} {mentor.last_name}
+                  <h1 className="text-xl mt-2 font-semibold md:text-3xl md:px-5 md:py-2">
+                    {mentor.first_name} {mentor?.last_name}
                   </h1>
                   <h1 className="md:px-5 mt-2 md:mt-0 text-md md:text-xl">
-                    {mentor.job_title}
-                    <strong className="text-gray-800 ml-1">
-                      {mentor.company}
-                    </strong>
+                    {mentor?.job_title}
+                    <strong className="ml-1">{mentor?.company}</strong>
                   </h1>
                 </div>
 
-                <div className="w-full md:max-w-2xl md:ml-4 mt-6 text-gray-800 md:px-3 md:py-3 text-md">
-                  <p className="text-md w-full">{mentor.bio}</p>
+                <div className="w-full md:max-w-2xl md:ml-4 mt-6 md:px-3 md:py-3 text-md">
+                  <p className="text-md w-full">{mentor?.bio}</p>
                   <div className="w-full mt-5">
                     {mentor.skills.map((skill, index) => (
                       <button
                         key={index}
-                        className="border-2 rounded-full px-3 bg-slate-200 mt-2 ml-2"
+                        className="rounded-full px-3 text-gray-900 bg-gray-500 mt-2 ml-2"
                       >
                         {skill}
                       </button>
@@ -67,9 +68,9 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
                   <div className="w-full mt-6 flex justify-between items-center flex-col md:flex-row">
                     <div className="w-full">
                       <button
-                        className="w-full border-2 rounded-md px-1 py-1 text-white bg-color-one text-lg font-bold md:h-10 md:w-96"
+                        className="w-full rounded-md px-1 py-1 text-gray-300 bg-color-one text-lg font-bold md:h-10 md:w-96"
                         onClick={() =>
-                          navigate(`/mentor-profile/${mentor.mentor_id}`)
+                          navigate(`/mentor-profile/${mentor?.mentor_id}`)
                         }
                       >
                         View Profile

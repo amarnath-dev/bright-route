@@ -119,13 +119,12 @@ const NavBar = () => {
       navigate("/mentor/managment/password");
     }
   };
-
   const handleNotification = () => {
     setOpen((state) => !state);
   };
   return (
     <>
-      <div className="grid grid-cols-12 w-full items-center sticky shadow-lg">
+      <div className="grid grid-cols-12 w-full items-center sticky shadow-lg z-10">
         <div className="col-span-4 bg-gray-800 h-16 flex items-center">
           {/* <img
             src={logoFinal}
@@ -135,15 +134,41 @@ const NavBar = () => {
         </div>
         <div className="col-span-8 bg-gray-800 h-16">
           <div className="flex justify-end items-center text-white">
-            <div>
+            <div className="flex">
+              <div className="flex gap-7 items-center">
+                <div onClick={handleClickOne}>
+                  {user?.role === "mentor" ? (
+                    <BsPersonLinesFill className="text-3xl text-white hover:text-blue-600 cursor-pointer" />
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div onClick={handleClickTwo}>
+                  {user?.role === "mentor" ? (
+                    <IoChatboxEllipsesOutline className="text-3xl hover:text-blue-600 cursor-pointer" />
+                  ) : (
+                    <>
+                      <FaChalkboardTeacher className="text-3xl hover:text-blue-600 text-white" />
+                    </>
+                  )}
+                </div>
+                <div>
+                  <span className="cursor-pointer">
+                    <IoNotifications
+                      className="text-3xl hover:text-blue-600 text-yellow-300"
+                      onClick={handleNotification}
+                    />
+                  </span>
+                </div>
+              </div>
               <Navbar fluid rounded className={open ? "hidden" : "block"}>
-                <div className="flex md:order-2 px-10">
+                <div className="flex px-2">
                   <Dropdown
                     arrowIcon={false}
                     inline
                     label={
                       <Avatar
-                        alt="User settings"
+                        alt="User_settings"
                         img={firebaseImgId ? firebaseImgId : ""}
                         rounded
                       />
@@ -158,45 +183,28 @@ const NavBar = () => {
                     <Dropdown.Item onClick={toProfile}>
                       My Profile
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={toPlans}>
-                      {user?.role === "mentor" ? "My Plans" : ""}
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={toPassword}>
-                      {user?.role === "mentor" ? "Password" : ""}
-                    </Dropdown.Item>
+
+                    {user?.role === "mentor" ? (
+                      <Dropdown.Item onClick={toPlans}>My Plans</Dropdown.Item>
+                    ) : (
+                      ""
+                    )}
+
+                    {user?.role === "mentor" ? (
+                      <Dropdown.Item onClick={toPassword}>
+                        Password
+                      </Dropdown.Item>
+                    ) : (
+                      ""
+                    )}
+
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogout}>
                       Log out
                     </Dropdown.Item>
                   </Dropdown>
-                  <Navbar.Toggle />
+                  <Navbar />
                 </div>
-                <Navbar.Collapse>
-                  <Navbar.Link active onClick={handleClickOne}>
-                    {user?.role === "mentor" ? (
-                      <BsPersonLinesFill className="text-3xl text-gray-400" />
-                    ) : (
-                      ""
-                    )}
-                  </Navbar.Link>
-                  <Navbar.Link onClick={handleClickTwo}>
-                    {user?.role === "mentor" ? (
-                      <IoChatboxEllipsesOutline className="text-3xl" />
-                    ) : (
-                      <>
-                        <FaChalkboardTeacher className="text-3xl" />
-                      </>
-                    )}
-                  </Navbar.Link>
-                  <Navbar.Link>
-                    <span className="bg-red-400 cursor-pointer">
-                      <IoNotifications
-                        className="text-3xl"
-                        onClick={handleNotification}
-                      />
-                    </span>
-                  </Navbar.Link>
-                </Navbar.Collapse>
               </Navbar>
               {open ? (
                 <Notification setOpen={setOpen} notData={notifications} />

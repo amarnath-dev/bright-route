@@ -19,7 +19,7 @@ const GoogleAuth = () => {
       const responseData = await dispatch(googleAuth(response.credential));
       const payloadData = responseData.payload;
       if (payloadData.status === "success") {
-        dispatch(authActions.setUser(payloadData.user));
+        await dispatch(authActions.setUser(payloadData.user));
         navigate("/");
       } else if (payloadData.status == 409) {
         toast.error(payloadData.message);
@@ -31,11 +31,9 @@ const GoogleAuth = () => {
     console.log("Error Occured");
   };
 
-  const clientId = import.meta.env.VITE_CLIENT_ID;
-
   return (
     <>
-      <GoogleOAuthProvider clientId={clientId}>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
         <GoogleLogin
           onSuccess={responseGoogle}
           onError={responseError}

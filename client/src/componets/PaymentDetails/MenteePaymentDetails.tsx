@@ -58,9 +58,9 @@ const MenteePaymentDetails = () => {
 
   return (
     <>
-      <div className="w-full h-full">
+      <div className="w-full h-screen bg-background-two">
         <div className="w-full h-full flex justify-center px-3 py-2">
-          <figure className="w-full bg-slate-100 rounded-xl p-8 md:w-1/2 mt-10">
+          <figure className="w-full bg-gray-800 rounded-xl p-8 md:w-1/2 mt-10">
             {user?.role === "mentor" ? (
               <div className="pt-6 space-y-4">
                 <blockquote>
@@ -82,58 +82,62 @@ const MenteePaymentDetails = () => {
             ) : (
               ""
             )}
-
             <div className="flex justify-center h-96 py-5 mt-2">
-              <div className="w-full rounded-md px-2 py-2 shadow-lg bg-white">
-                <h1 className="uppercase">Payment Details</h1>
+              <div className="w-full rounded-md px-2 py-2 bg-gray-800">
+                <h1 className="uppercase text-gray-400 font-bold">
+                  Payment Details
+                </h1>
+                <hr />
                 <div>
-                  <h1 className="py-2">
+                  <h1 className="py-2 text-gray-400">
                     Status:
-                    <span className="text-green-700 font-bold px-2">
+                    <span className="text-green-700 font-bold px-2 bg-gray-800">
                       Completed <CheckCircleIcon />
                     </span>
                   </h1>
-                  <h1>
+                  <h1 className="text-gray-400">
                     Amount:
                     <span className="font-bold text-green-700 px-2">
                       {planDetails?.planAmount}
                     </span>
                   </h1>
-                  <h1 className="mt-2">
+                  <h1 className="mt-2 text-gray-400">
                     Plan Type:
                     <span className="font-bold px-2">
                       {planDetails?.planType}
                     </span>
                   </h1>
                   <div className="mt-3">
-                    <h1>Services:</h1>
+                    <h1 className="text-gray-400">Services:</h1>
                     {planDetails?.planServices.map((service, index: number) => {
                       return (
-                        <div key={index} className="py-1">
-                          <h1 className="font-bold">
-                            <span className="px-1">
-                              {index + 1}
-                              {"."}
-                            </span>
-                            {service?.serviceName}
-                            <span className="px-2">
-                              {service?.serviceCount ? "Count - " : ""}
+                        <>
+                          <div key={index} className="py-1 text-gray-400">
+                            <h1 className="font-bold">
+                              <span className="px-1">
+                                {index + 1}
+                                {"."}
+                              </span>
+                              {service?.serviceName}
+                              <span className="px-2">
+                                {service?.serviceCount ? "Count - " : ""}
 
-                              {service?.serviceCount
-                                ? service.serviceCount
-                                : ""}
-                            </span>
-                          </h1>
-                        </div>
+                                {service?.serviceCount
+                                  ? service.serviceCount
+                                  : ""}
+                              </span>
+                            </h1>
+                          </div>
+                        </>
                       );
                     })}
                   </div>
-                  <h1 className="mt-2">Razor Pay ID</h1>
+                  <h1 className="mt-2 text-gray-400">Razor Pay ID</h1>
                   <div className="mt-1">
                     <span className="cursor-pointer hover:bg-gray-300 rounded-full">
                       <div>
                         <input
-                          className="rounded px-2 py-2"
+                          className="rounded px-2 py-2 bg-gray-200"
                           value={paymentDetails?.razorPay_id}
                           disabled
                           type="text"
@@ -144,7 +148,7 @@ const MenteePaymentDetails = () => {
                             copyToClipboard(paymentDetails?.razorPay_id)
                           }
                         >
-                          <ContentCopyIcon />
+                          <ContentCopyIcon className="text-gray-300" />
                         </span>
                       </div>
                     </span>
@@ -165,7 +169,7 @@ const MenteePaymentDetails = () => {
               ) : (
                 <>
                   <button
-                    className="bg-color-one text-white px-5 py-2 border rounded"
+                    className="bg-color-five w-full text-white px-5 py-2 rounded"
                     onClick={() => {
                       navigate(
                         `/my-mentors/mentor-profile/${paymentDetails?.mentor_id}`

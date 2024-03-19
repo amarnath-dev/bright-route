@@ -1,0 +1,35 @@
+.Animate {
+  font-family: sans-serif;
+}
+
+@keyframes animate {
+  0% {
+    content: "REACH";
+    color: rgb(215, 127, 127);
+  }
+  20% {
+    content: "OUT";
+    color: royalblue;
+  }
+  40% {
+    content: "LEARN";
+    color: olivedrab;
+  }
+  60% {
+    content: "GROW";
+    color: gold;
+  }
+  80% {
+    content: "ACHIEVE";
+    color: palevioletred;
+  }
+}
+
+.animate-text::before {
+  color: white;
+  content: "THIS";
+  font-size: 64px;
+  letter-spacing: 10px;
+  font-weight: 700;
+  animation: animate 7s steps(1, end) infinite;
+}

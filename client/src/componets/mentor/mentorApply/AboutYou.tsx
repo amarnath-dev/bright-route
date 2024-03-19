@@ -19,7 +19,7 @@ export function AboutYou({
   updateFields,
 }: AboutFormProps) {
   const [fileUrl, setFileUrl] = useState<string | undefined>();
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
@@ -38,7 +38,7 @@ export function AboutYou({
         <div className="flex justify-start items-center md:w-3/5">
           <form className="md:w-full" encType="multipart/form-data">
             <span className="font-bold ml-16 md:ml-2">
-              Choose a profile Image*
+              Choose a profile Image
             </span>
             <div className="flex justify-center mt-3 md:w-full md:justify-start">
               <span className="h-20 w-20 rounded-full overflow-hidden bg-gray-100">

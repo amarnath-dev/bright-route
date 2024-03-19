@@ -1,14 +1,14 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { useEffect, useState } from "react";
 import { storage } from "../../app/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { MentorListCard } from "../../componets/mentorListCard/MentorListCard";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
+import { useEffect, useState } from "react";
+import "../../app/GlobalStyles.css";
 
 const SearchMentors = () => {
-  const [allMentors, setAllMentors] = useState<mentorProfileObj[]>([]);
   const [filtered, setFiltered] = useState<mentorProfileObj[]>([]);
 
   const [jobTitle, setJobTitle] = useState("");
@@ -16,14 +16,12 @@ const SearchMentors = () => {
   const [company, setCompany] = useState("");
 
   const axiosPrivate = useAxiosPrivate();
-
   useEffect(() => {
     const mentorProfile = async () => {
       try {
         const response = await axiosPrivate.get("/browse-mentors");
         if (response.data) {
           const mentorProfile = response.data;
-          setAllMentors(mentorProfile.allMentors);
           setFiltered(mentorProfile.allMentors);
         }
       } catch (error) {
@@ -34,6 +32,7 @@ const SearchMentors = () => {
   }, [axiosPrivate]);
 
   useEffect(() => {
+    console.log("Runnign..");
     const fetchImages = async () => {
       try {
         await Promise.all(
@@ -42,7 +41,7 @@ const SearchMentors = () => {
             if (imageId) {
               const imageRef = ref(storage, imageId);
               const url = await getDownloadURL(imageRef);
-              setAllMentors((prevMentors) =>
+              setFiltered((prevMentors) =>
                 prevMentors.map((prevMentor) =>
                   prevMentor.profile_img === imageId
                     ? { ...prevMentor, imageUrl: url }
@@ -58,44 +57,45 @@ const SearchMentors = () => {
       }
     };
     fetchImages();
-  }, [filtered.length]);
+  }, [filtered?.length]);
 
   useEffect(() => {
-    const filterMentors = () => {
-      let filteredMentors = allMentors;
-      if (jobTitle.trim() !== "") {
-        filteredMentors = filteredMentors.filter(
-          (mentor) => mentor.job_title.toLowerCase() === jobTitle.toLowerCase()
+    const filterAndSortMentors = async () => {
+      try {
+        const response = await axiosPrivate.post(
+          "/sort",
+          {
+            jobTitle,
+            skill,
+            company,
+          },
+          { withCredentials: true }
         );
+        if (response.data.status === "success") {
+          setFiltered(response.data?.allMentors);
+        } else {
+          setFiltered([]);
+        }
+      } catch (error) {
+        console.error("Error filtering and sorting mentors:", error);
       }
-      if (company.trim() !== "") {
-        filteredMentors = filteredMentors.filter(
-          (mentor) => mentor.company.toLowerCase() === company.toLowerCase()
-        );
-      }
-      if (skill.trim() !== "") {
-        filteredMentors = filteredMentors.filter((mentor) =>
-          mentor.skills.some((s) => s.includes(skill))
-        );
-      }
-      setFiltered(filteredMentors);
     };
-    filterMentors();
-  }, [jobTitle, skill, company, allMentors]);
+    filterAndSortMentors();
+  }, [jobTitle, skill, company, axiosPrivate]);
 
   return (
     <>
-      <div className="w-full h-full">
-        <div className="w-full h-72 border-2 flex justify-center items-center px-3 py-3">
+      <div className="w-full h-full bg-background-two">
+        <div className="w-full h-72 flex justify-center items-center px-3 py-3">
           <div className="w-full h-full md:w-1/2 md:flex md:justify-center md:items-center md:flex-col">
             <label className="relative flex justify-center items-center">
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
                 options={topTechnicalJobPositions}
-                sx={{ width: 350, marginTop: 3, padding: 1 }}
+                className="custom-autocomplete"
                 renderInput={(params) => (
-                  <TextField {...params} label="Search by Job title" />
+                  <TextField {...params} label="Search by Job Title" />
                 )}
                 onChange={(event, value) => setJobTitle(value?.label || "")}
               />
@@ -106,6 +106,7 @@ const SearchMentors = () => {
                 disablePortal
                 id="combo-box-demo"
                 options={topTechnicalSkills}
+                className="custom-autocomplete"
                 sx={{ width: 300, marginTop: 3, padding: 1 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Search by Skills" />
@@ -117,6 +118,7 @@ const SearchMentors = () => {
                 disablePortal
                 id="combo-box-demo"
                 options={topTechnicalCompanies}
+                className="custom-autocomplete"
                 sx={{ width: 300, marginTop: 3, padding: 1 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Search by Company" />
@@ -126,7 +128,7 @@ const SearchMentors = () => {
             </div>
           </div>
         </div>
-        <MentorListCard filtered={filtered} />
+        <MentorListCard filtered={filtered?.length > 0 ? filtered : null} />
       </div>
     </>
   );

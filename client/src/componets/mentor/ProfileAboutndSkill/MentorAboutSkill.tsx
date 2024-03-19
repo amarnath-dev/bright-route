@@ -29,14 +29,17 @@ const MentorAboutSkill: React.FC<MentorProfileCardProps> = ({
             {user === "mentee" ? (
               <span className="cursor-pointer" onClick={() => setOpen(true)}>
                 <Tooltip title={"Report"}>
-                  <ReportGmailerrorredIcon />
+                  <ReportGmailerrorredIcon className="text-gray-400" />
                 </Tooltip>
               </span>
             ) : (
               ""
             )}
           </div>
-          <label htmlFor="bio" className="block mb-2 text-sm font-medium">
+          <label
+            htmlFor="bio"
+            className="block mb-2 text-sm font-medium text-gray-400"
+          >
             ABOUT ME
           </label>
           <textarea
@@ -44,18 +47,19 @@ const MentorAboutSkill: React.FC<MentorProfileCardProps> = ({
             rows={12}
             disabled
             defaultValue={mentor?.bio}
-            className="block p-2.5 w-full text-lg rounded-lg focus:border-gray text-black bg-white"
+            className="block p-2.5 w-full text-lg rounded-lg focus:border-gray text-gray-400 bg-background-two"
           ></textarea>
         </div>
-
         <div className="mt-5 rounded-md px-2 py-2">
-          <h1 className="block mb-2 text-lg font-medium">Skills</h1>
+          <h1 className="block mb-2 text-lg font-medium text-gray-400">
+            Skills
+          </h1>
           <div className="mt-3 h-full flex flex-wrap">
             {mentor?.skills.map((skill: string, index: number) => {
               return (
                 <span
                   key={index}
-                  className="rounded-full bg-blue-200 px-6 py-1 ml-2 mb-2"
+                  className="rounded-full bg-gray-600 px-6 py-1 ml-2 mb-2"
                   style={{ whiteSpace: "nowrap" }}
                 >
                   {skill}

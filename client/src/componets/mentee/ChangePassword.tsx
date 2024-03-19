@@ -142,7 +142,6 @@ const ChangePassword = () => {
   return (
     <>
       <ToastContainer />
-
       {isLoading ? (
         <h1>Loading...</h1>
       ) : (

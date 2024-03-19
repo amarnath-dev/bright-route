@@ -9,6 +9,7 @@ import mentorRouter from "./routes/mentorRoutes";
 import adminRouter from "./routes/adminRoutes";
 import chatRouter from "./routes/chatRoutes";
 import notificationRouter from "./routes/notificationRoutes";
+import forgotPassControl from "./routes/globalRoutes";
 import { limiter } from "./middleware/authLimit";
 
 const app = express();
@@ -31,5 +32,6 @@ app.use("/api/mentor", mentorRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/notification", notificationRouter);
+app.use("/api/password/", forgotPassControl);
 
 export default app;

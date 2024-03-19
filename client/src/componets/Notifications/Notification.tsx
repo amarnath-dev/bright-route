@@ -21,7 +21,6 @@ const Notification = ({ setOpen, notData }) => {
   };
 
   useEffect(() => {
-    console.log("This is not data", notData);
     const fetchMessages = async () => {
       try {
         const response = await axiosPrivate.get(
@@ -71,7 +70,7 @@ const Notification = ({ setOpen, notData }) => {
 
   return (
     <>
-      <div className="w-96 h-screen shadow-lg rounded-lg bg-slate-200 overflow-y-scroll">
+      <div className="w-96 h-screen shadow-lg rounded-lg bg-slate-200 overflow-y-scroll px-5 py-2">
         <div className="text-start font-bold text-gray-700 flex justify-between">
           <h1 className="py-2 px-2 text-xl">Alerts</h1>
           <span className="px-1 py-2">

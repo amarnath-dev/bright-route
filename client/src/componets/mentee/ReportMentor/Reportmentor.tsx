@@ -64,14 +64,16 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
         aria-hidden="true"
         className="overflow-y-auto md:fixed overflow-x-hidden flex z-50 justify-center items-center w-full h-full md:inset-0 max-h-full"
       >
-        <div className="relative p-4 w-full max-w-md max-h-full border-2 rounded-lg">
-          <div className="relative bg-white rounded-lg shadow">
-            <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-              <h3 className="text-lg font-semibold">Report Mentor</h3>
+        <div className="relative p-4 w-full max-w-md max-h-full rounded-lg bg-gray-800">
+          <div className="relative rounded-lg shadow bg-gray-800">
+            <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+              <h3 className="text-lg font-semibold text-gray-400">
+                Report Mentor
+              </h3>
               <button
                 onClick={() => setOpen(false)}
                 type="button"
-                className="text-gray-600 border-2 bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                className="text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center hover:bg-gray-900"
                 data-modal-toggle="crud-modal"
               >
                 <svg
@@ -89,27 +91,30 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                   />
                 </svg>
-                <span className="sr-only">Close modal</span>
+                <span className="sr-only">Close Modal</span>
               </button>
             </div>
 
-            <form className="p-4 md:p-5" onSubmit={handleSubmit}>
+            <form
+              className="p-4 md:p-5 bg-gray-800"
+              onSubmit={handleSubmit}
+            >
               <div className="grid gap-4 mb-4 grid-cols-2">
                 <div className="w-full flex flex-col">
                   <label
                     htmlFor="countries"
-                    className="block mb-2 text-sm font-medium"
+                    className="block mb-2 text-sm font-medium text-gray-400"
                   >
                     What issue do you faced ?
                   </label>
                   <select
                     id="countries"
                     name="issueFaced"
-                    value={reportData.issueFaced}
+                    value={reportData?.issueFaced}
                     onChange={handleChage}
-                    className="bg-gray-50 border border-gray-300 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 w-72 md:w-96 p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="bg-gray-50 border border-gray-300 text-md rounded-lg w-72 md:w-96 p-2.5 dark:placeholder-gray-400 text-gray-400"
                   >
-                    <option>Choose the type</option>
+                    <option>Choose the Type</option>
                     <option value="Harrasment">Harrasment</option>
                     <option value="Sexual Talks">Sexual Talks</option>
                     <option value="Rude Behaviour">Rude Behaviour</option>
@@ -120,17 +125,17 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                 <div className="col-span-2">
                   <label
                     htmlFor="description"
-                    className="block mb-2 text-sm font-medium"
+                    className="block mb-2 text-sm font-medium text-gray-400"
                   >
-                    Describe the issue you had
+                    Describe the issue you Faced
                   </label>
                   <textarea
                     id="description"
                     name="issueDescription"
-                    value={reportData.issueDescription}
+                    value={reportData?.issueDescription}
                     onChange={handleChage}
                     rows={4}
-                    className="block p-2.5 w-full text-sm rounded-lg border-2 placeholder:font-bold"
+                    className="block p-2.5 w-full text-sm rounded-lg placeholder:text-gray-400"
                     placeholder="Write here..."
                   ></textarea>
                 </div>
@@ -139,15 +144,15 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                 <input
                   type="date"
                   name="date"
-                  value={reportData.date}
+                  value={reportData?.date}
                   onChange={handleChage}
-                  className="w-full rounded h-10 mb-6"
+                  className="w-full rounded h-10 mb-6 indent-2"
                 />
               </div>
-              <div className="text-center">
+              <div>
                 <button
                   type="submit"
-                  className="text-white inline-flex items-center bg-color-one focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  className="text-white flex items-center justify-center w-full bg-color-five font-medium rounded-lg text-md px-5 py-2.5"
                 >
                   Submit
                 </button>

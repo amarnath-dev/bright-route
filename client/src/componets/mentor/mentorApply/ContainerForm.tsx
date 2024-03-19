@@ -8,11 +8,9 @@ import { INITIAL_DATA } from "../../.../../../datatypes/Datatypes";
 import { useAppDispatch } from "../../../app/hooks";
 import { MultiFromApply } from "../../../services/authServices";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../../app/hooks";
 
 function ContainerForm() {
   const [mentorData, setMentorData] = useState(INITIAL_DATA);
-  const { isLoading } = useAppSelector((state) => state.userAuth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -44,39 +42,33 @@ function ContainerForm() {
 
   return (
     <>
-      {isLoading ? (
-        <h1>Loading....</h1>
-      ) : (
-        <div>
-          <form onSubmit={handleSubmit}>
-            <div className="flex justify-center items-center">
-              <h1 className="font-bold text-lg">
-                {currentStepIndex + 1} / {steps.length}
-              </h1>
-            </div>
-            <div>{step}</div>
-
-            <div className="flex justify-center items-center md:absolute md:bottom-8 md:right-60 mb-18">
-              {!isFirststep && (
-                <button
-                  type="button"
-                  className="border-2 border-color-two bg-color-five text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
-                  onClick={back}
-                >
-                  Back
-                </button>
-              )}
-
+      <div>
+        <form onSubmit={handleSubmit}>
+          <div className="flex justify-center items-center">
+            <h1 className="font-bold text-lg">
+              {currentStepIndex + 1} / {steps.length}
+            </h1>
+          </div>
+          <div>{step}</div>
+          <div className="flex justify-center items-center md:absolute md:bottom-8 md:right-60 mb-18">
+            {!isFirststep && (
               <button
-                type="submit"
-                className="border-2 border-color-two bg-color-one text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
+                type="button"
+                className="border-2 border-color-two bg-color-five text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
+                onClick={back}
               >
-                {isLaststep ? "Finish" : "Next"}
+                Back
               </button>
-            </div>
-          </form>
-        </div>
-      )}
+            )}
+            <button
+              type="submit"
+              className="border-2 border-color-two bg-color-one text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
+            >
+              {isLaststep ? "Finish" : "Next"}
+            </button>
+          </div>
+        </form>
+      </div>
     </>
   );
 }

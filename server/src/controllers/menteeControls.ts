@@ -9,7 +9,7 @@ import OTP from "../models/otpModel";
 import Plans from "../models/mentorPlansModel";
 import Report from "../models/mentorReportModel";
 import { ObjectId } from "mongodb";
-import Payment from "../models/PaymentModel";
+import PaymentModel from "../models/PaymentModel";
 
 export interface mentorProfileObj {
   imageUrl: string;
@@ -342,7 +342,6 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
-      console.log("reached at the server HY");
       const { oldPassword, newPassword, confirmPassword, otpNumber } = req.body;
       if (!newPassword || !confirmPassword) {
         res.status(400).json({ message: "Data fields missing" });
@@ -500,7 +499,7 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
-      const mentors = await Payment.aggregate([
+      const mentors = await PaymentModel.aggregate([
         {
           $match: { mentee_id: user?.id },
         },
@@ -523,6 +522,43 @@ export class MenteeController {
       ]);
       if (mentors) {
         res.status(200).json({ status: true, mentors });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Email send failed"));
+    }
+  }
+  async getSorted(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { jobTitle, skill, company } = req.body;
+      const query: { [key: string]: any } = {};
+      if (jobTitle !== "") {
+        query["jobTitle"] = jobTitle;
+      }
+      if (skill !== "") {
+        query["skills"] = skill;
+      }
+      if (company !== "") {
+        query["company"] = company;
+      }
+      const allMentors = await MentorModel.aggregate([
+        { $match: { profile_state: "approved", ...query } },
+        {
+          $project: {
+            why_mentor: 0,
+            achievement: 0,
+          },
+        },
+      ]);
+      console.log(allMentors);
+      if (allMentors.length > 0) {
+        res.status(200).json({ status: "success", allMentors });
+      } else {
+        res.status(200).json({ status: "empty" });
       }
     } catch (error) {
       console.log(error);
