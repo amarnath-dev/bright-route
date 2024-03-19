@@ -196,7 +196,7 @@ const MenteeManagement = () => {
           ) : (
             <>
               <div>
-                <h1 className="text-xl">Not Mentees are Available</h1>
+                <h1 className="text-3xl text-gray-400 py-5">Not Mentees are Available</h1>
               </div>
             </>
           )}
