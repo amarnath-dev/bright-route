@@ -12,6 +12,7 @@ import Notification from "../Notifications/Notification";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { BsPersonLinesFill } from "react-icons/bs";
 import { Socket, io } from "socket.io-client";
+import Logo from "../../assets/BRLogo.png";
 
 interface NotType {
   senderId: string;
@@ -122,15 +123,25 @@ const NavBar = () => {
   const handleNotification = () => {
     setOpen((state) => !state);
   };
+  const logoClick = () => {
+    if (user?.role === "mentee") {
+      navigate("/");
+    } else if (user?.role === "mentor") {
+      navigate("/mentor/home");
+    } else {
+      navigate("/admin/dashboard");
+    }
+  };
   return (
     <>
       <div className="grid grid-cols-12 w-full items-center sticky shadow-lg z-10">
         <div className="col-span-4 bg-gray-800 h-16 flex items-center">
-          {/* <img
-            src={logoFinal}
-            className="bg-transparent w-32 text-white font-white cursor-pointer"
+          <img
+            src={Logo}
+            className="bg-transparent w-16 py-6 ml-10 text-white font-white cursor-pointer"
             alt="logo"
-          /> */}
+            onClick={logoClick}
+          />
         </div>
         <div className="col-span-8 bg-gray-800 h-16">
           <div className="flex justify-end items-center text-gray-400">
@@ -189,7 +200,6 @@ const NavBar = () => {
                     ) : (
                       ""
                     )}
-
                     {user?.role === "mentor" ? (
                       <Dropdown.Item onClick={toPassword}>
                         Password
@@ -220,3 +230,8 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
+//hello how are you
+//sdfsdfsadf
+//sdfsadf;hsadflh
+//sdf;asdfjlkjsadfk

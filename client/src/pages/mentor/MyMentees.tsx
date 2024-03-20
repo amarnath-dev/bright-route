@@ -78,15 +78,17 @@ const MyMentees = () => {
 
   return (
     <>
-      <div className="w-full h-full md:h-screen">
+      <div className="w-full h-full md:h-screen bg-background-two">
         {isApplication === true ? (
           <div className="w-full h-screen flex justify-center items-center flex-col">
-            <h1 className="text-2xl font-bold">No Mentees have Applied Yet</h1>
-            <img
+            <h1 className="text-3xl font-bold text-gray-400">
+              No Mentees have Applied Yet
+            </h1>
+            {/* <img
               src="https://cdnl.iconscout.com/lottie/premium/thumb/empty-box-5708298-4748209.gif"
               className="w-40"
               alt="empty_img"
-            />
+            /> */}
           </div>
         ) : (
           <>
