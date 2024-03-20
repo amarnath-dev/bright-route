@@ -70,6 +70,10 @@ const MyMentors = React.lazy(() => import("./pages/mentee/MyMentors"));
 const VideoChat = React.lazy(() => import("./componets/VideoChat/VideoChat"));
 const NewPassword = React.lazy(() => import("./pages/mentee/NewPassword"));
 
+const MentorManagement = React.lazy(
+  () => import("./pages/admin/MentorManagement")
+);
+
 function App() {
   return (
     <>
@@ -176,6 +180,10 @@ function App() {
                   <Route
                     path="/admin/mentee-management"
                     element={<MenteeManagement />}
+                  />
+                  <Route
+                    path="/admin/mentor-management"
+                    element={<MentorManagement />}
                   />
                 </Route>
                 <Route path="*" element={<PageNotFound />} />

@@ -35,10 +35,16 @@ export const IsAuthenticated: React.FC = () => {
           <div className="w-full h-screen flex flex-col justify-center items-center">
             <h1 className="text-2xl font-bold">Please Login to continue</h1>
             <div className="mt-8">
-              <Link to={"/signin"} className="px-4 py-1 border-2 rounded-md bg-color-one text-white">
+              <Link
+                to={"/signin"}
+                className="px-4 py-1 border-2 rounded-md bg-color-one text-white"
+              >
                 Sign In
               </Link>
-              <Link to={"/signup"} className="px-4 py-1 border-2 ml-2 bg-color-five rounded-md text-white">
+              <Link
+                to={"/signup"}
+                className="px-4 py-1 border-2 ml-2 bg-color-five rounded-md text-white"
+              >
                 Sign Up
               </Link>
               {/* <Navigate to={"/signup"} /> */}

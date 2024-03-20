@@ -164,9 +164,9 @@ export class MenteeController {
           mentor_id: mentorId,
           mentee_id: req.user?.id,
           ReportDetails: {
-            issue_faced: reportDetails.issueFaced,
-            issue_desc: reportDetails.issueDescription,
-            report_date: reportDetails.date,
+            issue_faced: reportDetails?.issueFaced,
+            issue_desc: reportDetails?.issueDescription,
+            report_date: reportDetails?.date,
           },
         });
         await report.save();

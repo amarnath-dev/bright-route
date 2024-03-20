@@ -170,11 +170,9 @@ export const adminLogin = createAsyncThunk(
   "auth/adminLogin",
   async (adminData: UserWithEmailAndPassword, thunkAPI) => {
     try {
-      const response = await API.post(
-        "/admin/admin-login",
-        { adminData },
-        { withCredentials: true }
-      );
+      const response = await API.post("/admin/admin-login", adminData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       const err = error as AxiosError<{ status?: string; message?: string }>;

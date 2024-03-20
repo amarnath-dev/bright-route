@@ -338,6 +338,7 @@ export class MenteeAuthController {
 
   async checkToken(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log("Reached on Check Token");
       const cookies = req.cookies;
       if (cookies.refreshToken) {
         res.json({ status: "exists" });
@@ -345,6 +346,7 @@ export class MenteeAuthController {
         res.json({ status: "not exists" });
       }
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
         console.log(error.message);
         return next(error);

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { AdminAuthControls } from "../controllers/adminAuthControl";
 import { AdminControls } from "../controllers/adminControl";
-import { protectAdmin } from "../middleware/authMiddleware";
 import { verifyJWT } from "../middleware/verifyJWT";
+import { protectAdmin } from "../middleware/authMiddleware";
 
 const router: Router = Router();
 
@@ -18,6 +18,7 @@ router.get(
   verifyJWT,
   adminControls.singleApplication
 );
+
 router.patch(
   "/single-application/approve/:applicationId",
   verifyJWT,
@@ -30,8 +31,13 @@ router.patch(
   adminControls.rejectApplication
 );
 
-router.get("/mentee", verifyJWT, adminControls.getMentors);
-router.patch("/mentee/:userId", verifyJWT, adminControls.blockUser);
-router.patch("/mentee/unblock/:userId", verifyJWT, adminControls.unBlock);
+router.get("/mentee", verifyJWT, adminControls.getMentees);
+
+router.patch("/block/:userId", verifyJWT, adminControls.blockUser);
+router.patch("/unblock/:userId", verifyJWT, adminControls.unBlock);
+
+router.post("/mentee/search", verifyJWT, adminControls.search);
+
+router.get("/mentor", verifyJWT, adminControls.getMentors);
 
 export default router;

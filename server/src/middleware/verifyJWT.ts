@@ -13,6 +13,12 @@ export const verifyJWT = async (
   try {
     const authHeader: any =
       req.headers.authorization || req.headers.Authorization;
+    // if (!authHeader?.startsWith("Bearer ")) {
+    //   return res
+    //     .status(401)
+    //     .json({ message: "Unauthorized not starting with Bearer" });
+    // }
+    // const accessToken = authHeader.split(" ")[1];
     const accessToken = authHeader;
     Jwt.verify(
       accessToken,

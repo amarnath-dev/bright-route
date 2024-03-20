@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import MentorProfile from "../models/mentorProfileModel";
-import MenteeProfile from "../models/menteeProfileModel";
 import User from "../models/userModel";
 import { ObjectId } from "mongodb";
 
@@ -11,7 +10,7 @@ export class AdminControls {
     next: NextFunction
   ): Promise<void> {
     try {
-      const applicationData = await MentorProfile.aggregate([
+      const applications = await MentorProfile.aggregate([
         { $match: { profile_state: "pending" } },
         {
           $lookup: {
@@ -27,10 +26,8 @@ export class AdminControls {
           },
         },
       ]);
-      if (applicationData) {
-        res
-          .status(200)
-          .json({ status: "success", applications: applicationData });
+      if (applications) {
+        res.status(200).json({ status: "success", applications });
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -64,7 +61,7 @@ export class AdminControls {
           },
         },
       ]);
-
+      console.log("Application Data", applicationData);
       if (applicationData) {
         res
           .status(200)
@@ -124,7 +121,7 @@ export class AdminControls {
     }
   }
 
-  async getMentors(
+  async getMentees(
     req: Request,
     res: Response,
     next: NextFunction
@@ -184,6 +181,50 @@ export class AdminControls {
       });
       if (update) {
         res.status(200).json({ status: "success", message: "User UnBlocked" });
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+        return next(error);
+      }
+    }
+  }
+  async search(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log(req.body);
+      const query = req.body.search;
+      console.log("In Server", query);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
+
+  async getMentors(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const mentors = await User.aggregate([
+        { $match: { role: "mentor" } },
+        {
+          $lookup: {
+            from: "mentorprofiles",
+            foreignField: "mentor_id",
+            localField: "_id",
+            as: "profileDetails",
+          },
+        },
+        {
+          $unwind: "$profileDetails",
+        },
+      ]);
+      console.log("Mentors", mentors);
+      if (mentors) {
+        res.status(200).json({ status: "success", mentors });
       }
     } catch (error) {
       if (error instanceof Error) {
