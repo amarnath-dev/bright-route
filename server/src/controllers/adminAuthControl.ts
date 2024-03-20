@@ -10,7 +10,7 @@ export class AdminAuthControls {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { email, password } = req.body.adminData;
+      const { email, password } = req.body;
       if (!email || !password) {
         res.status(400);
         return next(Error("Invalid Credentials"));
