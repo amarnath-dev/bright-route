@@ -161,7 +161,7 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
                 >
                   <div className="px-3 py-3 relative">
                     <button className="md:px-3 md:py-3 rounded-md">
-                      <h1 className="text-xl font-bold">{plan?.planType}</h1>
+                      <h1 className="text-xl font-bold text-gray-400">{plan?.planType}</h1>
                     </button>
                     <span
                       className="flex justify-end absolute top-0 right-2 mt-3"

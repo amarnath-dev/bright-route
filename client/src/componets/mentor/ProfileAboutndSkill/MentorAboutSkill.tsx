@@ -47,7 +47,7 @@ const MentorAboutSkill: React.FC<MentorProfileCardProps> = ({
             rows={12}
             disabled
             defaultValue={mentor?.bio}
-            className="block p-2.5 w-full text-lg rounded-lg focus:border-gray text-gray-400 bg-background-two"
+            className="block p-2.5 w-full text-lg rounded-lg border border-gray-400 focus:border-gray text-gray-400 bg-background-two"
           ></textarea>
         </div>
         <div className="mt-5 rounded-md px-2 py-2">

@@ -160,25 +160,39 @@ export class MenteeController {
       const mentorId = req.params.mentorId;
       const reportDetails = req.body;
       if (mentorId && reportDetails) {
-        const report = new Report({
-          mentor_id: mentorId,
-          mentee_id: req.user?.id,
-          ReportDetails: {
+        const existingReport = await Report.findOne({ mentor_id: mentorId });
+        if (existingReport) {
+          existingReport.ReportDetails.push({
             issue_faced: reportDetails?.issueFaced,
             issue_desc: reportDetails?.issueDescription,
             report_date: reportDetails?.date,
-          },
-        });
-        await report.save();
-        res.status(200).json({ status: "success", message: "Report submited" });
+          });
+          await existingReport.save();
+        } else {
+          const report = new Report({
+            mentor_id: mentorId,
+            mentee_id: req.user?.id,
+            ReportDetails: [
+              {
+                issue_faced: reportDetails.issueFaced,
+                issue_desc: reportDetails.issueDescription,
+                report_date: reportDetails.date,
+              },
+            ],
+          });
+          await report.save();
+        }
+        res
+          .status(200)
+          .json({ status: "success", message: "Report Submitted" });
       } else {
         res
           .status(400)
-          .json({ status: "error", message: "Report Sent Failed" });
+          .json({ status: "error", message: "Report submission failed" });
       }
     } catch (error) {
       console.log(error);
-      return next(Error("Email send failed"));
+      return next(Error("Report submission failed"));
     }
   }
 
@@ -441,13 +455,15 @@ export class MenteeController {
       const userRole = req.params.userRole;
       if (user) {
         if (userRole === "mentee") {
-          const menteeData = await MenteeModel.findOne({ mentee_id: user.id });
+          const menteeData = await MenteeModel.findOne({
+            mentee_id: new ObjectId(user?.id),
+          });
+          console.log(menteeData);
           if (menteeData) {
             res.status(200).json({
               status: "success",
               profileImageId: menteeData?.profile_img,
             });
-            return;
           } else {
             res
               .status(404)
