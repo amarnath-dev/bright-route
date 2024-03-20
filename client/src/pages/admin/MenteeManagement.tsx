@@ -98,7 +98,7 @@ const MenteeManagement = () => {
           { search },
           { withCredentials: true }
         );
-        console.log("Response", response);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -163,15 +163,11 @@ const MenteeManagement = () => {
                       </th>
                     </tr>
                   </thead>
-
-                  <tbody>
-                    {mentee.map((mentee: Mentee, index: number) => {
-                      return (
-                        <>
-                          <tr
-                            className="bg-gray-800 border-b text-gray-400"
-                            key={index}
-                          >
+                  {mentee.map((mentee: Mentee, index: number) => {
+                    return (
+                      <>
+                        <tbody key={index}>
+                          <tr className="bg-gray-800 border-b text-gray-400">
                             <th scope="row" className="px-6 py-4 font-medium">
                               {mentee.profileDetails?.first_name}{" "}
                               {mentee.profileDetails?.last_name}
@@ -205,10 +201,10 @@ const MenteeManagement = () => {
                               )}
                             </td>
                           </tr>
-                        </>
-                      );
-                    })}
-                  </tbody>
+                        </tbody>
+                      </>
+                    );
+                  })}
                 </table>
               </div>
               <div className="flex w-full flex-col items-end">

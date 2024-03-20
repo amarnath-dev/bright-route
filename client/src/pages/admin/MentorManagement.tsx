@@ -1,29 +1,71 @@
 import { useEffect, useState } from "react";
 import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import CheckReport from "../../componets/checkReport/CheckReport";
+import { toast } from "react-toastify";
 
-interface Mentor {
+//Mentor Types for state
+interface ReportDetails {
+  issue_faced: string;
+  issue_desc: string;
+  report_date: string;
   _id: string;
-  email: string;
-  is_blocked: boolean;
-  role: string;
-  profileDetails: MentorProfile;
+}
+
+interface MentorReport {
+  _id: string;
+  mentor_id: string;
+  mentee_id: string;
+  ReportDetails: ReportDetails[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 interface MentorProfile {
   _id: string;
-  mentee_id: string;
+  mentor_id: string;
+  profile_img: string;
   first_name: string;
   last_name: string;
   job_title: string;
+  company: string;
+  state: string;
+  category: string;
+  bio: string;
   linkedIn: string;
   twitter: string;
+  web_url: string;
+  why_mentor: string;
+  achievement: string;
+  profile_state: string;
+  skills: string[];
+  reports: string[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  isPaymentDetails: boolean;
+}
+
+interface MentorData {
+  _id: string;
+  email: string;
+  password: string;
+  role: string;
+  is_blocked: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  profileDetails: MentorProfile;
+  mentorReports: MentorReport[];
 }
 
 const MentorManagement = () => {
-  const [mentor, setMentor] = useState<Mentor[]>([]);
+  const [mentor, setMentor] = useState<MentorData[]>([]);
+  const [userReport, setUserReport] = useState<ReportDetails[] | undefined>();
+  const [openModal, setOpenModal] = useState(false);
+
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
@@ -34,6 +76,7 @@ const MentorManagement = () => {
           withCredentials: true,
         });
         if (response.data) {
+          console.log("Mentor Details", response.data.mentors);
           setMentor(response.data?.mentors);
         }
       } catch (error) {
@@ -52,7 +95,7 @@ const MentorManagement = () => {
           { withCredentials: true }
         );
         if (response.data.status === "success") {
-          const updatedUsers = mentor.map((user: Mentor) => {
+          const updatedUsers = mentor.map((user: MentorData) => {
             if (user?._id === mentorId) {
               return { ...user, is_blocked: true };
             }
@@ -83,8 +126,20 @@ const MentorManagement = () => {
     }
   };
 
+  const handleModal = (userId: string) => {
+    const user = mentor.find((user) => {
+      return user._id === userId;
+    });
+    setUserReport(user?.mentorReports[0]?.ReportDetails);
+    setOpenModal(true);
+  };
   return (
     <>
+      <CheckReport
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        userReport={userReport ? userReport : []}
+      />
       <div className="grid grid-cols-12 h-screen bg-background-two">
         <div className="hidden md:block col-span-3">
           <AdminSidebar />
@@ -117,7 +172,7 @@ const MentorManagement = () => {
             </div>
           </div>
 
-          {mentor.length > 0 ? (
+          {mentor?.length > 0 ? (
             <>
               <div className="relative overflow-x-auto">
                 <table className="w-full text-sm text-left rtl:text-right rounded">
@@ -141,22 +196,24 @@ const MentorManagement = () => {
                     </tr>
                   </thead>
 
-                  <tbody>
-                    {mentor.map((mentor, index: number) => {
-                      return (
-                        <>
-                          <tr
-                            className="bg-gray-800 border-b text-gray-400"
-                            key={index}
-                          >
+                  {mentor?.map((mentor, index: number) => {
+                    return (
+                      <>
+                        <tbody key={index}>
+                          <tr className="bg-gray-800 border-b text-gray-400">
                             <th scope="row" className="px-6 py-4 font-medium">
                               {mentor.profileDetails?.first_name}{" "}
                               {mentor.profileDetails?.last_name}
                             </th>
                             <td className="px-6 py-4">{mentor?.email}</td>
-                            <td className="px-6 py-4">0</td>
                             <td className="px-6 py-4">
-                              <button className="underline hover:text-blue-500">
+                              {mentor?.mentorReports[0]?.ReportDetails.length}
+                            </td>
+                            <td className="px-6 py-4">
+                              <button
+                                className="border border-gray-600 bg-gray-700 py-1 px-6 rounded"
+                                onClick={() => handleModal(mentor?._id)}
+                              >
                                 View
                               </button>
                             </td>
@@ -182,10 +239,10 @@ const MentorManagement = () => {
                               )}
                             </td>
                           </tr>
-                        </>
-                      );
-                    })}
-                  </tbody>
+                        </tbody>
+                      </>
+                    );
+                  })}
                 </table>
               </div>
               <div className="flex w-full flex-col items-end">

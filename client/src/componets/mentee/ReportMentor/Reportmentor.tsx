@@ -112,7 +112,7 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                     name="issueFaced"
                     value={reportData?.issueFaced}
                     onChange={handleChage}
-                    className="bg-gray-50 border border-gray-300 text-md rounded-lg w-72 md:w-96 p-2.5 dark:placeholder-gray-400 text-gray-400"
+                    className="bg-gray-800 border border-gray-300 text-md rounded-lg w-72 md:w-96 p-2.5 dark:placeholder-gray-400 text-gray-400"
                   >
                     <option>Choose the Type</option>
                     <option value="Harrasment">Harrasment</option>
@@ -135,7 +135,7 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                     value={reportData?.issueDescription}
                     onChange={handleChage}
                     rows={4}
-                    className="block p-2.5 w-full text-sm rounded-lg placeholder:text-gray-400"
+                    className="block p-2.5 w-full text-sm text-gray-400 rounded-lg bg-gray-800 border-2 border-gray-400 placeholder:text-gray-400"
                     placeholder="Write here..."
                   ></textarea>
                 </div>
@@ -146,7 +146,7 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                   name="date"
                   value={reportData?.date}
                   onChange={handleChage}
-                  className="w-full rounded h-10 mb-6 indent-2"
+                  className="w-full rounded h-10 mb-6 indent-2 bg-gray-800 text-gray-400"
                 />
               </div>
               <div>

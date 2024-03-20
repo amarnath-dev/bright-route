@@ -46,6 +46,8 @@ router.get(
   menteeController.getMentorProfile
 );
 
+/getimage/
+
 router.post(
   "/report/mentor/:mentorId",
   verifyJWT,

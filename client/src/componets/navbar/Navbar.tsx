@@ -23,7 +23,7 @@ interface NotType {
 const NavBar = () => {
   const { user } = useAppSelector((state) => state.userAuth);
   const [profileImg, setProfileImg] = useState<string>();
-  const [firebaseImgId, setFirebaseImgId] = useState("");
+  const [firebaseImgId, setFirebaseImgId] = useState<string>();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
 
@@ -71,7 +71,8 @@ const NavBar = () => {
         const response = await axiosPrivate.get(`/getimage/${user?.role}`, {
           withCredentials: true,
         });
-        if (response.data.profileImageId) {
+        if (response.data) {
+          console.log("Profile Image", response.data.profileImageId);
           setProfileImg(response.data.profileImageId);
         }
       } catch (error) {
@@ -155,7 +156,7 @@ const NavBar = () => {
                 <div>
                   <span className="cursor-pointer">
                     <IoNotifications
-                      className="text-3xl hover:text-blue-600 text-yellow-300"
+                      className="text-3xl hover:text-blue-600 text-white"
                       onClick={handleNotification}
                     />
                   </span>

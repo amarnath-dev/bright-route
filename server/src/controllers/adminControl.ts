@@ -221,6 +221,14 @@ export class AdminControls {
         {
           $unwind: "$profileDetails",
         },
+        {
+          $lookup: {
+            from: "mentorreports",
+            foreignField: "mentor_id",
+            localField: "_id",
+            as: "mentorReports",
+          },
+        },
       ]);
       console.log("Mentors", mentors);
       if (mentors) {

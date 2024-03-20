@@ -4,10 +4,12 @@ import { IReport } from "../Interfaces";
 const reportSchema: Schema<IReport> = new mongoose.Schema<IReport>(
   {
     mentor_id: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     mentee_id: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     ReportDetails: [
       {
