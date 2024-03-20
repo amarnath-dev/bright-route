@@ -72,7 +72,6 @@ const NavBar = () => {
           withCredentials: true,
         });
         if (response.data) {
-          console.log("Profile Image", response.data.profileImageId);
           setProfileImg(response.data.profileImageId);
         }
       } catch (error) {
@@ -134,29 +133,29 @@ const NavBar = () => {
           /> */}
         </div>
         <div className="col-span-8 bg-gray-800 h-16">
-          <div className="flex justify-end items-center text-white">
+          <div className="flex justify-end items-center text-gray-400">
             <div className="flex">
               <div className="flex gap-7 items-center">
                 <div onClick={handleClickOne}>
                   {user?.role === "mentor" ? (
-                    <BsPersonLinesFill className="text-3xl text-white hover:text-blue-600 cursor-pointer" />
+                    <BsPersonLinesFill className="text-3xl text-gray-400 hover:text-blue-600 cursor-pointer" />
                   ) : (
                     ""
                   )}
                 </div>
                 <div onClick={handleClickTwo}>
                   {user?.role === "mentor" ? (
-                    <IoChatboxEllipsesOutline className="text-3xl hover:text-blue-600 cursor-pointer" />
+                    <IoChatboxEllipsesOutline className="text-3xl hover:text-blue-600 cursor-pointer text-gray-400" />
                   ) : (
                     <>
-                      <FaChalkboardTeacher className="text-3xl hover:text-blue-600 text-white" />
+                      <FaChalkboardTeacher className="text-3xl hover:text-blue-600 text-gray-400" />
                     </>
                   )}
                 </div>
                 <div>
                   <span className="cursor-pointer">
                     <IoNotifications
-                      className="text-3xl hover:text-blue-600 text-white"
+                      className="text-3xl hover:text-blue-600 text-gray-400"
                       onClick={handleNotification}
                     />
                   </span>

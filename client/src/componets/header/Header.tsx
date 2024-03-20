@@ -8,11 +8,9 @@ const Header = () => {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [replay, setReplay] = useState(true);
-
   const placeholderText = [
     { type: "heading1", text: `Welcome to Bright Route.` },
   ];
-
   const container = {
     visible: {
       transition: {
@@ -25,7 +23,7 @@ const Header = () => {
     <>
       <div className="w-full h-screen bg-background-two">
         <div className="flex justify-center items-center flex-col">
-          <div className="font-bold text-2xl text-white mt-40">
+          <div className="font-bold text-2xl text-gray-400 mt-40">
             <motion.div
               className="App"
               initial="hidden"

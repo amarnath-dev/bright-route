@@ -6,14 +6,14 @@ const MentorHome: React.FC = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="w-full h-screen bg-slate-400">
+      <div className="w-full h-screen bg-background-two">
         <NavBar />
         <div className="w-full md:w-full h-16 bg-background-two text-white flex items-center justify-around"></div>
         <div className="w-full h-80 bg-background-two flex justify-start">
           <div className="ml-3 md:ml-10">
-            <h1 className="uppercase text-white text-5xl mt-10">welcome,</h1>
-            <h1 className="text-white mt-3 md:text-xl">
-              Share your'e knowledge, Grow yourself
+            <h1 className="uppercase text-5xl mt-10 text-gray-400">welcome,</h1>
+            <h1 className="text-gray-400 mt-3 md:text-xl">
+              Share your knowledge, Grow yourself
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg"
                 alt="logo"
