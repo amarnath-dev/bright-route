@@ -3,7 +3,7 @@ import MentorModel from "../models/mentorProfileModel";
 import MenteeModel from "../models/menteeProfileModel";
 import { ObjectId } from "mongodb";
 import Plans from "../models/mentorPlansModel";
-import Payment from "../models/PaymentModel";
+import Payment from "../models/paymentModel";
 
 export class MentorController {
   async mentorprofileDetails(

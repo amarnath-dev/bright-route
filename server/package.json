@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/config/database.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/config/database.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/database.js"
   },
   "keywords": [],
   "author": "Amarnath as",

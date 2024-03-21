@@ -9,7 +9,8 @@ import OTP from "../models/otpModel";
 import Plans from "../models/mentorPlansModel";
 import Report from "../models/mentorReportModel";
 import { ObjectId } from "mongodb";
-import PaymentModel from "../models/PaymentModel";
+// import PaymentModel from "../models/PaymentModel";
+import PaymentModel from "../models/paymentModel";
 
 export interface mentorProfileObj {
   imageUrl: string;

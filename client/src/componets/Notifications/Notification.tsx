@@ -15,7 +15,7 @@ interface Notification {
 
 export interface NotificationProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
-  notData: Notification;
+  notData: Notification | null;
 }
 
 interface NotificationMentor {

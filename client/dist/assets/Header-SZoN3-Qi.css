@@ -1,0 +1,1 @@
+.Animate{font-family:sans-serif}@keyframes animate{0%{content:"REACH";color:#d77f7f}20%{content:"OUT";color:#4169e1}40%{content:"LEARN";color:#6b8e23}60%{content:"GROW";color:gold}80%{content:"ACHIEVE";color:#db7093}}.animate-text:before{color:#fff;content:"THIS";font-size:64px;letter-spacing:10px;font-weight:700;animation:animate 7s steps(1,end) infinite}

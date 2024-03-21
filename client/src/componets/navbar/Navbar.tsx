@@ -15,9 +15,9 @@ import { Socket, io } from "socket.io-client";
 import Logo from "../../assets/BRLogo.png";
 
 interface NotType {
-  senderId: string;
   content: string;
   createdAt: number;
+  senderId: string;
   type: string;
 }
 
@@ -223,7 +223,7 @@ const NavBar = () => {
                 </div>
               </Navbar>
               {open ? (
-                <Notification setOpen={setOpen} notData={notifications} />
+                <Notification setOpen={setOpen} notData={notifications ? notifications : null} />
               ) : (
                 ""
               )}
