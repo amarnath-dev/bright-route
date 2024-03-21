@@ -45,7 +45,7 @@ const MenteePaymentDetails = () => {
   const [paymentDetails, setPaymentDetails] = useState<Payment | null>(null);
   const [planDetails, setPlanDetails] = useState<Plan | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [menteeId, setMenteeId] = useState();
+  const [_menteeId, setMenteeId] = useState();
 
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.userAuth);

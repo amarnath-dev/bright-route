@@ -23,11 +23,13 @@ const ForgotPassword = () => {
   });
   const [passwordError, setPasswordError] = useState(false);
 
-  const handleEmailSubmit = async (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const emailId = e.target[0]?.value;
-      setUserEmail(emailId);
+      // const emailId = e.target[0]?.value;
+      const formData = new FormData(e.currentTarget);
+      const emailId = formData.get("emailInput");
+      setUserEmail(emailId as string);
       const response = await axiosPrivate.post(
         "/password/checkEmail",
         { emailId },
@@ -44,10 +46,12 @@ const ForgotPassword = () => {
     }
   };
 
-  const handleOTPSubmit = async (e: React.FormEvent) => {
+  const handleOTPSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const OTPNum = e.target[0]?.value;
+      const formData = new FormData(e.currentTarget);
+      const OTPNum = formData.get("OTPinput");
+      console.log("OTP Nm", OTPNum);
       const response = await axiosPrivate.post(
         "/password/OTPVerify",
         { userEmail, OTPNum },
@@ -145,6 +149,7 @@ const ForgotPassword = () => {
                         className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
                         type="text"
                         required
+                        name="OTPinput"
                         onChange={errorChange}
                       />
                     </label>
@@ -162,7 +167,7 @@ const ForgotPassword = () => {
                   <div>
                     <div className="flex flex-col">
                       <h1 className="text-md px-4 py-1 md:py-0 md:px-0 mb-2 text-gray-300">
-                        Please provide your email address:
+                        Please provide your email Address:
                       </h1>
                       {isError ? (
                         <>
@@ -177,6 +182,7 @@ const ForgotPassword = () => {
                         className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
                         placeholder="Email"
                         type="email"
+                        name="emailInput"
                         onChange={errorChange}
                         required
                       />

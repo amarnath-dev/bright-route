@@ -8,7 +8,7 @@ import useAxiosPrivate from "../../app/useAxiosPrivate";
 const ChangePassword = () => {
   const axiosPrivate = useAxiosPrivate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [formData, setFormData] = useState({
+  const [formData, _setFormData] = useState({
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",

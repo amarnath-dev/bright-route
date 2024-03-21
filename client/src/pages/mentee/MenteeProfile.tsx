@@ -41,7 +41,7 @@ const MenteeProfile = () => {
   const [controlCrop, setControlCrop] = useState(false);
   const [goal, setGoal] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [profileImg, setProfileImg] = useState("");
+  const [_profileImg, setProfileImg] = useState("");
   const [imgSrc, setImgSrc] = useState("");
   const [aspect, setAspect] = useState<number | undefined>(16 / 9);
   const [crop, setCrop] = useState<Crop>();

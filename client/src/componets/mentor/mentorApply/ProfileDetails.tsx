@@ -19,7 +19,7 @@ export function ProfileDetails({
   const skillsOptions = skills.map((skill) => ({ title: skill }));
 
   const handleSkillsChange = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newSkills: { title: string }[] 
   ) => {
     updateFields({ skills: newSkills.map((skill) => skill.title) }); 

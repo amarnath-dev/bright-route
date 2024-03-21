@@ -36,7 +36,7 @@ const CheckReport: React.FC<CheckReportProps> = ({
       <Modal
         show={openModal}
         onClose={() => setOpenModal(false)}
-        userReport={userReport}
+        // userReport={userReport}
       >
         <Modal.Header className="bg-gray-800">
           <h1 className="text-white font-bold">User Reports</h1>
