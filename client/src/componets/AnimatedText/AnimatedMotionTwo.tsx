@@ -10,7 +10,7 @@ const tagMap = {
   heading2: "h2",
 };
 
-const AnimatedText = (props) => {
+export const AnimatedMotionTwo = (props) => {
   const item = {
     hidden: {
       y: "200%",
@@ -47,7 +47,7 @@ const AnimatedText = (props) => {
                   style={{
                     overflow: "hidden",
                     display: "inline-block",
-                    fontSize: "55px",
+                    fontSize: "45px",
                     height: "65px",
                   }}
                   key={index}
@@ -67,5 +67,3 @@ const AnimatedText = (props) => {
     </Tag>
   );
 };
-
-export default AnimatedText;
