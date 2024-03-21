@@ -1,17 +1,44 @@
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
+import React from "react";
 
-const Wrapper = (props) => {
-  return <span className="word-wrapper">{props.children}</span>;
+// Define the type for children prop in Wrapper component
+interface WrapperProps {
+  children: React.ReactNode;
+}
+
+// Define the type for tagMap object
+interface TagMap {
+  [key: string]: keyof JSX.IntrinsicElements;
+}
+
+// Define the props interface for AnimatedMotionTwo component
+interface AnimatedMotionTwoProps {
+  text: string;
+  type: keyof TagMap;
+  key: string | undefined;
+}
+
+// Define the variants type for animation
+type AnimationVariants = Variants;
+
+// Define the Wrapper component with its props type
+const Wrapper: React.FC<WrapperProps> = ({ children }) => {
+  return <span className="word-wrapper">{children}</span>;
 };
 
-const tagMap = {
+// Define the tagMap object with its type
+const tagMap: TagMap = {
   paragraph: "p",
   heading1: "h1",
   heading2: "h2",
 };
 
-export const AnimatedMotionTwo = (props) => {
-  const item = {
+// Define the AnimatedMotionTwo component with its props type
+export const AnimatedMotionTwo: React.FC<AnimatedMotionTwoProps> = (props) => {
+  console.log("Hello Two", props);
+
+  // Define the animation variants
+  const item: AnimationVariants = {
     hidden: {
       y: "200%",
       transition: { ease: [0.455, 0.03, 0.515, 0.955], duration: 0.85 },
@@ -22,26 +49,30 @@ export const AnimatedMotionTwo = (props) => {
     },
   };
 
-  const splitWords = props.text.split(" ");
+  // Split the text into words
+  const splitWords: string[] = props.text.split(" ");
 
-  const words = [];
+  // Create an array to hold words
+  const words: string[][] = [];
 
+  // Split each word into characters and add non-breaking space at the end
   for (const [, item] of splitWords.entries()) {
     words.push(item.split(""));
   }
 
-  words.map((word) => {
+  words.forEach((word) => {
     return word.push("\u00A0");
   });
 
+  // Get the tag corresponding to the given type
   const Tag = tagMap[props.type];
 
   return (
     <Tag>
-      {words.map((word, index) => {
+      {words.map((_word, index: number) => {
         return (
           <Wrapper key={index}>
-            {words[index].flat().map((element, index) => {
+            {words[index].flat().map((element, index: number) => {
               return (
                 <span
                   style={{

@@ -3,16 +3,48 @@ import { useParams } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import copy from "copy-to-clipboard";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
+import NavBar from "../navbar/Navbar";
+import copy from "copy-to-clipboard";
+import { toast } from "react-toastify";
+
+interface Payment {
+  _id: string;
+  duration: number;
+  goal_of_mentorship: string;
+  isExpired: boolean;
+  mentee_id: string;
+  mentor_id: string;
+  mentor_plan_id: string;
+  message_to_mentor: string;
+  paymentDone: boolean;
+  plan_price: number;
+  razorPay_id: string;
+  time_to_reach_goal: string;
+}
+
+interface Services {
+  _id: string;
+  serviceCount: number | null;
+  serviceName: string;
+}
+
+interface Plan {
+  _id: string;
+  isDeleted: boolean;
+  planAmount: number;
+  planDescription: string;
+  planServices: Services[];
+  planType: string;
+}
 
 const MenteePaymentDetails = () => {
   const { paymentId } = useParams();
   const axiosPrivate = useAxiosPrivate();
-  const [paymentDetails, setPaymentDetails] = useState();
-  const [planDetails, setPlanDetails] = useState();
+  const [paymentDetails, setPaymentDetails] = useState<Payment | null>(null);
+  const [planDetails, setPlanDetails] = useState<Plan | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [menteeId, setMenteeId] = useState();
 
   const navigate = useNavigate();
@@ -42,7 +74,7 @@ const MenteePaymentDetails = () => {
         const plans = await axiosPrivate.get(
           `/mentor/plan/${paymentDetails?.mentor_plan_id}`
         );
-        setPlanDetails(plans.data.plan);
+        setPlanDetails(plans.data?.plan);
       };
       fetchPlans();
     }
@@ -58,9 +90,10 @@ const MenteePaymentDetails = () => {
 
   return (
     <>
-      <div className="w-full h-screen bg-background-two">
+      <NavBar />
+      <div className="w-full h-full bg-background-two text-gray-400">
         <div className="w-full h-full flex justify-center px-3 py-2">
-          <figure className="w-full bg-gray-800 rounded-xl p-8 md:w-1/2 mt-10">
+          <figure className="w-full h-full bg-gray-800 rounded-xl p-8 md:w-1/2 mt-10">
             {user?.role === "mentor" ? (
               <div className="pt-6 space-y-4">
                 <blockquote>
@@ -70,7 +103,7 @@ const MenteePaymentDetails = () => {
                   <p className="text-lg font-medium mt-2">
                     {paymentDetails?.time_to_reach_goal}
                     <div>
-                      <small className="text-gray-700 uppercase underline">
+                      <small className="text-gray-100 uppercase underline">
                         Message:
                       </small>{" "}
                       <br />
@@ -137,7 +170,7 @@ const MenteePaymentDetails = () => {
                     <span className="cursor-pointer hover:bg-gray-300 rounded-full">
                       <div>
                         <input
-                          className="rounded px-2 py-2 bg-gray-200"
+                          className="rounded px-2 py-2 bg-gray-800"
                           value={paymentDetails?.razorPay_id}
                           disabled
                           type="text"
@@ -145,7 +178,9 @@ const MenteePaymentDetails = () => {
                         <span
                           className="px-2"
                           onClick={() =>
-                            copyToClipboard(paymentDetails?.razorPay_id)
+                            copyToClipboard(
+                              paymentDetails?.razorPay_id as string
+                            )
                           }
                         >
                           <ContentCopyIcon className="text-gray-300" />
@@ -158,14 +193,16 @@ const MenteePaymentDetails = () => {
             </div>
             <div className="text-center">
               {user?.role === "mentor" ? (
-                <button
-                  className="bg-color-one text-white px-5 py-2 border rounded"
-                  onClick={() => {
-                    navigate(`/mentor/mentee-profile/${menteeId}`);
-                  }}
-                >
-                  Mentee Profile
-                </button>
+                <>
+                  {/* <button
+                    className="bg-color-one text-white px-5 py-2 border rounded w-full"
+                    onClick={() => {
+                      navigate(`/mentor/mentee-profile/${menteeId}`);
+                    }}
+                  >
+                    Mentee Profile
+                  </button> */}
+                </>
               ) : (
                 <>
                   <button

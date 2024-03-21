@@ -7,7 +7,6 @@ import { AnimatedMotionTwo } from "../../componets/AnimatedText/AnimatedMotionTw
 
 const MentorHome: React.FC = () => {
   const navigate = useNavigate();
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [replay, setReplay] = useState(true);
 
@@ -43,7 +42,7 @@ const MentorHome: React.FC = () => {
               </div>
               <div className="text-3xl py-3 text-gray-400">
                 {placeholderTextTwo.map((item, index) => {
-                  return <AnimatedMotionTwo {...item} key={index} />;
+                  return <AnimatedMotionTwo {...item} key={index as unknown as string} />;
                 })}
               </div>
             </motion.div>
@@ -66,9 +65,3 @@ const MentorHome: React.FC = () => {
 };
 
 export default MentorHome;
-
-//chagisgsdag
-///sdhfgljksdhgjsda
-//sdfhsdkafh
-
-//sdfhs;pdfha

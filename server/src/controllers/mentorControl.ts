@@ -258,10 +258,10 @@ export class MentorController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const user = req.user;
+      const user = req?.user;
       const mentorApplication = await Payment.aggregate([
         {
-          $match: { mentor_id: user?.id },
+          $match: { mentor_id: new ObjectId(user?.id) },
         },
         {
           $lookup: {
@@ -272,6 +272,7 @@ export class MentorController {
           },
         },
       ]);
+      console.log("Application", mentorApplication);
       if (mentorApplication) {
         res.status(200).json({ status: "success", mentorApplication });
       }

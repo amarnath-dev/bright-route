@@ -18,22 +18,32 @@ import { storage } from "../../app/firebase";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 interface Message {
+  _id: string;
+  IsDeleted: boolean;
+  conversationId: string;
+  createdAt: number;
   senderId: string;
   text: string;
-  createdAt: number;
   type: string;
 }
-interface Conversation {
+
+// interface Conversation {
+//   _id: string;
+//   createdAt: string;
+//   members: string[];
+//   updatedAt: string;
+// }
+
+interface CurrentChat {
   _id: string;
+  members: [];
   createdAt: string;
-  members: string[];
-  updatedAt: string;
 }
 
 const MentorMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
-  const [currentChat, setCurrentChat] = useState<Conversation>();
+  const [currentChat, setCurrentChat] = useState<CurrentChat>();
   const { user } = useAppSelector((state) => state.userAuth);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -50,12 +60,7 @@ const MentorMessages = () => {
   useEffect(() => {
     socket.current = io("ws://localhost:3000");
     socket.current?.on("getMessage", (data) => {
-      setArrivalMessage({
-        senderId: data?.senderId,
-        text: data?.text,
-        createdAt: Date.now(),
-        type: data.type,
-      });
+      setArrivalMessage(data);
     });
   }, []);
 
@@ -75,7 +80,7 @@ const MentorMessages = () => {
   }, [axiosPrivate]);
 
   // Creating a new Conversation
-  const createConversation = async (conversation: Conversation) => {
+  const createConversation = async (conversation: CurrentChat) => {
     console.log("This is the conversation", conversation);
     try {
       if (conversation.members && Array.isArray(conversation.members)) {
@@ -118,9 +123,14 @@ const MentorMessages = () => {
   }, [conversation, axiosPrivate, user?._id, currentChat?._id]);
 
   //Updating the new messages
+  // useEffect(() => {
+  //   arrivalMessage &&
+  //     currentChat?.members.includes(arrivalMessage.senderId) &&
+  //     setMessages((prev) => [...prev, arrivalMessage]);
+  // }, [arrivalMessage, conversation, currentChat?.members]);
   useEffect(() => {
     arrivalMessage &&
-      currentChat?.members.includes(arrivalMessage.senderId) &&
+      currentChat?.members.includes(arrivalMessage?.senderId as never) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, conversation, currentChat?.members]);
 

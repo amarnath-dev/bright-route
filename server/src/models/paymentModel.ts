@@ -4,12 +4,12 @@ import { IApplication } from "../Interfaces";
 const paymentSchema: Schema<IApplication> = new mongoose.Schema<IApplication>(
   {
     mentor_id: {
-      type: String,
-      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     mentee_id: {
-      type: String,
-      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     razorPay_id: {
       type: String,

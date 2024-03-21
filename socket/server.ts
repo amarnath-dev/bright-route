@@ -34,13 +34,14 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
 
-  socket.on("sendMessage", ({ senderId, receiverId, text, type }) => {
-    const user = getUser(receiverId);
-    if (user) {
+  socket.on("sendMessage", (message) => {
+    console.log("Server Mesa", message);
+    const user = getUser(message?.receiverId);
+    if (user && message) {
       const { socketId } = user;
-      io.to(socketId).emit("getMessage", { senderId, text, type });
+      io.to(socketId).emit("getMessage", message);
     } else {
-      console.error(`User with ID ${receiverId} not found`);
+      console.error(`User with ID ${message?.receiverId} not found`);
     }
   });
 

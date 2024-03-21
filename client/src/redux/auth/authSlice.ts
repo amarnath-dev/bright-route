@@ -32,6 +32,7 @@ const initialState: Credentials = {
   status: null,
 };
 
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,

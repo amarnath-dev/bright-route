@@ -5,8 +5,8 @@ const notificationSchema: Schema<INotification> =
   new mongoose.Schema<INotification>(
     {
       userId: {
-        type: String,
-        required: true,
+        type: Schema.Types.ObjectId,
+        ref: "User",
       },
       content: {
         type: String,

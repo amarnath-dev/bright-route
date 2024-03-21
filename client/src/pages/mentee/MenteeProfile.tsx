@@ -20,8 +20,8 @@ import ReactCrop, {
   convertToPixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
-import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
+// import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
+// import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -255,20 +255,20 @@ const MenteeProfile = () => {
     }
   }
 
-  useDebounceEffect(
-    async () => {
-      if (
-        completedCrop?.width &&
-        completedCrop?.height &&
-        imgRef.current &&
-        previewCanvasRef.current
-      ) {
-        canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
-      }
-    },
-    100,
-    [completedCrop]
-  );
+  // useDebounceEffect(
+  //   async () => { 
+  //     if (
+  //       completedCrop?.width &&
+  //       completedCrop?.height &&
+  //       imgRef.current &&
+  //       previewCanvasRef.current
+  //     ) {
+  //       canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
+  //     }
+  //   },
+  //   100,
+  //   [completedCrop]
+  // );
 
   return (
     <>

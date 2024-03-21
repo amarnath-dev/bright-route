@@ -3,18 +3,37 @@ import { format } from "timeago.js";
 import { axiosPrivate } from "../../api";
 import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { useNavigate } from "react-router-dom";
 
-export interface Props {
-  setOpen: boolean;
+interface Notification {
+  content: string;
+  createdAt: number;
+  senderId: string;
+  type: string;
 }
 
-const Notification = ({ setOpen, notData }) => {
-  const [notifications, setNotifications] = useState();
+export interface NotificationProps {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  notData: Notification;
+}
+
+interface NotificationMentor {
+  _id: string;
+  content: string;
+  isDeleted: boolean;
+  isVisited: boolean;
+  messageType: string;
+  role: string;
+  userId: string;
+  createdAt: string;
+}
+
+const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
+  const [notifications, setNotifications] = useState<NotificationMentor[] | []>(
+    []
+  );
   const { user } = useAppSelector((state) => state.userAuth);
-  const navigate = useNavigate();
 
   const handleClose = () => {
     setOpen(false);
@@ -29,6 +48,7 @@ const Notification = ({ setOpen, notData }) => {
             withCredentials: true,
           }
         );
+        console.log("Notification", response.data.notifications);
         setNotifications(response.data.notifications);
       } catch (error) {
         console.log(error);
@@ -60,13 +80,20 @@ const Notification = ({ setOpen, notData }) => {
     }
   };
 
-  const messageClick = (notification) => {
-    if (notification?.messageType === "new chat" && user?.role === "mentee") {
-      navigate(`/chat/${notification?.senderId}`);
-    } else {
-      navigate(`/mentor/chat/${notification?.senderId}`);
+  // const messageClick = (notification) => {
+  //   console.log("Message Click", notification);
+  //   if (notification?.messageType === "new chat" && user?.role === "mentee") {
+  //     navigate(`/chat/${notification?.senderId}`);
+  //   } else {
+  //     navigate(`/mentor/chat/${notification?.senderId}`);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (notData) {
+      console.log("not Data", notData);
     }
-  };
+  }, [notData]);
 
   return (
     <>
@@ -83,39 +110,41 @@ const Notification = ({ setOpen, notData }) => {
         <div className="flex justify-start items-start flex-col mx-1 my-1">
           {notifications?.length > 0 ? (
             <div className="flex-wrap rounded-lg w-full">
-              {notifications?.map((notification, index: number) => {
-                return (
-                  <div
-                    className="px-2 py-1 w-full hover:bg-slate-300 cursor-pointer rounded-md"
-                    key={index}
-                  >
-                    {notification?.isDeleted ? (
-                      ""
-                    ) : (
-                      <>
-                        <div>
-                          <span className="flex justify-end">
-                            <MdDelete
-                              className="text-xl text-gray-700 hover:bg-gray-800 hover:text-white rounded-full"
-                              onClick={() => handleDelete(notification?._id)}
-                            />
-                          </span>
-                          <p
-                            className="text-black rounded-md px-2"
-                            key={index}
-                            onClick={() => messageClick(notification)}
-                          >
-                            {notification?.content}
-                          </p>
-                          <small className="text-black px-2">
-                            {format(notification?.createdAt)}
-                          </small>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                );
-              })}
+              {notifications?.map(
+                (notification: NotificationMentor, index: number) => {
+                  return (
+                    <div
+                      className="px-2 py-1 w-full hover:bg-slate-300 cursor-pointer rounded-md"
+                      key={index}
+                    >
+                      {notification?.isDeleted ? (
+                        ""
+                      ) : (
+                        <>
+                          <div>
+                            <span className="flex justify-end">
+                              <MdDelete
+                                className="text-xl text-gray-700 hover:bg-gray-800 hover:text-white rounded-full"
+                                onClick={() => handleDelete(notification?._id)}
+                              />
+                            </span>
+                            <p
+                              className="text-black rounded-md px-2"
+                              key={index}
+                              // onClick={() => messageClick(notification)}
+                            >
+                              {notification?.content}
+                            </p>
+                            <small className="text-black px-2">
+                              {format(notification?.createdAt)}
+                            </small>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  );
+                }
+              )}
             </div>
           ) : (
             <>
