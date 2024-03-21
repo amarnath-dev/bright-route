@@ -142,7 +142,7 @@ const ForgotPassword = () => {
                     </div>
                     <label className="flex justify-center">
                       <input
-                        className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
+                        className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
                         type="text"
                         required
                         onChange={errorChange}
@@ -174,7 +174,7 @@ const ForgotPassword = () => {
                     </div>
                     <label className="flex justify-center">
                       <input
-                        className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
+                        className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
                         placeholder="Email"
                         type="email"
                         onChange={errorChange}
@@ -213,7 +213,7 @@ const ForgotPassword = () => {
                     ""
                   )}
                   <input
-                    className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-1 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
+                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-1 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
                     type="text"
                     name="password"
                     value={formData?.password}
@@ -224,7 +224,7 @@ const ForgotPassword = () => {
                 <h1 className="text-gray-300 py-1">Re-enter the Password</h1>
                 <label className="flex justify-center flex-col">
                   <input
-                    className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-1 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
+                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-1 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-lg"
                     type="text"
                     name="re_entered_pass"
                     value={formData?.re_entered_pass}
