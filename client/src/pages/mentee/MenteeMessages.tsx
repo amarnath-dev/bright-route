@@ -65,9 +65,7 @@ const MenteeMessages = () => {
 
   //Connecting to the Server
   useEffect(() => {
-    socket.current = io(HOST,{
-      transports: ['websocket']
-    });
+    socket.current = io(HOST);
     socket.current?.on("getMessage", (data) => {
       console.log("Arrival Message", data);
       setArrivalMessage(data);

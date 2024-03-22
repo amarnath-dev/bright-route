@@ -61,9 +61,7 @@ const MentorMessages = () => {
 
   //Connecting to the Server
   useEffect(() => {
-    socket.current = io(HOST,{
-      transports: ['websocket']
-    });
+    socket.current = io(HOST);
     socket.current?.on("getMessage", (data) => {
       setArrivalMessage(data);
     });
