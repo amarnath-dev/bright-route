@@ -40,6 +40,9 @@ interface CurrentChat {
   createdAt: string;
 }
 
+const HOST = "https://bright-route.online"
+
+
 const MentorMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
@@ -58,7 +61,9 @@ const MentorMessages = () => {
 
   //Connecting to the Server
   useEffect(() => {
-    socket.current = io("ws://localhost:3000");
+    socket.current = io(HOST,{
+      transports: ['websocket']
+    });
     socket.current?.on("getMessage", (data) => {
       setArrivalMessage(data);
     });

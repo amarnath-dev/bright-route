@@ -7,7 +7,7 @@ interface User {
 
 const io = new Server({
   cors: {
-    origin: "http://34.125.52.166",
+    origin: "https://bright-route.online",
   },
 });
 

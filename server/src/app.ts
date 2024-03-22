@@ -12,7 +12,7 @@ import notificationRouter from "./routes/notificationRoutes";
 import forgotPassControl from "./routes/globalRoutes";
 import { limiter } from "./middleware/authLimit";
 
-const ORIGIN = "http://34.125.52.166";
+const ORIGIN = "https://bright-route.online";
 // const ORIGIN = "http://localhost:5173"
 const app = express();
 dotenv.config();

@@ -42,6 +42,9 @@ interface CurrentChat {
 //   createdAt: number;
 // }
 
+
+const HOST = "https://bright-route.online"
+
 const MenteeMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
@@ -62,7 +65,9 @@ const MenteeMessages = () => {
 
   //Connecting to the Server
   useEffect(() => {
-    socket.current = io("ws://localhost:3000");
+    socket.current = io(HOST,{
+      transports: ['websocket']
+    });
     socket.current?.on("getMessage", (data) => {
       console.log("Arrival Message", data);
       setArrivalMessage(data);
