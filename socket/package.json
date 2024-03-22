@@ -2,9 +2,11 @@
   "name": "socket",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "nodemon server.ts --exec ts-node"
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "dev": "nodemon server.ts"
   },
   "keywords": [],
   "author": "",

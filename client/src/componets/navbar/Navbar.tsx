@@ -21,6 +21,8 @@ interface NotType {
   type: string;
 }
 
+const HOST = "https://bright-route.online"
+
 const NavBar = () => {
   const { user } = useAppSelector((state) => state.userAuth);
   const [profileImg, setProfileImg] = useState<string>();
@@ -34,7 +36,7 @@ const NavBar = () => {
 
   //Connecting to the Server
   useEffect(() => {
-    socket.current = io("ws://localhost:3000");
+    socket.current = io(HOST);
     socket.current?.on("getNotification", (data) => {
       setNotifications({
         senderId: data?.senderId,
