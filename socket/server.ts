@@ -8,6 +8,7 @@ interface User {
 const io = new Server({
   cors: {
     origin: "https://bright-route.online",
+    credentials: true,
   },
 });
 
@@ -35,7 +36,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", (message) => {
-    console.log("Server Mesa", message);
     const user = getUser(message?.receiverId);
     if (user && message) {
       const { socketId } = user;
