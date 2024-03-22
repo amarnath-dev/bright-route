@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const baseURL = "http://localhost:5000/api";
-const baseURL = "http://34.125.52.166/api"
+const baseURL = "https://bright-route.online/api"
 
 export default axios.create({
   baseURL,
