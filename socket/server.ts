@@ -7,7 +7,7 @@ interface User {
 
 const io = new Server({
   cors: {
-    origin: "http://localhost:5173",
+    origin: "http://34.125.52.166",
   },
 });
 
