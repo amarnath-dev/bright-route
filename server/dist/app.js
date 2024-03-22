@@ -15,10 +15,12 @@ const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 const chatRoutes_1 = __importDefault(require("./routes/chatRoutes"));
 const notificationRoutes_1 = __importDefault(require("./routes/notificationRoutes"));
 const globalRoutes_1 = __importDefault(require("./routes/globalRoutes"));
+const ORIGIN = "http://34.125.52.166";
+// const ORIGIN = "http://localhost:5173"
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 const corsConfig = {
-    origin: "http://localhost:5173",
+    origin: ORIGIN,
     credentials: true,
 };
 app.use((0, morgan_1.default)("dev"));

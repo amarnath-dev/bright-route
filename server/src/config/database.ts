@@ -1,6 +1,6 @@
 import app from "../app";
 import mongoose from "mongoose";
-import { job } from "../utils/expiryScript";
+// import { job } from "../utils/expiryScript";
 
 const PORT = process.env.PORT;
 
@@ -9,7 +9,7 @@ mongoose
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server Running on the Port ${PORT}`);
-      job
+      // job
     });
   })
   .catch((error) => {
