@@ -19,17 +19,28 @@ import { storage } from "../../app/firebase";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface Message {
+  _id: string;
+  IsDeleted: boolean;
+  conversationId: string;
+
+  createdAt: number;
   senderId: string;
   text: string;
-  createdAt: number;
   type: string;
 }
 
 interface CurrentChat {
   _id: string;
   members: [];
-  createdAt: Date;
+  createdAt: string;
 }
+
+// interface ArrivalMessage {
+//   senderId: string;
+//   text: string;
+//   type: string;
+//   createdAt: number;
+// }
 
 const MenteeMessages = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -53,12 +64,8 @@ const MenteeMessages = () => {
   useEffect(() => {
     socket.current = io("ws://localhost:3000");
     socket.current?.on("getMessage", (data) => {
-      setArrivalMessage({
-        senderId: data?.senderId,
-        text: data?.text,
-        createdAt: Date.now(),
-        type: data?.type,
-      });
+      console.log("Arrival Message", data);
+      setArrivalMessage(data);
     });
   }, []);
 
@@ -152,16 +159,14 @@ const MenteeMessages = () => {
         const receiverId = currentChat?.members.find(
           (userId: string) => userId !== user?._id
         );
-        socket.current?.emit("sendMessage", {
-          senderId: user?._id,
-          receiverId,
-          text: currentImg,
-          type: "image",
-        });
         const response = await axiosPrivate.post("chat/message", message, {
           withCredentials: true,
         });
         if (response) {
+          socket.current?.emit("sendMessage", {
+            ...response.data.savedMessage,
+            receiverId,
+          });
           setMessages([...messages, response.data.savedMessage]);
           setCurrentImg("");
           setOpenImg(false);
@@ -177,15 +182,21 @@ const MenteeMessages = () => {
         const receiverId = currentChat?.members.find(
           (userId: string) => userId !== user?._id
         );
-        socket.current?.emit("sendMessage", {
-          senderId: user?._id,
-          receiverId,
-          text: newMessage,
-          type: "text",
-        });
+        // socket.current?.emit("sendMessage", {
+        //   senderId: user?._id,
+        //   receiverId,
+        //   text: newMessage,
+        //   type: "text",
+        // });
         const response = await axiosPrivate.post("chat/message", message, {
           withCredentials: true,
         });
+        if (response) {
+          socket.current?.emit("sendMessage", {
+            ...response.data.savedMessage,
+            receiverId,
+          });
+        }
         setMessages([...messages, response.data.savedMessage]);
         setNewMessage("");
       }

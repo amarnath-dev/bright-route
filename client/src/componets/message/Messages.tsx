@@ -1,19 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { format } from "timeago.js";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
+import { format } from "timeago.js";
 
-interface Messages {
-  message: object;
+interface MessagesProps {
+  message: Message;
   own: boolean;
   index: number;
-  currentChat: object | null;
+  currentChat: CurrentChat | null;
   userId: string | undefined;
 }
-export const Messages: React.FC<Messages> = ({
+
+interface CurrentChat {
+  _id: string;
+  createdAt: string;
+  members: [];
+}
+
+interface Message {
+  _id: string;
+  IsDeleted: boolean;
+  conversationId: string;
+  createdAt: number;
+  senderId: string;
+  text: string;
+  type: string;
+}
+
+export const Messages: React.FC<MessagesProps> = ({
   message,
   own,
   index,
@@ -29,6 +46,7 @@ export const Messages: React.FC<Messages> = ({
     const frndId = currentChat?.members?.find(
       (user: string) => user !== userId
     );
+
     if (frndId) {
       try {
         const fetchFrnd = async () => {
@@ -98,6 +116,12 @@ export const Messages: React.FC<Messages> = ({
       }
     });
   };
+
+  useEffect(() => {
+    if (message) {
+      console.log("Message", message);
+    }
+  }, [message]);
 
   return (
     <>

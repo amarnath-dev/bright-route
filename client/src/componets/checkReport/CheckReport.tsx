@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "flowbite-react";
-
-interface ChatReportProps {
-  openModal: boolean;
-  setOpenModal: boolean;
-  userReport: Report[];
-}
 
 interface Report {
   _id: string;
@@ -14,13 +8,19 @@ interface Report {
   report_date: string;
 }
 
-const CheckReport: React.FC<ChatReportProps> = ({
+interface CheckReportProps {
+  openModal: boolean;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  userReport: Report[] | undefined;
+}
+
+const CheckReport: React.FC<CheckReportProps> = ({
   openModal,
   setOpenModal,
   userReport,
 }) => {
-  const [accordionStates, setAccordionStates] = useState(
-    Array(userReport.length).fill(false)
+  const [accordionStates, setAccordionStates] = useState<boolean[]>(
+    Array(userReport?.length || 0).fill(false)
   );
 
   const handleView = (index: number) => {
@@ -31,18 +31,12 @@ const CheckReport: React.FC<ChatReportProps> = ({
     });
   };
 
-  useEffect(() => {
-    if (userReport) {
-      console.log("User Reportx", userReport);
-    }
-  }, [userReport]);
-
   return (
     <>
       <Modal
         show={openModal}
         onClose={() => setOpenModal(false)}
-        userReport={userReport}
+        // userReport={userReport}
       >
         <Modal.Header className="bg-gray-800">
           <h1 className="text-white font-bold">User Reports</h1>

@@ -57,6 +57,7 @@ const SearchMentors = () => {
       }
     };
     fetchImages();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtered?.length]);
 
   useEffect(() => {
@@ -97,7 +98,7 @@ const SearchMentors = () => {
                 renderInput={(params) => (
                   <TextField {...params} label="Search by Job Title" />
                 )}
-                onChange={(event, value) => setJobTitle(value?.label || "")}
+                onChange={(_event, value) => setJobTitle(value?.label || "")}
               />
             </label>
 
@@ -111,7 +112,7 @@ const SearchMentors = () => {
                 renderInput={(params) => (
                   <TextField {...params} label="Search by Skills" />
                 )}
-                onChange={(event, value) => setSkill(value?.label || "")}
+                onChange={(_event, value) => setSkill(value?.label || "")}
               />
 
               <Autocomplete
@@ -123,7 +124,7 @@ const SearchMentors = () => {
                 renderInput={(params) => (
                   <TextField {...params} label="Search by Company" />
                 )}
-                onChange={(event, value) => setCompany(value?.label || "")}
+                onChange={(_event, value) => setCompany(value?.label || "")}
               />
             </div>
           </div>

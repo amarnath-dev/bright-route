@@ -64,7 +64,7 @@ interface MentorData {
 const MentorManagement = () => {
   const [mentor, setMentor] = useState<MentorData[]>([]);
   const [userReport, setUserReport] = useState<ReportDetails[] | undefined>();
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
@@ -138,7 +138,7 @@ const MentorManagement = () => {
       <CheckReport
         openModal={openModal}
         setOpenModal={setOpenModal}
-        userReport={userReport ? userReport : []}
+        userReport={userReport}
       />
       <div className="grid grid-cols-12 h-screen bg-background-two">
         <div className="hidden md:block col-span-3">

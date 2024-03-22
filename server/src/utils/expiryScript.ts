@@ -1,5 +1,5 @@
 import schedule from "node-schedule";
-import Payment from "../models/PaymentModel";
+import Payment from "../models/paymentModel";
 
 const job = schedule.scheduleJob("0 0 * * *", async () => {
   try {

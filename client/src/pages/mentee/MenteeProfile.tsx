@@ -20,8 +20,8 @@ import ReactCrop, {
   convertToPixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
-import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
+// import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
+// import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -41,7 +41,7 @@ const MenteeProfile = () => {
   const [controlCrop, setControlCrop] = useState(false);
   const [goal, setGoal] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [profileImg, setProfileImg] = useState("");
+  const [_profileImg, setProfileImg] = useState("");
   const [imgSrc, setImgSrc] = useState("");
   const [aspect, setAspect] = useState<number | undefined>(16 / 9);
   const [crop, setCrop] = useState<Crop>();
@@ -255,20 +255,20 @@ const MenteeProfile = () => {
     }
   }
 
-  useDebounceEffect(
-    async () => {
-      if (
-        completedCrop?.width &&
-        completedCrop?.height &&
-        imgRef.current &&
-        previewCanvasRef.current
-      ) {
-        canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
-      }
-    },
-    100,
-    [completedCrop]
-  );
+  // useDebounceEffect(
+  //   async () => { 
+  //     if (
+  //       completedCrop?.width &&
+  //       completedCrop?.height &&
+  //       imgRef.current &&
+  //       previewCanvasRef.current
+  //     ) {
+  //       canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
+  //     }
+  //   },
+  //   100,
+  //   [completedCrop]
+  // );
 
   return (
     <>

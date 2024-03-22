@@ -69,7 +69,7 @@ const MyMentors = () => {
       <div className="w-full h-full md:h-screen bg-background-two">
         {isMentor === true ? (
           <div className="w-full h-screen flex justify-center items-center flex-col">
-            <h1 className="text-2xl font-bold">Please Apply to a Mentor</h1>
+            <h1 className="text-2xl font-bold text-gray-300">Please Apply to a Mentor</h1>
             <Link
               to={"/mentor/browse"}
               className="mt-5 rounded bg-color-one text-white border px-2 py-1"

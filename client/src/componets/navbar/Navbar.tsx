@@ -15,9 +15,9 @@ import { Socket, io } from "socket.io-client";
 import Logo from "../../assets/BRLogo.png";
 
 interface NotType {
-  senderId: string;
   content: string;
   createdAt: number;
+  senderId: string;
   type: string;
 }
 
@@ -147,14 +147,20 @@ const NavBar = () => {
           <div className="flex justify-end items-center text-gray-400">
             <div className="flex">
               <div className="flex gap-7 items-center">
-                <div onClick={handleClickOne}>
+                <div
+                  onClick={handleClickOne}
+                  className={open ? "hidden" : "block"}
+                >
                   {user?.role === "mentor" ? (
                     <BsPersonLinesFill className="text-3xl text-gray-400 hover:text-blue-600 cursor-pointer" />
                   ) : (
                     ""
                   )}
                 </div>
-                <div onClick={handleClickTwo}>
+                <div
+                  onClick={handleClickTwo}
+                  className={open ? "hidden" : "block"}
+                >
                   {user?.role === "mentor" ? (
                     <IoChatboxEllipsesOutline className="text-3xl hover:text-blue-600 cursor-pointer text-gray-400" />
                   ) : (
@@ -163,7 +169,7 @@ const NavBar = () => {
                     </>
                   )}
                 </div>
-                <div>
+                <div className={open ? "hidden" : "block"}>
                   <span className="cursor-pointer">
                     <IoNotifications
                       className="text-3xl hover:text-blue-600 text-gray-400"
@@ -217,7 +223,7 @@ const NavBar = () => {
                 </div>
               </Navbar>
               {open ? (
-                <Notification setOpen={setOpen} notData={notifications} />
+                <Notification setOpen={setOpen} notData={notifications ? notifications : null} />
               ) : (
                 ""
               )}

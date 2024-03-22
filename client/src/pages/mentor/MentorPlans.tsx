@@ -10,7 +10,7 @@ const MentorPlans = () => {
   const axiosPrivate = useAxiosPrivate();
   const [isDeleted, setIsDeleted] = useState<boolean | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [justMounted, setJustMounted] = useState<boolean | null>(null);
+  const [justMounted, _setJustMounted] = useState<boolean | null>(null);
 
   const handleChildData = () => {
     setIsDeleted((state) => !state);

@@ -9,7 +9,8 @@ import OTP from "../models/otpModel";
 import Plans from "../models/mentorPlansModel";
 import Report from "../models/mentorReportModel";
 import { ObjectId } from "mongodb";
-import PaymentModel from "../models/PaymentModel";
+// import PaymentModel from "../models/PaymentModel";
+import PaymentModel from "../models/paymentModel";
 
 export interface mentorProfileObj {
   imageUrl: string;
@@ -517,21 +518,13 @@ export class MenteeController {
       const user = req.user;
       const mentors = await PaymentModel.aggregate([
         {
-          $match: { mentee_id: user?.id },
+          $match: { mentee_id: new ObjectId(user?.id) },
         },
         {
           $lookup: {
             from: "mentorprofiles",
-            let: { mentorId: "$mentor_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: [{ $toString: "$mentor_id" }, "$$mentorId"],
-                  },
-                },
-              },
-            ],
+            localField: "mentor_id",
+            foreignField: "mentor_id",
             as: "mentorProfile",
           },
         },

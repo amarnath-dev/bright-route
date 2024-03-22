@@ -111,7 +111,7 @@ export interface IPlans extends Document {
 }
 
 export interface INotification extends Document {
-  userId: string;
+  userId: ObjectId;
   content: string;
   isDeleted: boolean;
   isVisited: boolean;

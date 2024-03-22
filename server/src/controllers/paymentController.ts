@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_KEY as string);
-import Payment from "../models/PaymentModel";
+import Payment from "../models/paymentModel";
 
 export class PaymentControls {
   async payment(

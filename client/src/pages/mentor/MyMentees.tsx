@@ -27,6 +27,7 @@ const MyMentees = () => {
           withCredentials: true,
         });
         if (response.data.mentorApplication.length > 0) {
+          console.log(response.data.mentorApplication)
           setMyMentees(response.data.mentorApplication);
         } else {
           setIsApplication(true);
@@ -78,7 +79,7 @@ const MyMentees = () => {
 
   return (
     <>
-      <div className="w-full h-full md:h-screen bg-background-two">
+      <div className="w-full h-screen bg-background-two">
         {isApplication === true ? (
           <div className="w-full h-screen flex justify-center items-center flex-col">
             <h1 className="text-3xl font-bold text-gray-400">
@@ -94,14 +95,14 @@ const MyMentees = () => {
           <>
             <div className="px-2 md:px-10 md:py-10 w-full">
               <div className="py-5 font-bold text-2xl">
-                <h1>My Mentees</h1>
+                <h1 className="text-gray-400">My Mentees</h1>
               </div>
               <hr />
               <div className="flex w-full h-full flex-wrap py-3">
                 {myMentees?.map((plan, index: number) => {
                   return (
                     <div key={index}>
-                      <figure className="md:w-96 min-h-full rounded-xl p-8 shadow-md md:shadow-lg mt-2 ml-2">
+                      <figure className="md:w-96 min-h-full rounded-xl p-8 shadow-md md:shadow-lg mt-2 ml-2 bg-gray-800">
                         <div className="flex">
                           <img
                             className="w-24 h-24 rounded-full object-cover"
@@ -110,11 +111,11 @@ const MyMentees = () => {
                             // src={plan?.newProfileImg}
                           />
                           <div className="px-2 py-2 font-bold">
-                            <h1 className="text-xl">
+                            <h1 className="text-xl text-gray-400">
                               {plan?.menteeDetails[0]?.first_name}
                               {plan?.menteeDetails[0]?.last_name}
                             </h1>
-                            <h1 className="mt-2 uppercase text-sm text-gray-600">
+                            <h1 className="mt-2 uppercase text-sm text-gray-400">
                               {plan?.menteeDetails[0]?.job_title}
                             </h1>
                           </div>
@@ -127,43 +128,38 @@ const MyMentees = () => {
                             href={plan?.menteeDetails[0]?.twitter}
                             className="ml-10"
                           >
-                            <XIcon />
+                            <XIcon className="text-gray-400"/>
                           </a>
                         </div>
                         <div className="pt-6 space-y-4">
-                          <blockquote>
-                            <p className="text-lg">
-                              {plan?.goal_of_mentorship}
-                            </p>
-                          </blockquote>
                           <figcaption>
                             <div className="flex justify-around">
                               <button
-                                className="border-2 px-2 py-2 rounded-md text-black"
+                                className="border px-2 py-2 rounded-md text-black"
                                 onClick={() => {
                                   navigate(
                                     `/mentor/mentees/paymentdetails/${plan?._id}`
                                   );
                                 }}
                               >
-                                <PaymentsIcon />
+                                <PaymentsIcon className="text-gray-400"/>
                               </button>
                               <Link
                                 to={`/mentor/chat/${plan?.mentee_id}`}
-                                className="border-2 px-2 py-2 rounded-md text-black"
+                                className="border px-2 py-2 rounded-md text-black"
                               >
-                                <MessageIcon />
+                                <MessageIcon className="text-gray-400"/>
                               </Link>
                               <Link
                                 to={`/video/${plan?.mentee_id}`}
-                                className="border-2 px-2 py-2 rounded-md text-white"
+                                className="border px-2 py-2 rounded-md text-white"
                                 target="_blank"
                               >
-                                <VideoChatIcon className="text-black" />
+                                <VideoChatIcon className="text-gray-400" />
                               </Link>
                             </div>
                             <div className="px-3">
-                              <h1 className="py-2">
+                              <h1 className="py-2 text-gray-400">
                                 {format(plan?.createdAt)}
                               </h1>
                             </div>

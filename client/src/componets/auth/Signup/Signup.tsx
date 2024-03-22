@@ -137,12 +137,12 @@ const SignupForm: React.FC = () => {
               className="flex items-center justify-center"
             >
               <div className="mt-5 flex items-center justify-center flex-col border px-5 py-5 rounded-md">
-                <h2 className="text-2xl text-center font-bold text-white py-3">
+                <h2 className="text-2xl text-center font-bold text-gray-400 py-3">
                   Sign up as Mentee
                 </h2>
                 <label>
                   <input
-                    className="placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="First name"
                     type="text"
                     {...register("first_name")}
@@ -155,7 +155,7 @@ const SignupForm: React.FC = () => {
                 </label>
                 <label>
                   <input
-                    className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Last name"
                     type="text"
                     {...register("last_name")}
@@ -168,7 +168,7 @@ const SignupForm: React.FC = () => {
                 </label>
                 <label>
                   <input
-                    className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Email"
                     type="text"
                     {...register("email")}
@@ -181,9 +181,9 @@ const SignupForm: React.FC = () => {
                 </label>
                 <label>
                   <input
-                    className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Password"
-                    type="text"
+                    type="password"
                     {...register("password")}
                   />
                   {errors.password && (

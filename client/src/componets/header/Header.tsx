@@ -7,7 +7,7 @@ import AnimatedTextTwo from "../AnimatedTextTwo/AnimatedTextTwo";
 const Header = () => {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [replay, setReplay] = useState(true);
+  const [replay, _setReplay] = useState(true);
   const placeholderText = [
     { type: "heading1", text: `Welcome to Bright Route.` },
   ];
