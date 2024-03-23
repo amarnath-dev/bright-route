@@ -14,8 +14,8 @@ const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 const chatRoutes_1 = __importDefault(require("./routes/chatRoutes"));
 const notificationRoutes_1 = __importDefault(require("./routes/notificationRoutes"));
 const globalRoutes_1 = __importDefault(require("./routes/globalRoutes"));
-const ORIGIN = "https://bright-route.online";
-// const ORIGIN = "http://localhost:5173"
+// const ORIGIN = "https://bright-route.online";
+const ORIGIN = "http://localhost:5173";
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 const corsConfig = {

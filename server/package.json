@@ -7,7 +7,7 @@
     "dev": "nodemon src/config/database.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node dist/database.js"
+    "start": "node dist/config/database.js"
   },
   "keywords": [],
   "author": "Amarnath as",

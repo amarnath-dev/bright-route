@@ -11,8 +11,8 @@ import notificationRouter from "./routes/notificationRoutes";
 import forgotPassControl from "./routes/globalRoutes";
 import { limiter } from "./middleware/authLimit";
 
-const ORIGIN = "https://bright-route.online";
-// const ORIGIN = "http://localhost:5173"
+// const ORIGIN = "https://bright-route.online";
+const ORIGIN = "http://localhost:5173"
 const app = express();
 dotenv.config();
 const corsConfig = {
