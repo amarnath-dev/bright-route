@@ -4,6 +4,7 @@ const socket_io_1 = require("socket.io");
 const io = new socket_io_1.Server({
     cors: {
         origin: "https://bright-route.online",
+        // origin: "http://localhost:5173",
         credentials: true,
     },
 });
@@ -20,15 +21,29 @@ const getUser = (userId) => {
     return users.find((user) => user.userId === userId);
 };
 io.on("connection", (socket) => {
+    console.log("Socket Connected");
     socket.on("addUser", (userId) => {
-        console.log("User Added");
         addUser(userId, socket.id);
+        console.log("USERS", users);
         io.emit("getUsers", users);
     });
+    socket.on("typing", (value) => {
+        console.log("VALU___>", value);
+        const socketIdOne = getUser(value === null || value === void 0 ? void 0 : value[0]);
+        const socketIdTwo = getUser(value === null || value === void 0 ? void 0 : value[1]);
+        if (socketIdOne && socketIdTwo) {
+            socket
+                .to([socketIdOne === null || socketIdOne === void 0 ? void 0 : socketIdOne.socketId, socketIdTwo === null || socketIdTwo === void 0 ? void 0 : socketIdTwo.socketId])
+                .emit("getTyping");
+        }
+    });
     socket.on("sendMessage", (message) => {
+        console.log("Message ->", message);
         const user = getUser(message === null || message === void 0 ? void 0 : message.receiverId);
+        console.log("Got User -> ", user);
         if (user && message) {
             const { socketId } = user;
+            console.log("SOCKET ID", socketId, message);
             io.to(socketId).emit("getMessage", message);
         }
         else {

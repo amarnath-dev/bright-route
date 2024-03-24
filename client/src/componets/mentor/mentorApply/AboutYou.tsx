@@ -1,6 +1,6 @@
+import { useState } from "react";
 import HeaderCard from "./HeaderCard";
 import { MentorAboutData } from "../../../datatypes/Datatypes";
-import { useState } from "react";
 
 type AboutFormProps = MentorAboutData & {
   updateFields: (
@@ -37,27 +37,27 @@ export function AboutYou({
       <div className="w-screen mt-1 flex justify-center items-center">
         <div className="flex justify-start items-center md:w-3/5">
           <form className="md:w-full" encType="multipart/form-data">
-            <span className="font-bold ml-16 md:ml-2">
-              Choose a profile Image
+            <span className="font-bold ml-16 md:ml-2 text-gray-400">
+              Choose a Profile Image
             </span>
             <div className="flex justify-center mt-3 md:w-full md:justify-start">
-              <span className="h-20 w-20 rounded-full overflow-hidden bg-gray-100">
+              <span className="h-20 w-20 rounded-full overflow-hidden bg-gray-800">
                 <img src={fileUrl} alt="" />
               </span>
               <label>
                 <input
                   type="file"
                   accept="image/*"
-                  className="placeholder:text-slate-400 ml-3 block bg-white mt-5 border border-slate-300 rounded-md py-2 pl-5 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-32 sm:text-sm"
+                  className="placeholder:text-slate-400 ml-3 block bg-gray-800 mt-5 border border-gray-900 rounded-md py-2 pl-5 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-32 sm:text-sm"
                   onChange={handleChange}
                 />
               </label>
             </div>
 
-            <div className="w-screen flex flex-col justify-start items-center md:w-full md:flex-row">
+            <div className="w-screen flex flex-col justify-start items-center md:w-full md:flex-row text-gray-400">
               <label>
                 <input
-                  className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="First name*"
                   type="text"
                   value={first_name}
@@ -66,7 +66,7 @@ export function AboutYou({
               </label>
               <label>
                 <input
-                  className="md:ml-2 placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="md:ml-2 placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Last name*"
                   type="text"
                   value={last_name}
@@ -78,7 +78,7 @@ export function AboutYou({
             <div className="w-screen flex flex-col justify-start items-center md:w-full md:flex-row">
               <label>
                 <input
-                  className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Email*"
                   type="text"
                   value={email}
@@ -87,7 +87,7 @@ export function AboutYou({
               </label>
               <label>
                 <input
-                  className="md:ml-2 placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="md:ml-2 placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Choose a Password*"
                   type="text"
                   value={password}
@@ -98,7 +98,7 @@ export function AboutYou({
             <div className="w-screen flex flex-col justify-start items-center md:w-full md:flex-row">
               <label>
                 <input
-                  className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Job title*"
                   type="text"
                   value={job_title}
@@ -107,7 +107,7 @@ export function AboutYou({
               </label>
               <label>
                 <input
-                  className="md:ml-2 placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="md:ml-2 placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Company*"
                   type="text"
                   value={company}
@@ -118,7 +118,7 @@ export function AboutYou({
             <div className="w-screen flex flex-col justify-start items-center md:w-full md:flex-row">
               <label>
                 <input
-                  className="placeholder:text-slate-400 block bg-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="State*"
                   type="text"
                   value={state}

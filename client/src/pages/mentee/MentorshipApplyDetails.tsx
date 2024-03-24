@@ -55,13 +55,13 @@ export const MentorshipApplyDetails = () => {
 
   return (
     <>
-      <div className="w-full h-screen">
+      <div className="w-full h-screen bg-background-two text-gray-400">
         <div className="w-full h-screen flex justify-center items-center px-2 py-5">
           <div className="w-full h-full md:w-3/4 rounded-lg md:px-4">
             <div className="mt-10 md:mt-4">
               <label
                 htmlFor="large"
-                className="block mb-2 text-base font-medium text-gray-900"
+                className="block mb-2 text-base font-medium"
               >
                 What best describes the goal of your mentorship?
               </label>
@@ -70,7 +70,7 @@ export const MentorshipApplyDetails = () => {
                 name="mentorship_goal"
                 onChange={handleChange}
                 value={formData.mentorship_goal}
-                className="block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="block w-full px-4 py-3 text-base bg-background-two text-gray-400 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option>Choose an option</option>
                 <option value="Do not wish to disclose.">
@@ -99,7 +99,7 @@ export const MentorshipApplyDetails = () => {
             <div className="mt-10 md:mt-4">
               <label
                 htmlFor="large"
-                className="block mb-2 text-base font-medium text-gray-900"
+                className="block mb-2 text-base font-medium"
               >
                 When would you like to reach that goal?
               </label>
@@ -108,7 +108,7 @@ export const MentorshipApplyDetails = () => {
                 name="time_to_reach"
                 value={formData.time_to_reach}
                 onChange={handleChange}
-                className="block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="block w-full px-4 py-3 text-base bg-background-two text-gray-400 border border-gray-300 rounded-lg focus:ring-gray-800 focus:border-gray-800 dark:placeholder-gray-400 dark:focus:ring-gray-800 dark:focus:border-blue-500"
               >
                 <option>Choose an option</option>
                 <option value="I don't have a timeline in mind.">
@@ -134,7 +134,7 @@ export const MentorshipApplyDetails = () => {
             <div className="mt-10 md:mt-5">
               <label
                 htmlFor="message"
-                className="block mb-2 text-lg font-medium text-gray-900"
+                className="block mb-2 text-lg font-medium"
               >
                 Write a message to Mentor
               </label>
@@ -144,7 +144,7 @@ export const MentorshipApplyDetails = () => {
                 value={formData.message_to_mentor}
                 name="message_to_mentor"
                 onChange={handleChange}
-                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="placeholder:text-gray-900 block p-2.5 w-full text-sm bg-gray-800 text-gray-400 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Write your message here..."
               ></textarea>
               <div className="mt-2 flex-wrap">

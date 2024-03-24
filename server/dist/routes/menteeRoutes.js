@@ -26,7 +26,6 @@ router.post("/change-password", verifyJWT_1.verifyJWT, menteeController.changePa
 router.post("/managment/password/sentotp", verifyJWT_1.verifyJWT, menteeController.sendOtp);
 router.post("/profile/changePassword/sendOTP", verifyJWT_1.verifyJWT, menteeController.sendOtp);
 router.get("/visit/mentor-profile/:mentorId", verifyJWT_1.verifyJWT, menteeController.getMentorProfile);
-/getimage/;
 router.post("/report/mentor/:mentorId", verifyJWT_1.verifyJWT, menteeController.reportMentor);
 router.post("/mentorship/apply", verifyJWT_1.verifyJWT, menteeController.mentorshipApply);
 router.get("/mentor/plans/:mentorId", verifyJWT_1.verifyJWT, menteeController.getMentorPlans);

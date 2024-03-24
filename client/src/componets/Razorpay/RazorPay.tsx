@@ -19,7 +19,8 @@ export const RazorPay = () => {
   const socket = useRef<Socket | null>(null);
 
   useEffect(() => {
-    socket.current = io("ws://localhost:3000");
+    // socket.current = io("http://localhost:3000");
+    socket.current = io("ws:https://bright-route.online");
   }, []);
 
   const { form, planId, mentorId, planAmount } = useAppSelector(
@@ -56,7 +57,7 @@ export const RazorPay = () => {
               { withCredentials: true }
             );
             if (sendData.data.status === "success") {
-              const text = "Payment Completed Successfully!🤝🤝";
+              const text = "Payment Completed Successfully 🤝";
               const mentorText = `${user?.first_name} has purchased your mentorship plan!🎉`;
               await axiosPrivate.post(
                 "/notification/paymentMessage",
@@ -127,13 +128,26 @@ export const RazorPay = () => {
   ]);
 
   return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <button
-        onClick={handlePayment}
-        className="border px-6 py-2 text-white bg-black"
-      >
-        Make Payment
-      </button>
+    <div className="w-full h-screen flex justify-center py-20 bg-background-two">
+      <div className="text-gray-400 flex flex-col">
+        <li className="py-3">
+          Please make sure that you have a stable internet connection
+        </li>
+        <li className="py-3">
+          Do not close or cancel the window during the Transactions
+        </li>
+        <li className="py-3">
+          Once you payment is completed you can check the payment details
+        </li>
+        <div className="w-full flex justify-center py-10">
+          <button
+            onClick={handlePayment}
+            className="border px-6 py-2 rounded-sm text-white bg-black"
+          >
+            Proceed to Transaction
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

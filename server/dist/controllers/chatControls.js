@@ -17,6 +17,8 @@ const conversationModel_1 = __importDefault(require("../models/conversationModel
 const messageModal_1 = __importDefault(require("../models/messageModal"));
 const mentorProfileModel_1 = __importDefault(require("../models/mentorProfileModel"));
 const menteeProfileModel_1 = __importDefault(require("../models/menteeProfileModel"));
+const roomModel_1 = __importDefault(require("../models/roomModel"));
+const mongodb_1 = require("mongodb");
 class ChatControls {
     makeConversation(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -29,7 +31,7 @@ class ChatControls {
                 if (existingConversation) {
                     res.status(200).json({
                         status: "success",
-                        message: "Conversation already exists",
+                        message: "Conversation Already exists",
                         conversation: existingConversation,
                     });
                     return;
@@ -110,7 +112,7 @@ class ChatControls {
     getFriendDetails(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const friendId = req.params.friendId;
+                const friendId = new mongodb_1.ObjectId(req.params.friendId);
                 if (friendId) {
                     const friendDetails = yield mentorProfileModel_1.default.findOne({ mentor_id: friendId });
                     if (friendDetails === null || friendDetails === void 0 ? void 0 : friendDetails._id) {
@@ -189,6 +191,26 @@ class ChatControls {
             catch (error) {
                 console.log(error);
                 return next(Error("Conversation creation failed"));
+            }
+        });
+    }
+    roomId(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log(req.body);
+                const result = yield roomModel_1.default.findOne({
+                    members: { $in: [req.body.userId, req.body.pairId] },
+                });
+                if (result) {
+                    res.status(200).json({ status: "success", roomId: result === null || result === void 0 ? void 0 : result.roomId });
+                }
+                else {
+                    res.status(200).json({ status: "failed" });
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return next(Error());
             }
         });
     }

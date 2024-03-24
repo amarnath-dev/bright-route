@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import VideoChatIcon from "@mui/icons-material/VideoChat";
+import { Link } from "react-router-dom";
 import {
   deleteObject,
   getDownloadURL,
@@ -17,12 +19,13 @@ import {
 } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import CloseIcon from "@mui/icons-material/Close";
+import "../../app/GlobalStyles.css";
+import NavBar from "../../componets/navbar/Navbar";
 
 interface Message {
   _id: string;
   IsDeleted: boolean;
   conversationId: string;
-
   createdAt: number;
   senderId: string;
   text: string;
@@ -35,16 +38,8 @@ interface CurrentChat {
   createdAt: string;
 }
 
-// interface ArrivalMessage {
-//   senderId: string;
-//   text: string;
-//   type: string;
-//   createdAt: number;
-// }
-
-
 const HOST = "https://bright-route.online"
-
+// const HOST = "http://localhost:3000";
 const MenteeMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
@@ -66,19 +61,40 @@ const MenteeMessages = () => {
   //Connecting to the Server
   useEffect(() => {
     socket.current = io(HOST);
-    socket.current?.on("getMessage", (data) => {
-      console.log("Arrival Message", data);
-      setArrivalMessage(data);
-    });
-  }, []);
-
-  //Adding the current user to socket.io server
-  useEffect(() => {
     socket.current?.emit("addUser", user?._id);
     socket.current?.on("getUsers", (users) => {
-      console.log(users);
+      console.log("Current Usres", users);
     });
   }, [user]);
+
+  useEffect(() => {
+    socket?.current?.emit("typing", currentChat?.members);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newMessage]);
+
+  useEffect(() => {
+    socket.current?.on("getTyping", () => {
+      console.log("TYPING");
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket.current]);
+
+  useEffect(() => {
+    console.log("RUNNING>>>", socket.current);
+    socket?.current?.on("getMessage", (data) => {
+      console.log("Arrival Message -> ", data);
+      setArrivalMessage(data);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket?.current]);
+
+  //Adding the current user to socket.io server
+  // useEffect(() => {
+  //   socket.current?.emit("addUser", user?._id);
+  //   socket.current?.on("getUsers", (users) => {
+  //     console.log("Current Usres", users);
+  //   });
+  // }, [user]);
 
   // Creating a new Conversation
   useEffect(() => {
@@ -97,9 +113,10 @@ const MenteeMessages = () => {
                 withCredentials: true,
               }
             );
+            console.log("-->", conversations.data);
             if (conversations.data) {
               setConversation(conversations.data.conversation);
-              setCurrentChat(conversations.data.conversation[0]);
+              setCurrentChat(conversations.data.conversation?.[0]);
             }
           } else {
             const conversations = await axiosPrivate.get(
@@ -108,6 +125,7 @@ const MenteeMessages = () => {
                 withCredentials: true,
               }
             );
+            console.log("-->", conversations.data);
             if (conversations.data) {
               setConversation(conversations.data.conversation);
               setCurrentChat(conversations.data.conversation[0]);
@@ -121,12 +139,19 @@ const MenteeMessages = () => {
     createConversation();
   }, [axiosPrivate, menteeID, mentorId, user?._id]);
 
-  //Updating the new messages
   useEffect(() => {
-    arrivalMessage &&
-      currentChat?.members.includes(arrivalMessage?.senderId as never) &&
+    // arrivalMessage &&
+    //   currentChat?.members.includes(arrivalMessage?.senderId as never) &&
+    //   setMessages((prev) => [...prev, arrivalMessage]);
+    if (
+      arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage?.senderId as never)
+    ) {
       setMessages((prev) => [...prev, arrivalMessage]);
-  }, [arrivalMessage, currentChat]);
+    } else {
+      console.log("Nop");
+    }
+  }, [arrivalMessage, currentChat, currentChat?.members]);
 
   //Fetching both users all conversations.
   useEffect(() => {
@@ -185,12 +210,6 @@ const MenteeMessages = () => {
         const receiverId = currentChat?.members.find(
           (userId: string) => userId !== user?._id
         );
-        // socket.current?.emit("sendMessage", {
-        //   senderId: user?._id,
-        //   receiverId,
-        //   text: newMessage,
-        //   type: "text",
-        // });
         const response = await axiosPrivate.post("chat/message", message, {
           withCredentials: true,
         });
@@ -211,7 +230,7 @@ const MenteeMessages = () => {
         );
         const ChatMessage = {
           userId: receiverId,
-          content: "You have one new Message!!🔔",
+          content: "You have New Message 🔔",
           role: "mentor",
           messageType: "new chat",
           senderId: user?._id,
@@ -225,7 +244,7 @@ const MenteeMessages = () => {
           socket.current?.emit("sendNotification", {
             senderId: user?._id,
             receiverId: receiverId,
-            content: "You have a new message 🔔",
+            content: "You have a New Message 🔔",
             type: "chat message",
           });
         } else {
@@ -331,20 +350,45 @@ const MenteeMessages = () => {
 
   return (
     <>
-      <div className="grid grid-cols-12 h-full bg-gray-200">
+      <NavBar />
+      <div className="grid grid-cols-12 h-full bg-background-two">
         <div className="col-span-3 px-1 py-1"></div>
-        <div className="col-span-12 md:col-span-6 bg-white rounded-md">
+        <div className="col-span-12 md:col-span-6 bg-gray-800 rounded-md">
           <div className="flex flex-col items-center justify-center w-full min-h-screen text-gray-800 rounded">
             <div className="w-full" id="chat_header">
               {conversation.map((c, index) => {
                 return (
-                  <div key={index}>
-                    <Conversations
-                      conversation={c}
-                      currentUser={user}
-                      index={index}
-                    />
-                  </div>
+                  <>
+                    <div key={index} className="flex">
+                      <Conversations
+                        conversation={c}
+                        currentUser={user}
+                        index={index}
+                      />
+                      <div className="flex justify-center items-center px-4">
+                        {user?.role === "mentee" && (
+                          <Link
+                            to={`/video/${mentorId}`}
+                            className="border rounded-md text-gray-400 bg-gray-900 px-4 py-4"
+                            target="_blank"
+                          >
+                            <VideoChatIcon />
+                          </Link>
+                        )}
+                        {user?.role === "mentor" && (
+                          <>
+                            <Link
+                              to={`/video/${menteeID}`}
+                              className="border rounded-md text-gray-400 bg-gray-900 px-4 py-4"
+                              target="_blank"
+                            >
+                              <VideoChatIcon />
+                            </Link>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </>
                 );
               })}
             </div>
@@ -398,14 +442,14 @@ const MenteeMessages = () => {
                       document.getElementById("imageFile")?.click();
                     }}
                   >
-                    <AttachFileIcon />
+                    <AttachFileIcon className="text-gray-400" />
                   </span>
                 </div>
                 <input
                   type="text"
                   id="messageInput"
                   placeholder="Type a message..."
-                  className="w-full rounded-l h-10 pl-2"
+                  className="w-full rounded-l h-10 pl-2 bg-gray-800 text-white"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                 />
@@ -415,14 +459,14 @@ const MenteeMessages = () => {
                     onClick={handleImoji}
                     id="imoji-btn"
                   >
-                    <SentimentSatisfiedIcon />
+                    <SentimentSatisfiedIcon className="text-gray-400" />
                   </span>
                 </div>
                 <div
-                  className="bg-gray-200 rounded-r h-10 flex items-center px-2 cursor-pointer hover:bg-slate-300"
+                  className="bg-gray-800 rounded-r h-10 flex items-center px-2 cursor-pointer hover:bg-slate-300"
                   onClick={handleSubmit}
                 >
-                  <SendIcon />
+                  <SendIcon className="text-gray-400" />
                 </div>
               </div>
             </div>

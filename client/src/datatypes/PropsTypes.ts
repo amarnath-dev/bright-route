@@ -126,7 +126,19 @@ export interface MyMenteePayment {
   duration: number;
   goal_of_mentorship: string;
   isExpired: boolean;
-  menteeDetails: MenteeProfileDetails[];
+  menteeDetails: {
+    _id: string;
+    country: string;
+    first_name: string;
+    last_name: string;
+    goal: string;
+    job_title: string;
+    linkedIn: string;
+    twitter: string;
+    profile_img: string;
+    mentee_id: string;
+    email: string;
+  };
   mentee_id: string;
   mentor_id: string;
   mentor_plan_id: string;
@@ -137,4 +149,5 @@ export interface MyMenteePayment {
   time_to_reach_goal: string;
   _id: string;
   createdAt: string;
+  profile_img: string;
 }

@@ -1,28 +1,24 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const PaymentSuccess = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    Swal.fire({
+      title: "Payment Successull",
+      icon: "success",
+      allowOutsideClick: false,
+      backdrop: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/my-mentors");
+      }
+    });
+  }, [navigate]);
   return (
     <>
-      <div className="w-full h-screen flex justify-center items-center flex-col">
-        <div>
-          <img
-            className="h-52 w-68"
-            src="https://i.pinimg.com/originals/32/b6/f2/32b6f2aeeb2d21c5a29382721cdc67f7.gif"
-            alt="paymen_successfull"
-          />
-        </div>
-        <div className="w-full text-center">
-          <h1 className="text-xl">Payment Successfull 🤝</h1>
-          <div className="mt-4">
-            <Link
-              to={"/my-mentors"}
-              className="text-center border-2 px-2 py-1 mt-3 rounded"
-            >
-              My Mentors
-            </Link>
-          </div>
-        </div>
-      </div>
+      <div className="w-full h-screen flex justify-center items-center flex-col bg-background-two"></div>
     </>
   );
 };

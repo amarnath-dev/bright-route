@@ -188,52 +188,24 @@ class MenteeController {
         });
     }
     menteeProfile(req, res, next) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const mentee_id = req.params.menteeId;
-                const mentee = yield userModel_1.default.aggregate([
+                const menteeDetails = yield userModel_1.default.aggregate([
                     { $match: { _id: new mongodb_1.ObjectId(mentee_id) } },
                     {
                         $lookup: {
                             from: "menteeprofiles",
-                            let: { userId: "$_id" },
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $eq: ["$mentee_id", { $toString: "$$userId" }],
-                                        },
-                                    },
-                                },
-                            ],
+                            localField: "_id",
+                            foreignField: "mentee_id",
                             as: "menteeProfile",
                         },
                     },
+                    {
+                        $unwind: "$menteeProfile",
+                    },
                 ]);
-                const menteeEmail = mentee[0];
-                const menteeProfile = (_a = mentee[0]) === null || _a === void 0 ? void 0 : _a.menteeProfile[0];
-                const menteeDetails = {
-                    mentee_id: menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.mentee_id,
-                    profile_img: (menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.profile_img)
-                        ? menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.profile_img
-                        : "",
-                    first_name: menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.first_name,
-                    last_name: menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.last_name,
-                    email: menteeEmail === null || menteeEmail === void 0 ? void 0 : menteeEmail.email,
-                    job_title: (menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.job_title) ? menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.job_title : "",
-                    linkedIn: (menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.linkedIn) ? menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.linkedIn : "",
-                    twitter: (menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.twitter) ? menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.twitter : "",
-                    goal: (menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.goal) ? menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.goal : "",
-                    available_time: (menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.available_time)
-                        ? menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.available_time
-                        : "",
-                    country: (menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.country) ? menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.country : "",
-                    region: (menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.region) ? menteeProfile === null || menteeProfile === void 0 ? void 0 : menteeProfile.region : "",
-                    role: menteeEmail === null || menteeEmail === void 0 ? void 0 : menteeEmail.role,
-                };
                 if (menteeDetails) {
-                    console.log("Menteedetails", menteeDetails);
                     res.status(200).json({ status: "success", menteeDetails });
                 }
             }
@@ -315,10 +287,10 @@ class MenteeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
+                console.log("Boady", req.body);
                 const { oldPassword, newPassword, confirmPassword, otpNumber } = req.body;
                 if (!newPassword || !confirmPassword) {
                     res.status(400).json({ message: "Data fields missing" });
-                    return next(Error("Data fields missing"));
                 }
                 const userDB = yield userModel_1.default.findById(user === null || user === void 0 ? void 0 : user.id);
                 if (userDB) {
@@ -395,16 +367,16 @@ class MenteeController {
         });
     }
     getProfileImg(req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
-                const userRole = req.params.userRole;
+                const userRole = (_a = req.params) === null || _a === void 0 ? void 0 : _a.userRole;
                 if (user) {
                     if (userRole === "mentee") {
                         const menteeData = yield menteeProfileModel_1.default.findOne({
-                            mentee_id: new mongodb_1.ObjectId(user === null || user === void 0 ? void 0 : user.id),
+                            mentee_id: user === null || user === void 0 ? void 0 : user.id,
                         });
-                        console.log(menteeData);
                         if (menteeData) {
                             res.status(200).json({
                                 status: "success",
@@ -418,7 +390,10 @@ class MenteeController {
                         }
                     }
                     else if (userRole === "mentor") {
-                        const mentorData = yield mentorProfileModel_1.default.findOne({ mentor_id: user.id });
+                        const mentorData = yield mentorProfileModel_1.default.findOne({
+                            mentor_id: new mongodb_1.ObjectId(user === null || user === void 0 ? void 0 : user.id),
+                        });
+                        console.log("Metor Data", mentorData);
                         if (mentorData) {
                             res.status(200).json({
                                 status: "success",

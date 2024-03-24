@@ -221,48 +221,21 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const mentee_id = req.params.menteeId;
-      const mentee = await User.aggregate([
+      const menteeDetails = await User.aggregate([
         { $match: { _id: new ObjectId(mentee_id) } },
         {
           $lookup: {
             from: "menteeprofiles",
-            let: { userId: "$_id" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ["$mentee_id", { $toString: "$$userId" }],
-                  },
-                },
-              },
-            ],
+            localField: "_id",
+            foreignField: "mentee_id",
             as: "menteeProfile",
           },
         },
+        {
+          $unwind: "$menteeProfile",
+        },
       ]);
-      const menteeEmail = mentee[0];
-      const menteeProfile = mentee[0]?.menteeProfile[0];
-      const menteeDetails = {
-        mentee_id: menteeProfile?.mentee_id,
-        profile_img: menteeProfile?.profile_img
-          ? menteeProfile?.profile_img
-          : "",
-        first_name: menteeProfile?.first_name,
-        last_name: menteeProfile?.last_name,
-        email: menteeEmail?.email,
-        job_title: menteeProfile?.job_title ? menteeProfile?.job_title : "",
-        linkedIn: menteeProfile?.linkedIn ? menteeProfile?.linkedIn : "",
-        twitter: menteeProfile?.twitter ? menteeProfile?.twitter : "",
-        goal: menteeProfile?.goal ? menteeProfile?.goal : "",
-        available_time: menteeProfile?.available_time
-          ? menteeProfile?.available_time
-          : "",
-        country: menteeProfile?.country ? menteeProfile?.country : "",
-        region: menteeProfile?.region ? menteeProfile?.region : "",
-        role: menteeEmail?.role,
-      };
       if (menteeDetails) {
-        console.log("Menteedetails", menteeDetails);
         res.status(200).json({ status: "success", menteeDetails });
       }
     } catch (error) {
@@ -357,10 +330,10 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
+      console.log("Boady", req.body);
       const { oldPassword, newPassword, confirmPassword, otpNumber } = req.body;
       if (!newPassword || !confirmPassword) {
         res.status(400).json({ message: "Data fields missing" });
-        return next(Error("Data fields missing"));
       }
       const userDB = await User.findById(user?.id);
       if (userDB) {
@@ -453,13 +426,12 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
-      const userRole = req.params.userRole;
+      const userRole = req.params?.userRole;
       if (user) {
         if (userRole === "mentee") {
           const menteeData = await MenteeModel.findOne({
-            mentee_id: new ObjectId(user?.id),
+            mentee_id: user?.id,
           });
-          console.log(menteeData);
           if (menteeData) {
             res.status(200).json({
               status: "success",
@@ -471,7 +443,10 @@ export class MenteeController {
               .json({ status: "error", message: "User not found" });
           }
         } else if (userRole === "mentor") {
-          const mentorData = await MentorModel.findOne({ mentor_id: user.id });
+          const mentorData = await MentorModel.findOne({
+            mentor_id: new ObjectId(user?.id),
+          });
+          console.log("Metor Data", mentorData);
           if (mentorData) {
             res.status(200).json({
               status: "success",

@@ -1,10 +1,11 @@
 import { IoMdClose } from "react-icons/io";
 import { format } from "timeago.js";
-import { axiosPrivate } from "../../api";
 import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
+import useAxiosPrivate from "../../app/useAxiosPrivate";
+import "../../app/GlobalStyles.css";
 
 interface Notification {
   content: string;
@@ -34,6 +35,7 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
     []
   );
   const { user } = useAppSelector((state) => state.userAuth);
+  const axiosPrivate = useAxiosPrivate();
 
   const handleClose = () => {
     setOpen(false);
@@ -48,14 +50,13 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
             withCredentials: true,
           }
         );
-        console.log("Notification", response.data.notifications);
         setNotifications(response.data.notifications);
       } catch (error) {
         console.log(error);
       }
     };
     fetchMessages();
-  }, [notData, user?._id]);
+  }, [notData, user?._id, axiosPrivate]);
 
   const handleDelete = async (notificationId: string) => {
     try {
@@ -80,26 +81,11 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
     }
   };
 
-  // const messageClick = (notification) => {
-  //   console.log("Message Click", notification);
-  //   if (notification?.messageType === "new chat" && user?.role === "mentee") {
-  //     navigate(`/chat/${notification?.senderId}`);
-  //   } else {
-  //     navigate(`/mentor/chat/${notification?.senderId}`);
-  //   }
-  // };
-
-  useEffect(() => {
-    if (notData) {
-      console.log("not Data", notData);
-    }
-  }, [notData]);
-
   return (
     <>
-      <div className="w-96 h-screen shadow-lg rounded-lg bg-slate-200 overflow-y-scroll px-5 py-2">
+      <div className="w-96 h-screen shadow-lg rounded-lg bg-gray-800 overflow-y-scroll px-5 py-2">
         <div className="text-start font-bold text-gray-700 flex justify-between">
-          <h1 className="py-2 px-2 text-xl">Alerts</h1>
+          <h1 className="py-2 px-2 text-xl text-gray-400">Alerts</h1>
           <span className="px-1 py-2">
             <IoMdClose
               className="text-3xl cursor-pointer rounded-full hover:bg-gray-400"
@@ -149,7 +135,7 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
           ) : (
             <>
               <div>
-                <h1 className="text-black px-4 py-4 text-xl">
+                <h1 className="text-black px-4 py-4 text-xl text-gray-400">
                   No Notifications
                 </h1>
               </div>

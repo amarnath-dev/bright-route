@@ -21,9 +21,7 @@ export type FormData = {
   company: string;
   state: string;
   job_category: string;
-
   skills: string[];
-
   bio_dec: string;
   linkedIn_url: string;
   twitter_url: string;
@@ -42,9 +40,7 @@ export const INITIAL_DATA: FormData = {
   company: "",
   state: "",
   job_category: "",
-
   skills: [],
-
   bio_dec: "",
   linkedIn_url: "",
   twitter_url: "",

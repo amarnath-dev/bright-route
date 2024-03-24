@@ -17,6 +17,12 @@ interface jwtPayload {
   given_name: string;
 }
 
+interface GoogleStringAuth {
+  email: string;
+  name: string;
+  picture: string;
+}
+
 export class MenteeAuthController {
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -55,14 +61,16 @@ export class MenteeAuthController {
       const userExists = await User.findOne({ email });
       if (!userExists) {
         res.status(401).json({ message: "Canno't Find Email" });
-        return next(Error("Invalid Email"));
       } else {
+        if (userExists.is_blocked) {
+          res.status(401).json({ message: "Your Account has been Blocked" });
+          return;
+        }
         const dbPassword = CryptoJS.AES.decrypt(
           userExists.password,
           process.env.HASH_KEY as string
         ).toString(CryptoJS.enc.Utf8);
         if (password === dbPassword) {
-          console.log("Inside the check");
           const accessToken = Jwt.sign(
             {
               UserInfo: {
@@ -74,7 +82,6 @@ export class MenteeAuthController {
             process.env.ACCESS_TOKEN_SECRETE as string,
             { expiresIn: "3d" }
           );
-
           const refreshToken = Jwt.sign(
             { email: userExists.email },
             process.env.REFRESH_TOKEN_SECRETE as string,
@@ -196,14 +203,14 @@ export class MenteeAuthController {
       const otpData = await Otp.findOne({ email });
       if (!otpData) {
         res.status(404).json({ message: "Resend otp and try Again" });
-        return next(Error("Re-send otp and Try Again"));
+        return;
       }
       const dbOTP: string = CryptoJS.AES.decrypt(
         otpData.otp,
         process.env.HASH_KEY as string
       ).toString(CryptoJS.enc.Utf8);
       if (dbOTP === otp) {
-        const hashedPassword: any = CryptoJS.AES.encrypt(
+        const hashedPassword = CryptoJS.AES.encrypt(
           password,
           process.env.HASH_KEY as string
         ).toString();
@@ -221,7 +228,27 @@ export class MenteeAuthController {
           });
           const profileData: IMenteeProfile = await userProfileDetails.save();
           if (profileData) {
-            const token = generateJwt(user?._id, email);
+            const accessToken = Jwt.sign(
+              {
+                UserInfo: {
+                  id: menteeDetails?._id,
+                  email: menteeDetails?.email,
+                  roles: menteeDetails?.role,
+                },
+              },
+              process.env.ACCESS_TOKEN_SECRETE as string,
+              { expiresIn: "3d" }
+            );
+            const refreshToken = Jwt.sign(
+              { email: menteeDetails?.email },
+              process.env.REFRESH_TOKEN_SECRETE as string,
+              { expiresIn: "7d" }
+            );
+            res.cookie("refreshToken", refreshToken, {
+              httpOnly: true,
+              secure: false,
+              maxAge: 7 * 24 * 60 * 60 * 1000,
+            });
             res.status(200).json({
               status: "success",
               message: "User Created Successfully",
@@ -231,7 +258,7 @@ export class MenteeAuthController {
                 email: user?.email,
                 role: user?.role,
               },
-              token,
+              accessToken,
             });
           }
         }
@@ -270,37 +297,56 @@ export class MenteeAuthController {
 
   async googleAuth(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("Reached at the google auth");
-      if (!req.body.userData) {
-        res.status(400);
-        return next(Error("Invalid credentials"));
+      if (!req.body.authString) {
+        res
+          .status(400)
+          .json({ status: "failed", message: "Invalid credentials" });
+        return;
       }
-      const { email }: jwtPayload = jwtDecode(req.body.userData);
-      const existingUser = await User.findOne({ email: email });
+      const decodeData: GoogleStringAuth = jwtDecode(req.body.authString);
+      const existingUser = await User.findOne({ email: decodeData.email });
       if (existingUser) {
-        if (existingUser.password) {
-          res.status(409).json({ message: "Invalid Email" });
-          return next(Error("Invalid Email"));
+        if (existingUser?.password) {
+          res.status(409).json({ message: "User Alredy Exists" });
+          return;
         }
-        const token = generateJwt(existingUser._id, existingUser.email);
+        const accessToken = Jwt.sign(
+          {
+            UserInfo: {
+              id: existingUser?._id,
+              email: existingUser?.email,
+              roles: existingUser?.role,
+            },
+          },
+          process.env.ACCESS_TOKEN_SECRETE as string,
+          { expiresIn: "3d" }
+        );
+        const refreshToken = Jwt.sign(
+          { email: existingUser?.email },
+          process.env.REFRESH_TOKEN_SECRETE as string,
+          { expiresIn: "7d" }
+        );
         const userDataFromProfile = await Menteeprofile.findOne({
           mentee_id: existingUser?._id,
         });
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: false,
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
         res.status(200).json({
           status: "success",
-          message: "User loged in successfully",
           user: {
-            _id: existingUser._id,
+            _id: existingUser?._id,
             first_name: userDataFromProfile?.first_name,
-            email: existingUser.email,
-            role: existingUser.role,
+            email: existingUser?.email,
+            role: existingUser?.role,
           },
-          token,
+          accessToken,
         });
       } else {
-        const userName = await generateUsername();
         const menteeDetails: IUser = new User({
-          email,
+          email: decodeData.email,
           password: "",
           role: "mentee",
         });
@@ -308,22 +354,44 @@ export class MenteeAuthController {
         if (user) {
           const userProfileDetails: IMenteeProfile = new Menteeprofile({
             mentee_id: user?._id,
-            first_name: userName.toString(),
+            first_name: decodeData.name,
             last_name: "",
           });
           const profileData: IMenteeProfile = await userProfileDetails.save();
           if (profileData) {
-            const token = generateJwt(user?._id, email);
+            const accessToken = Jwt.sign(
+              {
+                UserInfo: {
+                  id: user?._id,
+                  email: user?.email,
+                  roles: user?.role,
+                },
+              },
+              process.env.ACCESS_TOKEN_SECRETE as string,
+              { expiresIn: "3d" }
+            );
+            const refreshToken = Jwt.sign(
+              { email: user?.email },
+              process.env.REFRESH_TOKEN_SECRETE as string,
+              { expiresIn: "7d" }
+            );
+            res.cookie("refreshToken", refreshToken, {
+              httpOnly: true,
+              secure: false,
+              maxAge: 7 * 24 * 60 * 60 * 1000,
+            });
+            const userDataFromProfile = await Menteeprofile.findOne({
+              mentee_id: user?._id,
+            });
             res.status(200).json({
               status: "success",
-              message: "User Created Successfully",
               user: {
                 _id: user?._id,
-                first_name: profileData?.first_name,
+                first_name: userDataFromProfile?.first_name,
                 email: user?.email,
                 role: user?.role,
               },
-              token,
+              accessToken,
             });
           }
         }
@@ -432,6 +500,10 @@ export class MentorAuthController {
         res.status(401).json({ message: "Canno't Find Email" });
         return next(Error("Invalid Email"));
       } else {
+        if (userExists.is_blocked) {
+          res.status(401).json({ message: "Your Account has been Blocked" });
+          return;
+        }
         if (userExists.role !== "mentor") {
           res.status(400).json({ message: "Invalid Email" });
           return next(Error("Incorect Email"));

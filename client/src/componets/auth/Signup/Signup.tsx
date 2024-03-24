@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SignupOtp from "../Modal/SignupOtp";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
 import Snackbar from "@mui/material/Snackbar";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AxiosError } from "axios";
 import { useAppSelector, useAppDispatch } from "../../../app/hooks";
@@ -22,11 +22,11 @@ export interface Credentials {
 }
 
 const SignupForm: React.FC = () => {
+  const { user } = useAppSelector((state) => state.userAuth);
   const [openModal, setOpenModal] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { isLoading } = useAppSelector((state) => state.userAuth);
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.userAuth);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
@@ -94,11 +94,10 @@ const SignupForm: React.FC = () => {
           setServerResponse(serverRes);
           setOpenModal(true);
           setOpen(true);
-          toast("Email Sent Successfull");
+          // toast("Email Sent Successfull");
         }
       } else {
-        console.log("Auth service signupOtpSend rejected");
-        toast.error("Something went wrong");
+        toast.error(response.payload.message);
       }
     } catch (error) {
       const err = error as AxiosError<{
@@ -126,7 +125,7 @@ const SignupForm: React.FC = () => {
         onClose={handleClose}
         message="Email sent Successfully"
       />
-      <ToastContainer className="w-40 md:w-80" />
+      {/* <ToastContainer className="w-40 md:w-80" /> */}
       {isLoading ? (
         <h1 className="font-bold">Loading...</h1>
       ) : (
@@ -145,10 +144,11 @@ const SignupForm: React.FC = () => {
                     className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="First name"
                     type="text"
+                    required
                     {...register("first_name")}
                   />
                   {errors.first_name && (
-                    <small className="text-red-600 text-sm italic">
+                    <small className="text-red-500 text-sm italic">
                       *{errors.first_name.message}
                     </small>
                   )}
@@ -158,10 +158,11 @@ const SignupForm: React.FC = () => {
                     className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Last name"
                     type="text"
+                    required
                     {...register("last_name")}
                   />
                   {errors.last_name && (
-                    <span className="text-red-600 text-sm italic">
+                    <span className="text-red-500 text-sm italic">
                       *{errors.last_name.message}
                     </span>
                   )}
@@ -171,10 +172,11 @@ const SignupForm: React.FC = () => {
                     className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Email"
                     type="text"
+                    required
                     {...register("email")}
                   />
                   {errors.email && (
-                    <span className="text-red-600 text-sm italic">
+                    <span className="text-red-500 text-sm italic">
                       *{errors.email.message}
                     </span>
                   )}
@@ -184,10 +186,11 @@ const SignupForm: React.FC = () => {
                     className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Password"
                     type="password"
+                    required
                     {...register("password")}
                   />
                   {errors.password && (
-                    <span className="text-red-600 text-sm italic">
+                    <span className="text-red-500 text-sm italic">
                       *{errors.password.message}
                     </span>
                   )}

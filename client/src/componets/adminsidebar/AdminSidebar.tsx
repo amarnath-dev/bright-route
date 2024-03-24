@@ -50,7 +50,6 @@ export const AdminSidebar = () => {
               Dash Board
             </Link>
           </button>
-
           <button className="flex items-center px-4 py-2 rounded-md w-full mt-8 hover:bg-gray-700">
             <FaWpforms className="text-color-five text-xl" />
             <Link
@@ -60,7 +59,6 @@ export const AdminSidebar = () => {
               Mentor Application
             </Link>
           </button>
-
           <button className="flex items-center px-4 py-2 rounded-md w-full mt-8 hover:bg-gray-700">
             <FaPeopleGroup className="text-color-five text-xl" />
             <Link

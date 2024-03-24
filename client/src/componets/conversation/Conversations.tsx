@@ -64,7 +64,7 @@ export const Conversations: React.FC<ConversationProps> = ({
     <>
       <div
         key={index}
-        className="w-full bg-gray-200 hover:bg-gray-250 rounded-lg px-1 py-1 flex items-center cursor-pointer"
+        className="w-full bg-gray-900 hover:bg-gray-250 rounded-lg px-1 py-1 flex items-center text-gray-400"
       >
         <div className="md:px-1 md:py-1">
           <img
@@ -82,7 +82,7 @@ export const Conversations: React.FC<ConversationProps> = ({
           <h1 className="font-bold">
             {user?.first_name} {user?.last_name}
           </h1>
-          <small>{user?.job_title}</small>
+          <h1>{user?.job_title}</h1>
         </div>
       </div>
     </>

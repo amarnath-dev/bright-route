@@ -11,8 +11,8 @@ import { useEffect, useState } from "react";
 import { MentorLogin } from "../../../services/authServices";
 import useAxiosPrivate from "../../../app/useAxiosPrivate";
 import { useAppSelector } from "../../../app/hooks";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 const SigninForm: React.FC = () => {
   const [user, setUser] = useState(false);
@@ -67,7 +67,6 @@ const SigninForm: React.FC = () => {
         if (payloadData.status === "success") {
           const user = payloadData.user;
           if (user.role === "mentee") {
-            console.log("Redirecting to home page");
             navigate("/");
           } else if (user.role === "mentor") {
             //error because mentor have seperate login page
@@ -107,7 +106,7 @@ const SigninForm: React.FC = () => {
       {user ? (
         <>
           {/* Mentee Login  */}
-          <ToastContainer className="w-40 md:w-80" />
+          {/* <ToastContainer className="w-40 md:w-80" /> */}
           <div className="w-full h-screen bg-background-two">
             <div className="flex justify-center items-center h-full">
               <form
@@ -183,7 +182,7 @@ const SigninForm: React.FC = () => {
       ) : (
         <>
           {/* Mentee Login  */}
-          <ToastContainer className="w-40 md:w-80" />
+          {/* <ToastContainer className="w-40 md:w-80" /> */}
           <div className="w-full h-screen bg-background-two">
             <div className="flex justify-center items-center h-full py-16">
               <form

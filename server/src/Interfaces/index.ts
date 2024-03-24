@@ -41,6 +41,12 @@ export interface IOtp extends Document {
   createdAt: Date;
 }
 
+export interface IRoom extends Document {
+  members: [];
+  roomId: string;
+  createdAt: Date;
+}
+
 export interface IApplication extends Document {
   mentee_id: ObjectId;
   mentor_id: ObjectId;
@@ -91,7 +97,6 @@ export interface IMentorProfile extends Document {
   achievement: string;
   profile_state: string;
   skills: [];
-  // reports: Report[];
   isPaymentDetails: boolean;
   is_active: boolean;
   isBlocked: boolean;
