@@ -19,7 +19,9 @@ const SearchMentors = () => {
   useEffect(() => {
     const mentorProfile = async () => {
       try {
-        const response = await axiosPrivate.get("/browse-mentors");
+        const response = await axiosPrivate.get("/browse-mentors", {
+          withCredentials: true,
+        });
         if (response.data) {
           const mentorProfile = response.data;
           setFiltered(mentorProfile.allMentors);
@@ -32,7 +34,6 @@ const SearchMentors = () => {
   }, [axiosPrivate]);
 
   useEffect(() => {
-    console.log("Runnign..");
     const fetchImages = async () => {
       try {
         await Promise.all(
@@ -52,14 +53,14 @@ const SearchMentors = () => {
           })
         );
       } catch (error) {
-        console.log("Image fetch Failed");
         console.error(error);
       }
     };
     fetchImages();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtered?.length]);
 
+  //Sorting Request
   useEffect(() => {
     const filterAndSortMentors = async () => {
       try {
@@ -72,6 +73,7 @@ const SearchMentors = () => {
           },
           { withCredentials: true }
         );
+        console.log(response.data);
         if (response.data.status === "success") {
           setFiltered(response.data?.allMentors);
         } else {
@@ -114,7 +116,6 @@ const SearchMentors = () => {
                 )}
                 onChange={(_event, value) => setSkill(value?.label || "")}
               />
-
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
@@ -129,8 +130,8 @@ const SearchMentors = () => {
             </div>
           </div>
         </div>
-        <MentorListCard filtered={filtered?.length > 0 ? filtered : null} />
       </div>
+      <MentorListCard filtered={filtered} />
     </>
   );
 };

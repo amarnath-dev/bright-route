@@ -5,7 +5,7 @@ const menteeProfileSchema: Schema<IMenteeProfile> =
   new mongoose.Schema<IMenteeProfile>(
     {
       mentee_id: {
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: "User",
       },
       profile_img: {

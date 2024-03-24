@@ -40,7 +40,11 @@ export const signup = createAsyncThunk(
   "auth/verifyOTP",
   async (userData: UserWithIdAndRoles, thunkAPI) => {
     try {
-      const response = await API.post("/verifyOTP", { userData });
+      const response = await API.post(
+        "/verifyOTP",
+        { userData },
+        { withCredentials: true }
+      );
       if (response.data) {
         return response.data;
       }
@@ -83,6 +87,34 @@ export const signin = createAsyncThunk(
   }
 );
 
+export const googleAuth = createAsyncThunk(
+  "auth/google-auth",
+  async (authString: string, thunkAPI) => {
+    try {
+      const response = await API.post(
+        "/google-auth",
+        { authString },
+        { withCredentials: true }
+      );
+      if (response) {
+        if (response.data.status == "success") {
+          return response.data;
+        }
+      }
+    } catch (error) {
+      const err = error as AxiosError<{
+        status?: string;
+        message?: string;
+      }>;
+      const payload = {
+        status: err.response?.status,
+        message: err.response?.data?.message,
+      };
+      return thunkAPI.rejectWithValue(payload);
+    }
+  }
+);
+
 export const MentorLogin = createAsyncThunk(
   "auth/mentor/signin",
   async (mentorData: UserWithEmailAndPassword, thunkAPI) => {
@@ -100,30 +132,6 @@ export const MentorLogin = createAsyncThunk(
       const payload = {
         message: err.response?.data?.message,
         status: err.response?.status,
-      };
-      return thunkAPI.rejectWithValue(payload);
-    }
-  }
-);
-
-export const googleAuth = createAsyncThunk(
-  "auth/google-auth",
-  async (userData: string, thunkAPI) => {
-    try {
-      const response = await API.post("/google-auth", { userData });
-      if (response) {
-        if (response.data.status == "success") {
-          return response.data;
-        }
-      }
-    } catch (error) {
-      const err = error as AxiosError<{
-        status?: string;
-        message?: string;
-      }>;
-      const payload = {
-        status: err.response?.status,
-        message: err.response?.data?.message,
       };
       return thunkAPI.rejectWithValue(payload);
     }

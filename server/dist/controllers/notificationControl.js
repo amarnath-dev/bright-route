@@ -51,7 +51,6 @@ class NotificationControl {
                 }
             }
             catch (error) {
-                console.log(error);
                 return next(Error());
             }
         });

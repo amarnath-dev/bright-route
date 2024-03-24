@@ -20,8 +20,8 @@ import ReactCrop, {
   convertToPixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-// import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
-// import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
+import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
+import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -51,6 +51,7 @@ const MenteeProfile = () => {
   const blobUrlRef = useRef("");
   const hiddenAnchorRef = useRef<HTMLAnchorElement>(null);
 
+  const [menteeEmail, setMenteeEmail] = useState<string>("");
   const [formData, setFormdata] = useState({
     profile_img: "",
     first_name: "",
@@ -61,8 +62,6 @@ const MenteeProfile = () => {
     linkedIn: "",
     twitter: "",
     goal: "",
-    available_time: "",
-    region: "",
   });
 
   const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,10 +78,11 @@ const MenteeProfile = () => {
         const response = await axiosPrivate.get(`/managment/${user?._id}`, {
           withCredentials: true,
         });
-        const details = response.data;
-        setGoal(details.menteeDetails.goal);
-        setProfileImg(details.menteeDetails.profile_img);
-        setFormdata(details.menteeDetails);
+        const details = response.data.menteeDetails[0];
+        setGoal(details.menteeProfile?.goal);
+        setProfileImg(details.menteeProfile?.profile_img);
+        setFormdata(details.menteeProfile);
+        setMenteeEmail(details?.email);
       } catch (error) {
         console.log(error);
       }
@@ -255,20 +255,20 @@ const MenteeProfile = () => {
     }
   }
 
-  // useDebounceEffect(
-  //   async () => { 
-  //     if (
-  //       completedCrop?.width &&
-  //       completedCrop?.height &&
-  //       imgRef.current &&
-  //       previewCanvasRef.current
-  //     ) {
-  //       canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
-  //     }
-  //   },
-  //   100,
-  //   [completedCrop]
-  // );
+  useDebounceEffect(
+    async () => {
+      if (
+        completedCrop?.width &&
+        completedCrop?.height &&
+        imgRef.current &&
+        previewCanvasRef.current
+      ) {
+        canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
+      }
+    },
+    100,
+    [completedCrop]
+  );
 
   return (
     <>
@@ -277,7 +277,7 @@ const MenteeProfile = () => {
       <div className="w-full h-full flex justify-center bg-background-two">
         <div className="w-full md:w-2/3 h-full border border-gray-500 mt-10 rounded-md">
           <div className="w-full h-full flex justify-center flex-col">
-            <h1 className="text-center mt-4 text-md md:text-lg font-bold text-white">
+            <h1 className="text-center mt-4 text-md md:text-lg font-bold text-gray-400">
               Personal Information
             </h1>
             <MenteeProfileCard />
@@ -296,7 +296,9 @@ const MenteeProfile = () => {
             ""
           ) : (
             <div className="flex flex-col ml-6">
-              <h1 className="font-bold">Add a profile Image</h1>
+              <h1 className="font-bold text-gray-400">
+                Please Add a profile Image
+              </h1>
             </div>
           )}
           <div className="px-2 md:px-5 md:py-2 flex items-center">
@@ -409,12 +411,12 @@ const MenteeProfile = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="w-full px-3 md:px-0">
-            <div className="flex flex-col w-full md:flex-row justify-center">
+            <div className="flex flex-col w-full md:flex-row justify-center text-gray-400">
               <label>
                 <span className="text-gray-400">First Name</span>
                 <input
                   id="first_name"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 text-gray-400 border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
                   name="first_name"
                   onChange={onchange}
@@ -425,7 +427,7 @@ const MenteeProfile = () => {
                 <span className="text-gray-400">Last name</span>
                 <input
                   id="last_name"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
                   type="text"
                   name="last_name"
                   value={formData.last_name}
@@ -438,10 +440,11 @@ const MenteeProfile = () => {
                 <span className="text-gray-400">Email</span>
                 <input
                   id="email"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 text-gray-400 border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
                   name="email"
-                  value={formData.email}
+                  disabled
+                  value={menteeEmail}
                   onChange={onchange}
                 />
               </label>
@@ -449,7 +452,7 @@ const MenteeProfile = () => {
                 <span className="text-gray-400">Job Title</span>
                 <input
                   id="job_title"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm md:ml-3"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 text-gray-400 border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm md:ml-3"
                   type="text"
                   name="job_title"
                   value={formData.job_title}
@@ -462,7 +465,7 @@ const MenteeProfile = () => {
                 <span className="text-gray-400">LinkedIn</span>
                 <input
                   id="linkedIn"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 text-gray-400 border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
                   name="linkedIn"
                   onChange={onchange}
@@ -473,7 +476,7 @@ const MenteeProfile = () => {
                 <span className="text-gray-400">Twitter</span>
                 <input
                   id="twitter"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 border-gray-800 text-white rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
+                  className="placeholder:text-black field mt-1 block bg-gray-800 border-gray-800 text-gray-400 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
                   type="text"
                   name="twitter"
                   value={formData.twitter}
@@ -494,7 +497,7 @@ const MenteeProfile = () => {
                 name="goal"
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
-                className="placeholder:text-black field block mt-1 p-3 w-full text-sm bg-gray-800 text-white rounded-lg border border-gray-800 focus:outline-none focus:ring-dark-500 focus:ring-1"
+                className="placeholder:text-black field block mt-1 p-3 w-full text-sm bg-gray-800 text-gray-400 rounded-lg border border-gray-800 focus:outline-none focus:ring-dark-500 focus:ring-1"
               ></textarea>
               <h1 className="mt-2 text-sm text-gray-400">
                 It's good practice to build mentorship around a long-term goal

@@ -5,6 +5,7 @@ const chatControls_1 = require("../controllers/chatControls");
 const verifyJWT_1 = require("../middleware/verifyJWT");
 const router = (0, express_1.Router)();
 const chatControls = new chatControls_1.ChatControls();
+router.post("/roomId", chatControls.roomId);
 router.post("/conversation", verifyJWT_1.verifyJWT, chatControls.makeConversation);
 router.get("/conversation", verifyJWT_1.verifyJWT, chatControls.getConversation);
 router.get("/mentee/conversation/:menteeId/:mentorId", verifyJWT_1.verifyJWT, chatControls.getSingleConversation);

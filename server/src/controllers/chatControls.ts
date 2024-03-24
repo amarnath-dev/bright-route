@@ -3,6 +3,8 @@ import Conversation from "../models/conversationModel";
 import Message from "../models/messageModal";
 import Mentor from "../models/mentorProfileModel";
 import Mentee from "../models/menteeProfileModel";
+import Room from "../models/roomModel";
+import { ObjectId } from "mongodb";
 
 export class ChatControls {
   async makeConversation(
@@ -19,7 +21,7 @@ export class ChatControls {
       if (existingConversation) {
         res.status(200).json({
           status: "success",
-          message: "Conversation already exists",
+          message: "Conversation Already exists",
           conversation: existingConversation,
         });
         return;
@@ -106,7 +108,7 @@ export class ChatControls {
     next: NextFunction
   ): Promise<void> {
     try {
-      const friendId = req.params.friendId;
+      const friendId = new ObjectId(req.params.friendId);
       if (friendId) {
         const friendDetails = await Mentor.findOne({ mentor_id: friendId });
         if (friendDetails?._id) {
@@ -184,6 +186,23 @@ export class ChatControls {
     } catch (error) {
       console.log(error);
       return next(Error("Conversation creation failed"));
+    }
+  }
+
+  async roomId(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log(req.body);
+      const result = await Room.findOne({
+        members: { $in: [req.body.userId, req.body.pairId] },
+      });
+      if (result) {
+        res.status(200).json({ status: "success", roomId: result?.roomId });
+      } else {
+        res.status(200).json({ status: "failed" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error());
     }
   }
 }

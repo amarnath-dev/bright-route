@@ -16,6 +16,8 @@ import {
 } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import NavBar from "../../componets/navbar/Navbar";
+import "../../app/GlobalStyles.css";
 
 interface Message {
   _id: string;
@@ -27,13 +29,6 @@ interface Message {
   type: string;
 }
 
-// interface Conversation {
-//   _id: string;
-//   createdAt: string;
-//   members: string[];
-//   updatedAt: string;
-// }
-
 interface CurrentChat {
   _id: string;
   members: [];
@@ -41,8 +36,7 @@ interface CurrentChat {
 }
 
 const HOST = "https://bright-route.online"
-
-
+// const HOST = "http://localhost:3000";
 const MentorMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
@@ -84,7 +78,6 @@ const MentorMessages = () => {
 
   // Creating a new Conversation
   const createConversation = async (conversation: CurrentChat) => {
-    console.log("This is the conversation", conversation);
     try {
       if (conversation.members && Array.isArray(conversation.members)) {
         const menteeId = conversation?.members.find(
@@ -125,12 +118,6 @@ const MentorMessages = () => {
     }
   }, [conversation, axiosPrivate, user?._id, currentChat?._id]);
 
-  //Updating the new messages
-  // useEffect(() => {
-  //   arrivalMessage &&
-  //     currentChat?.members.includes(arrivalMessage.senderId) &&
-  //     setMessages((prev) => [...prev, arrivalMessage]);
-  // }, [arrivalMessage, conversation, currentChat?.members]);
   useEffect(() => {
     arrivalMessage &&
       currentChat?.members.includes(arrivalMessage?.senderId as never) &&
@@ -313,7 +300,6 @@ const MentorMessages = () => {
       e.target.value = "";
     }
   };
-
   const handleClose = () => {
     const imageRef = ref(storage, currentImg);
     deleteObject(imageRef)
@@ -324,20 +310,22 @@ const MentorMessages = () => {
         console.log("Error Occured", error);
       });
   };
-
   return (
     <>
-      <div className="grid grid-cols-12 h-full bg-gray-100">
+      <NavBar />
+      <div className="grid grid-cols-12 h-full md:h-screen px-3 py-15 bg-background-two">
         <div className="col-span-full md:col-span-3 px-1 py-1">
-          <div className="w-full" id="chat_header">
+          <div className="w-full overflow-y-scroll" id="chat_header">
             <div className="rounded-full">
-              <h1 className="text-center text-xl font-bold">Mentees</h1>
+              <h1 className="text-center text-xl font-bold text-gray-400">
+                Mentees
+              </h1>
             </div>
             {conversation.map((c, index) => {
               return (
                 <div
                   onClick={() => createConversation(c)}
-                  className="mt-3"
+                  className="mt-3 cursor-pointer"
                   key={index}
                 >
                   <Conversations
@@ -350,15 +338,14 @@ const MentorMessages = () => {
             })}
           </div>
         </div>
-
-        <div className="col-span-12 md:col-span-6 bg-white rounded-md">
-          <div className="flex flex-col items-center justify-center w-full min-h-screen text-gray-800 rounded relative">
+        <div className="col-span-12 md:col-span-9 bg-gray-800 rounded-md">
+          <div className="flex flex-col items-center justify-center w-full min-h-full text-gray-800 rounded relative">
             <div className="w-full absolute bottom-15 left-36">
               <div id="imoji-picker">
                 {imoji && <EmojiPicker onEmojiClick={handleImojiClick} />}
               </div>
             </div>
-            <div className="flex flex-col flex-grow w-full shadow-xl rounded-lg overflow-hidden">
+            <div className="flex flex-col flex-grow w-full shadow-xl rounded-lg overflow-hidden h-96 py-8 px-1">
               {currentChat ? (
                 <div>
                   <div className="flex flex-col flex-grow p-4 overflow-auto h-screen">
@@ -377,7 +364,7 @@ const MentorMessages = () => {
                     })}
                   </div>
                   {openImg ? (
-                    <div className="bg-gray-100 border-2 flex justify-center px-3 py-3">
+                    <div className="bg-gray-800 flex justify-center px-3 py-3">
                       <img
                         id="chat_img_main"
                         src=""
@@ -387,14 +374,14 @@ const MentorMessages = () => {
                         className="px-2 cursor-pointer"
                         onClick={handleClose}
                       >
-                        <CloseIcon className="border-2 rounded" />
+                        <CloseIcon className="border-2 rounded text-gray-400" />
                       </span>
                     </div>
                   ) : (
                     ""
                   )}
                   <div className="flex items-center px-1 w-full mb-4">
-                    <div className="px-2 hover:bg-gray-300 rounded-full">
+                    <div className="px-2 hover:bg-gray-900 rounded-full">
                       <span className="hidden">
                         <input
                           type="file"
@@ -408,13 +395,13 @@ const MentorMessages = () => {
                           document.getElementById("imageFile")?.click();
                         }}
                       >
-                        <AttachFileIcon />
+                        <AttachFileIcon className="text-gray-400" />
                       </span>
                     </div>
                     <input
                       type="text"
                       placeholder="Type a message..."
-                      className="w-full rounded-l h-10 pl-2"
+                      className="w-full rounded-l h-10 pl-2 bg-gray-800 text-white"
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                     />
@@ -424,20 +411,20 @@ const MentorMessages = () => {
                         id="imoji-btn"
                         onClick={handleImoji}
                       >
-                        <SentimentSatisfiedIcon />
+                        <SentimentSatisfiedIcon className="text-gray-400" />
                       </span>
                     </div>
                     <div
-                      className="bg-gray-200 rounded-r h-10 flex items-center px-2 cursor-pointer hover:bg-slate-300"
+                      className="bg-gray-800 rounded-r h-10 flex items-center px-2 cursor-pointer"
                       onClick={handleSubmit}
                     >
-                      <SendIcon />
+                      <SendIcon className="text-gray-400" />
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="text-center mt-10">
-                  <span className="font-bold text-xl">
+                  <span className="font-bold text-xl text-gray-400">
                     Please Select a chat to start messaging
                     <img
                       src="https://www.csr-online.net/wp-content/uploads/2020/06/people-speech-bubbles-chatting-communication-concept-vector-illustration-141568372-450x350.jpg"

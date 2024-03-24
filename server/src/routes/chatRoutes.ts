@@ -5,6 +5,7 @@ import { verifyJWT } from "../middleware/verifyJWT";
 const router: Router = Router();
 const chatControls = new ChatControls();
 
+router.post("/roomId", chatControls.roomId);
 router.post("/conversation", verifyJWT, chatControls.makeConversation);
 router.get("/conversation", verifyJWT, chatControls.getConversation);
 router.get(

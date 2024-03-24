@@ -5,6 +5,7 @@ import {
   MentorLogin,
   MultiFromApply,
   adminLogin,
+  googleAuth,
 } from "../../services/authServices";
 import { changePassword } from "../../services/profileService";
 import Cookies from "js-cookie";
@@ -32,7 +33,6 @@ const initialState: Credentials = {
   status: null,
 };
 
-
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -45,6 +45,7 @@ export const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
+        Cookies.set("accessToken", action.payload.accessToken);
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
@@ -74,6 +75,10 @@ export const authSlice = createSlice({
         };
         state.errorMessage = error?.message;
         state.status = error?.status;
+      })
+      .addCase(googleAuth.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        Cookies.set("accessToken", action.payload.accessToken);
       })
       //Mentor sign In
       .addCase(MentorLogin.pending, (state) => {

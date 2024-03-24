@@ -115,7 +115,7 @@ const MenteePaymentDetails = () => {
             ) : (
               ""
             )}
-            <div className="flex justify-center h-96 py-5 mt-2">
+            <div className="flex justify-center py-5 mt-2">
               <div className="w-full rounded-md px-2 py-2 bg-gray-800">
                 <h1 className="uppercase text-gray-400 font-bold">
                   Payment Details
@@ -183,7 +183,7 @@ const MenteePaymentDetails = () => {
                             )
                           }
                         >
-                          <ContentCopyIcon className="text-gray-300" />
+                          <ContentCopyIcon className="text-gray-400" />
                         </span>
                       </div>
                     </span>

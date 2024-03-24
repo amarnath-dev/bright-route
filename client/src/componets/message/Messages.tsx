@@ -54,7 +54,7 @@ export const Messages: React.FC<MessagesProps> = ({
             withCredentials: true,
           });
           if (details.data) {
-            const imageId = details?.data?.friendDetails?.profile_img;
+            const imageId = details.data?.friendDetails?.profile_img;
             if (imageId) {
               const imageRef = ref(storage, imageId);
               getDownloadURL(imageRef)
@@ -110,6 +110,13 @@ export const Messages: React.FC<MessagesProps> = ({
         );
         if (response.data) {
           console.log("Message deleted successfully");
+          // const updatedMessages = message.map((msg) => {
+          //   if (msg._id === messageId) {
+          //     return { ...msg, IsDeleted: true };
+          //   }
+          //   return msg;
+          // });
+          // setMentee(updatedUsers);
         }
       } else {
         return;
@@ -117,11 +124,11 @@ export const Messages: React.FC<MessagesProps> = ({
     });
   };
 
-  useEffect(() => {
-    if (message) {
-      console.log("Message", message);
-    }
-  }, [message]);
+  // useEffect(() => {
+  //   if (message) {
+  //     console.log("Message", message);
+  //   }
+  // }, [message]);
 
   return (
     <>

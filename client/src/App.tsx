@@ -84,7 +84,7 @@ function App() {
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/signin" element={<SigninPage />} />
-              <Route path="/video/:roomId" element={<VideoChat />} />
+              <Route path="/video/:pairId" element={<VideoChat />} />
               <Route path="/forgotpassword" element={<NewPassword />} />
               <Route path="/mentor/apply" element={<ContainerForm />} />
               <Route path="/mentor/login" element={<SigninPage />} />

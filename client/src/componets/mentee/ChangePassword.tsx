@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
@@ -14,7 +13,6 @@ const ChangePassword = () => {
     confirmPassword: "",
     otpNumber: "",
   });
-  const { isLoading } = useAppSelector((state) => state.userAuth);
   const [otpSend, setOtpSend] = useState(false);
   const [otpNumber, setOtpNumber] = useState("");
   const [error, setError] = useState(false);
@@ -69,7 +67,7 @@ const ChangePassword = () => {
         withCredentials: true,
       });
       if (response.data.status === "success") {
-        toast(response.data.message);
+        toast.success(response.data.message);
         setTimeout(() => {
           if (response.data.role === "mentee") {
             navigate("/managment");
@@ -82,6 +80,7 @@ const ChangePassword = () => {
         toast.error(response.data.message);
       }
     } catch (error) {
+      console.log(error);
       const errorRes = (error as { response?: { status: number } }).response;
       if (errorRes?.status === 401) {
         setCurrentError(true);
@@ -137,45 +136,35 @@ const ChangePassword = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds,minutes]);
+  }, [seconds, minutes]);
 
   return (
     <>
-      <ToastContainer />
-      {isLoading ? (
-        <h1>Loading...</h1>
-      ) : (
+      <ToastContainer className="w-40 md:w-80" />
+      <div className="w-full h-screen bg-background-two">
         <div
           id="authentication-modal"
           tabIndex={-1}
           aria-hidden="true"
-          className="mt-12 overflow-y-auto overflow-x-hidden flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+          className="overflow-y-auto overflow-x-hidden flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
         >
           <div className="relative p-4 w-full max-w-md max-h-full">
-            {currentError === true ? (
-              <div>
-                <h1 className="text-center py-1 text-red-500">
-                  Incorrect current password
-                </h1>
-              </div>
-            ) : (
-              ""
-            )}
-
-            <div className="relative rounded-lg shadow-lg border-2">
+            <div className="relative rounded-lg shadow-lg border">
               <div className="flex items-center justify-center p-4 md:p-5 border-b rounded-t">
-                <h3 className="text-xl font-semibold">Change Password</h3>
+                <h3 className="text-xl font-semibold text-gray-400">
+                  Change Password
+                </h3>
               </div>
               <div className="p-4 md:p-5">
                 <form className="space-y-4" onSubmit={handleSubmit}>
                   {otpSend === false ? (
                     <div>
-                      <label className="block mb-2 text-sm font-medium">
+                      <label className="block mb-2 text-sm font-medium text-gray-400">
                         Enter the current password
                       </label>
                       <input
                         type="text"
-                        className="border text-sm rounded-lg block w-full p-2.5"
+                        className="border text-sm rounded-lg block w-full p-2.5 bg-gray-800 border-gray-900 text-white"
                         required
                         onChange={() => {
                           setCurrentError(false);
@@ -188,24 +177,33 @@ const ChangePassword = () => {
                         >
                           Forgot Password?
                         </a>
+                        {currentError === true ? (
+                          <>
+                            <h1 className="text-red-500">
+                              Incorrect current password
+                            </h1>
+                          </>
+                        ) : (
+                          ""
+                        )}
                       </div>
                       <hr className="mt-4" />
                     </div>
                   ) : (
                     <div>
-                      <label className="block mb-2 text-sm font-medium">
+                      <label className="block mb-2 text-sm font-medium text-gray-400">
                         Enter the OTP Send to Email
                       </label>
                       <input
                         type="text"
-                        className="border text-sm rounded-lg block w-full p-2.5"
+                        className="border text-sm rounded-lg block w-full p-2.5 bg-gray-800 text-white"
                         required
                         value={otpNumber}
                         onChange={(e) => setOtpNumber(e.target.value)}
                       />
                       <div className="countdown-text">
                         {seconds > 0 || minutes > 0 ? (
-                          <p>
+                          <p className="text-gray-300">
                             Time Remaining:{" "}
                             <span style={{ fontWeight: 600 }}>
                               {minutes < 10 ? `0${minutes}` : minutes}:
@@ -213,16 +211,17 @@ const ChangePassword = () => {
                             </span>
                           </p>
                         ) : (
-                          <p>Didn't receive code?</p>
+                          <p className="text-gray-400">Didn't receive code?</p>
                         )}
                         {/* Button to resend OTP */}
                         <button
+                          className="text-gray-400"
                           disabled={seconds > 0 || minutes > 0}
                           style={{
                             color:
                               seconds > 0 || minutes > 0
-                                ? "#DFE3E8"
-                                : "#FF5630",
+                                ? "#rgb(156 163 175)"
+                                : "#rgb(156 163 175)",
                           }}
                           onClick={forgotPassword}
                         >
@@ -240,30 +239,30 @@ const ChangePassword = () => {
                     ) : (
                       ""
                     )}
-                    <label className="block mb-2 text-sm font-medium">
+                    <label className="block mb-2 text-sm font-medium text-gray-400">
                       New Password
                     </label>
                     <input
                       type="text"
-                      className="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5"
+                      className="bg-gray-800 border border-gray-900 text-white rounded-lg block w-full p-2.5"
                       required
                       onChange={removeError}
                     />
                   </div>
                   <div>
-                    <label className="block mb-2 text-sm font-medium">
+                    <label className="block mb-2 text-sm font-medium text-gray-400">
                       Confirm New Password
                     </label>
                     <input
                       type="text"
-                      className="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5"
+                      className="border-gray-900 border bg-gray-800 text-white text-sm rounded-lg block w-full p-2.5"
                       required
                       onChange={removeError}
                     />
                   </div>
                   <button
                     type="submit"
-                    className="w-full text-white bg-color-one focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                    className="w-full text-white bg-color-five focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                   >
                     Change
                   </button>
@@ -272,7 +271,7 @@ const ChangePassword = () => {
             </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };

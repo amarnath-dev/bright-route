@@ -14,20 +14,15 @@ const onlyString = /^[a-zA-Z]+$/;
 export const schema: ZodType<MenteeSignupShema> = z.object({
   first_name: z
     .string()
-    .min(3)
     .max(30)
-    .refine((value) => onlyString.test(value), {
-      message: "Name shoul not contain numbers",
-    })
     .refine((value) => value.trim() !== "", {
       message: "First name should not be empty",
     }),
   last_name: z
     .string()
-    .min(3)
     .max(30)
     .refine((value) => onlyString.test(value), {
-      message: "Name shoul not contain numbers",
+      message: "Name should not contain numbers",
     })
     .refine((value) => value.trim() !== "", {
       message: "Last name should not be empty",

@@ -12,6 +12,7 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import { format } from "timeago.js";
 import { useAppSelector } from "../../app/hooks";
 import { MyMenteePayment } from "../../datatypes/PropsTypes";
+import NavBar from "../../componets/navbar/Navbar";
 
 const MyMentees = () => {
   const [myMentees, setMyMentees] = useState<MyMenteePayment[]>([]);
@@ -27,7 +28,6 @@ const MyMentees = () => {
           withCredentials: true,
         });
         if (response.data.mentorApplication.length > 0) {
-          console.log(response.data.mentorApplication)
           setMyMentees(response.data.mentorApplication);
         } else {
           setIsApplication(true);
@@ -41,27 +41,30 @@ const MyMentees = () => {
 
   useEffect(() => {
     if (myMentees) {
-      myMentees?.map((menteeObj) => {
-        const imageId = menteeObj?.menteeDetails[0]?.profile_img;
-        if (imageId) {
-          const imageRef = ref(storage, imageId);
-          getDownloadURL(imageRef)
-            .then((url) => {
-              // menteeObj["newProfileImg"] = url;
-              const img = document.getElementById(
-                "profile_img"
-              ) as HTMLImageElement;
-              img.src = url;
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      });
-    }
-  }, [myMentees]);
+      const fetchProfileImages = async () => {
+        try {
+          const fetchedMentees = await Promise.all(
+            myMentees.map(async (menteeObj) => {
+              const imageId = menteeObj?.menteeDetails?.profile_img;
+              if (imageId) {
+                const imageRef = ref(storage, imageId);
+                const url = await getDownloadURL(imageRef);
 
-  //Creating the chat Conversation
+                return { ...menteeObj, profile_img: url };
+              } else {
+                return menteeObj;
+              }
+            })
+          );
+          setMyMentees(fetchedMentees);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchProfileImages();
+    }
+  }, [myMentees.length]);
+
   useEffect(() => {
     if (myMentees) {
       myMentees?.map((menteeObj) => {
@@ -79,17 +82,13 @@ const MyMentees = () => {
 
   return (
     <>
-      <div className="w-full h-screen bg-background-two">
+      <NavBar />
+      <div className="w-full h-full md:h-screen bg-background-two">
         {isApplication === true ? (
           <div className="w-full h-screen flex justify-center items-center flex-col">
             <h1 className="text-3xl font-bold text-gray-400">
               No Mentees have Applied Yet
             </h1>
-            {/* <img
-              src="https://cdnl.iconscout.com/lottie/premium/thumb/empty-box-5708298-4748209.gif"
-              className="w-40"
-              alt="empty_img"
-            /> */}
           </div>
         ) : (
           <>
@@ -98,37 +97,36 @@ const MyMentees = () => {
                 <h1 className="text-gray-400">My Mentees</h1>
               </div>
               <hr />
-              <div className="flex w-full h-full flex-wrap py-3">
+              <div className="flex flex-col md:flex-row w-full h-full flex-wrap py-3">
                 {myMentees?.map((plan, index: number) => {
                   return (
-                    <div key={index}>
-                      <figure className="md:w-96 min-h-full rounded-xl p-8 shadow-md md:shadow-lg mt-2 ml-2 bg-gray-800">
+                    <div key={index} className="px-1">
+                      <figure className="md:w-96 min-h-full rounded-xl p-8 shadow-md md:shadow-lg bg-gray-800 mt-2">
                         <div className="flex">
                           <img
                             className="w-24 h-24 rounded-full object-cover"
-                            id="profile_img"
                             alt="profile_img"
-                            // src={plan?.newProfileImg}
+                            src={plan?.profile_img ? plan?.profile_img : "https://www.pngkey.com/png/full/52-522921_kathrine-vangen-profile-pic-empty-png.png"}
                           />
                           <div className="px-2 py-2 font-bold">
                             <h1 className="text-xl text-gray-400">
-                              {plan?.menteeDetails[0]?.first_name}
-                              {plan?.menteeDetails[0]?.last_name}
+                              {plan?.menteeDetails?.first_name}
+                              {plan?.menteeDetails?.last_name}
                             </h1>
                             <h1 className="mt-2 uppercase text-sm text-gray-400">
-                              {plan?.menteeDetails[0]?.job_title}
+                              {plan?.menteeDetails?.job_title}
                             </h1>
                           </div>
                         </div>
                         <div className="flex justify-center">
-                          <a href={plan?.menteeDetails[0]?.linkedIn}>
+                          <a href={plan?.menteeDetails?.linkedIn}>
                             <LinkedInIcon className="text-blue-600" />
                           </a>
                           <a
-                            href={plan?.menteeDetails[0]?.twitter}
+                            href={plan?.menteeDetails?.twitter}
                             className="ml-10"
                           >
-                            <XIcon className="text-gray-400"/>
+                            <XIcon className="text-gray-400" />
                           </a>
                         </div>
                         <div className="pt-6 space-y-4">
@@ -142,13 +140,13 @@ const MyMentees = () => {
                                   );
                                 }}
                               >
-                                <PaymentsIcon className="text-gray-400"/>
+                                <PaymentsIcon className="text-gray-400" />
                               </button>
                               <Link
                                 to={`/mentor/chat/${plan?.mentee_id}`}
                                 className="border px-2 py-2 rounded-md text-black"
                               >
-                                <MessageIcon className="text-gray-400"/>
+                                <MessageIcon className="text-gray-400" />
                               </Link>
                               <Link
                                 to={`/video/${plan?.mentee_id}`}

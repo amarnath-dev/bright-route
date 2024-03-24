@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import { PaymentDetails } from "../../datatypes/PropsTypes";
+import NavBar from "../../componets/navbar/Navbar";
 
 const MyMentors = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -66,10 +67,13 @@ const MyMentors = () => {
 
   return (
     <>
-      <div className="w-full h-full md:h-screen bg-background-two">
+      <NavBar />
+      <div className="w-full h-screen md:h-screen bg-background-two">
         {isMentor === true ? (
           <div className="w-full h-screen flex justify-center items-center flex-col">
-            <h1 className="text-2xl font-bold text-gray-300">Please Apply to a Mentor</h1>
+            <h1 className="text-2xl font-bold text-gray-300">
+              Please Apply to a Mentor
+            </h1>
             <Link
               to={"/mentor/browse"}
               className="mt-5 rounded bg-color-one text-white border px-2 py-1"
@@ -116,7 +120,7 @@ const MyMentors = () => {
                           href={mentor?.mentorProfile[0]?.twitter}
                           className="ml-10"
                         >
-                          <XIcon className="text-black"/>
+                          <XIcon className="text-black" />
                         </a>
                       </div>
                       <div className="pt-6 space-y-4">
@@ -147,7 +151,9 @@ const MyMentors = () => {
                             </Link>
                           </div>
                           <div className="px-3">
-                            <h1 className="py-2 text-gray-400">{format(mentor.createdAt)}</h1>
+                            <h1 className="py-2 text-gray-400">
+                              {format(mentor.createdAt)}
+                            </h1>
                           </div>
                         </figcaption>
                       </div>

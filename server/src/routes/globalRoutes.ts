@@ -8,4 +8,6 @@ router.post("/checkEmail", forgotPassControl.checkEmail);
 router.post("/OTPVerify", forgotPassControl.verifyOTP)
 router.post("/new-password",forgotPassControl.newPassword)
 
+
+
 export default router;

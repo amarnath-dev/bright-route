@@ -39,7 +39,6 @@ export class NotificationControl {
         res.status(404).json({ message: "Data not found" });
       }
     } catch (error) {
-      console.log(error);
       return next(Error());
     }
   }
@@ -83,7 +82,7 @@ export class NotificationControl {
       return next(Error());
     }
   }
-  
+
   async mentorChatNotification(
     req: Request,
     res: Response,

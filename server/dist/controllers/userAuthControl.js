@@ -17,12 +17,10 @@ const crypto_js_1 = __importDefault(require("crypto-js"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const mentorProfileModel_1 = __importDefault(require("../models/mentorProfileModel"));
 const menteeProfileModel_1 = __importDefault(require("../models/menteeProfileModel"));
-const generateJWT_1 = __importDefault(require("../utils/generateJWT"));
 const sendEmail_1 = __importDefault(require("../utils/sendEmail"));
 const otpModel_1 = __importDefault(require("../models/otpModel"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const jwt_decode_1 = require("jwt-decode");
-const generateUsername_1 = __importDefault(require("../utils/generateUsername"));
 class MenteeAuthController {
     signup(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -64,12 +62,14 @@ class MenteeAuthController {
                 const userExists = yield userModel_1.default.findOne({ email });
                 if (!userExists) {
                     res.status(401).json({ message: "Canno't Find Email" });
-                    return next(Error("Invalid Email"));
                 }
                 else {
+                    if (userExists.is_blocked) {
+                        res.status(401).json({ message: "Your Account has been Blocked" });
+                        return;
+                    }
                     const dbPassword = crypto_js_1.default.AES.decrypt(userExists.password, process.env.HASH_KEY).toString(crypto_js_1.default.enc.Utf8);
                     if (password === dbPassword) {
-                        console.log("Inside the check");
                         const accessToken = jsonwebtoken_1.default.sign({
                             UserInfo: {
                                 id: userExists._id,
@@ -187,7 +187,7 @@ class MenteeAuthController {
                 const otpData = yield otpModel_1.default.findOne({ email });
                 if (!otpData) {
                     res.status(404).json({ message: "Resend otp and try Again" });
-                    return next(Error("Re-send otp and Try Again"));
+                    return;
                 }
                 const dbOTP = crypto_js_1.default.AES.decrypt(otpData.otp, process.env.HASH_KEY).toString(crypto_js_1.default.enc.Utf8);
                 if (dbOTP === otp) {
@@ -206,7 +206,19 @@ class MenteeAuthController {
                         });
                         const profileData = yield userProfileDetails.save();
                         if (profileData) {
-                            const token = (0, generateJWT_1.default)(user === null || user === void 0 ? void 0 : user._id, email);
+                            const accessToken = jsonwebtoken_1.default.sign({
+                                UserInfo: {
+                                    id: menteeDetails === null || menteeDetails === void 0 ? void 0 : menteeDetails._id,
+                                    email: menteeDetails === null || menteeDetails === void 0 ? void 0 : menteeDetails.email,
+                                    roles: menteeDetails === null || menteeDetails === void 0 ? void 0 : menteeDetails.role,
+                                },
+                            }, process.env.ACCESS_TOKEN_SECRETE, { expiresIn: "3d" });
+                            const refreshToken = jsonwebtoken_1.default.sign({ email: menteeDetails === null || menteeDetails === void 0 ? void 0 : menteeDetails.email }, process.env.REFRESH_TOKEN_SECRETE, { expiresIn: "7d" });
+                            res.cookie("refreshToken", refreshToken, {
+                                httpOnly: true,
+                                secure: false,
+                                maxAge: 7 * 24 * 60 * 60 * 1000,
+                            });
                             res.status(200).json({
                                 status: "success",
                                 message: "User Created Successfully",
@@ -216,7 +228,7 @@ class MenteeAuthController {
                                     email: user === null || user === void 0 ? void 0 : user.email,
                                     role: user === null || user === void 0 ? void 0 : user.role,
                                 },
-                                token,
+                                accessToken,
                             });
                         }
                     }
@@ -259,38 +271,49 @@ class MenteeAuthController {
     googleAuth(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("Reached at the google auth");
-                if (!req.body.userData) {
-                    res.status(400);
-                    return next(Error("Invalid credentials"));
+                if (!req.body.authString) {
+                    res
+                        .status(400)
+                        .json({ status: "failed", message: "Invalid credentials" });
+                    return;
                 }
-                const { email } = (0, jwt_decode_1.jwtDecode)(req.body.userData);
-                const existingUser = yield userModel_1.default.findOne({ email: email });
+                const decodeData = (0, jwt_decode_1.jwtDecode)(req.body.authString);
+                const existingUser = yield userModel_1.default.findOne({ email: decodeData.email });
                 if (existingUser) {
-                    if (existingUser.password) {
-                        res.status(409).json({ message: "Invalid Email" });
-                        return next(Error("Invalid Email"));
+                    if (existingUser === null || existingUser === void 0 ? void 0 : existingUser.password) {
+                        res.status(409).json({ message: "User Alredy Exists" });
+                        return;
                     }
-                    const token = (0, generateJWT_1.default)(existingUser._id, existingUser.email);
+                    const accessToken = jsonwebtoken_1.default.sign({
+                        UserInfo: {
+                            id: existingUser === null || existingUser === void 0 ? void 0 : existingUser._id,
+                            email: existingUser === null || existingUser === void 0 ? void 0 : existingUser.email,
+                            roles: existingUser === null || existingUser === void 0 ? void 0 : existingUser.role,
+                        },
+                    }, process.env.ACCESS_TOKEN_SECRETE, { expiresIn: "3d" });
+                    const refreshToken = jsonwebtoken_1.default.sign({ email: existingUser === null || existingUser === void 0 ? void 0 : existingUser.email }, process.env.REFRESH_TOKEN_SECRETE, { expiresIn: "7d" });
                     const userDataFromProfile = yield menteeProfileModel_1.default.findOne({
                         mentee_id: existingUser === null || existingUser === void 0 ? void 0 : existingUser._id,
                     });
+                    res.cookie("refreshToken", refreshToken, {
+                        httpOnly: true,
+                        secure: false,
+                        maxAge: 7 * 24 * 60 * 60 * 1000,
+                    });
                     res.status(200).json({
                         status: "success",
-                        message: "User loged in successfully",
                         user: {
-                            _id: existingUser._id,
+                            _id: existingUser === null || existingUser === void 0 ? void 0 : existingUser._id,
                             first_name: userDataFromProfile === null || userDataFromProfile === void 0 ? void 0 : userDataFromProfile.first_name,
-                            email: existingUser.email,
-                            role: existingUser.role,
+                            email: existingUser === null || existingUser === void 0 ? void 0 : existingUser.email,
+                            role: existingUser === null || existingUser === void 0 ? void 0 : existingUser.role,
                         },
-                        token,
+                        accessToken,
                     });
                 }
                 else {
-                    const userName = yield (0, generateUsername_1.default)();
                     const menteeDetails = new userModel_1.default({
-                        email,
+                        email: decodeData.email,
                         password: "",
                         role: "mentee",
                     });
@@ -298,22 +321,36 @@ class MenteeAuthController {
                     if (user) {
                         const userProfileDetails = new menteeProfileModel_1.default({
                             mentee_id: user === null || user === void 0 ? void 0 : user._id,
-                            first_name: userName.toString(),
+                            first_name: decodeData.name,
                             last_name: "",
                         });
                         const profileData = yield userProfileDetails.save();
                         if (profileData) {
-                            const token = (0, generateJWT_1.default)(user === null || user === void 0 ? void 0 : user._id, email);
+                            const accessToken = jsonwebtoken_1.default.sign({
+                                UserInfo: {
+                                    id: user === null || user === void 0 ? void 0 : user._id,
+                                    email: user === null || user === void 0 ? void 0 : user.email,
+                                    roles: user === null || user === void 0 ? void 0 : user.role,
+                                },
+                            }, process.env.ACCESS_TOKEN_SECRETE, { expiresIn: "3d" });
+                            const refreshToken = jsonwebtoken_1.default.sign({ email: user === null || user === void 0 ? void 0 : user.email }, process.env.REFRESH_TOKEN_SECRETE, { expiresIn: "7d" });
+                            res.cookie("refreshToken", refreshToken, {
+                                httpOnly: true,
+                                secure: false,
+                                maxAge: 7 * 24 * 60 * 60 * 1000,
+                            });
+                            const userDataFromProfile = yield menteeProfileModel_1.default.findOne({
+                                mentee_id: user === null || user === void 0 ? void 0 : user._id,
+                            });
                             res.status(200).json({
                                 status: "success",
-                                message: "User Created Successfully",
                                 user: {
                                     _id: user === null || user === void 0 ? void 0 : user._id,
-                                    first_name: profileData === null || profileData === void 0 ? void 0 : profileData.first_name,
+                                    first_name: userDataFromProfile === null || userDataFromProfile === void 0 ? void 0 : userDataFromProfile.first_name,
                                     email: user === null || user === void 0 ? void 0 : user.email,
                                     role: user === null || user === void 0 ? void 0 : user.role,
                                 },
-                                token,
+                                accessToken,
                             });
                         }
                     }
@@ -423,6 +460,10 @@ class MentorAuthController {
                     return next(Error("Invalid Email"));
                 }
                 else {
+                    if (userExists.is_blocked) {
+                        res.status(401).json({ message: "Your Account has been Blocked" });
+                        return;
+                    }
                     if (userExists.role !== "mentor") {
                         res.status(400).json({ message: "Invalid Email" });
                         return next(Error("Incorect Email"));

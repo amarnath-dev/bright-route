@@ -21,8 +21,8 @@ interface NotType {
   type: string;
 }
 
-const HOST = "https://bright-route.online"
-
+const HOST = "https://bright-route.online";
+// const HOST = "http://localhost:3000";
 const NavBar = () => {
   const { user } = useAppSelector((state) => state.userAuth);
   const [profileImg, setProfileImg] = useState<string>();
@@ -84,19 +84,22 @@ const NavBar = () => {
     getImg();
   }, [axiosPrivate, user?.role]);
 
-  if (profileImg) {
-    const fetchImg = async () => {
-      try {
-        const imageId = profileImg;
-        const imageRef = ref(storage, imageId);
-        const url = await getDownloadURL(imageRef);
-        setFirebaseImgId(url);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchImg();
-  }
+  useEffect(() => {
+    if (profileImg) {
+      const fetchImg = async () => {
+        try {
+          const imageId = profileImg;
+          const imageRef = ref(storage, imageId);
+          const url = await getDownloadURL(imageRef);
+          setFirebaseImgId(url);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchImg();
+    }
+  }, [profileImg, axiosPrivate]);
+
   const handleClickOne = () => {
     if (user?.role === "mentor") {
       navigate("/mentor/my-mentees");
@@ -140,7 +143,7 @@ const NavBar = () => {
         <div className="col-span-4 bg-gray-800 h-16 flex items-center">
           <img
             src={Logo}
-            className="bg-transparent w-16 py-6 ml-10 text-white font-white cursor-pointer"
+            className="w-16 py-6 ml-10 cursor-pointer px-2 md:px-0"
             alt="logo"
             onClick={logoClick}
           />
@@ -225,7 +228,10 @@ const NavBar = () => {
                 </div>
               </Navbar>
               {open ? (
-                <Notification setOpen={setOpen} notData={notifications ? notifications : null} />
+                <Notification
+                  setOpen={setOpen}
+                  notData={notifications ? notifications : null}
+                />
               ) : (
                 ""
               )}
@@ -239,7 +245,4 @@ const NavBar = () => {
 
 export default NavBar;
 
-//hello how are you
-//sdfsdfsadf
-//sdfsadf;hsadflh
-//sdf;asdfjlkjsadfk
+

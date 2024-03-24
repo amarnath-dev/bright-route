@@ -12,3 +12,23 @@
 .custom-autocomplete .MuiInputBase-root {
   background-color: rgb(247, 244, 244);
 }
+
+/* Custom Scroll Bar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track (background) */
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+/* Handle (thumb) */
+::-webkit-scrollbar-thumb {
+  background: rgb(13 17 23);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(13 17 23);
+}
