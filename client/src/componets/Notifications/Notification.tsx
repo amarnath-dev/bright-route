@@ -110,12 +110,12 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
                           <div>
                             <span className="flex justify-end">
                               <MdDelete
-                                className="text-xl text-gray-700 hover:bg-gray-800 hover:text-white rounded-full"
+                                className="text-xl text-gray-400 rounded-full"
                                 onClick={() => handleDelete(notification?._id)}
                               />
                             </span>
                             <p
-                              className="text-black rounded-md px-2"
+                              className="text-gray-400 rounded-md px-2"
                               key={index}
                               // onClick={() => messageClick(notification)}
                             >

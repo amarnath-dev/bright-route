@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import MentorPaymentCard from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
 import { MentorPlan } from "../../datatypes/PropsTypes";
+import NavBar from "../../componets/navbar/Navbar";
 
 const MentorPlans = () => {
   const [mentorPlans, setMentorPlans] = useState<MentorPlan | null>(null);
@@ -29,7 +30,6 @@ const MentorPlans = () => {
         const result = response.data.plans;
         if (result.planDetails.length > 0) {
           setIsPlan(true);
-          console.log("mentor Plans", response?.data?.plans);
           setMentorPlans(response?.data?.plans);
         } else {
           setIsPlan(false);
@@ -43,7 +43,8 @@ const MentorPlans = () => {
 
   return (
     <>
-      <div className="w-full h-full md:h-screen mb-10 md:mb-0">
+      <NavBar />
+      <div className="w-full h-full md:h-screen bg-background-two">
         {isPlan ? (
           <>
             {mentorPlans?.planDetails && mentorPlans.planDetails.length >= 2 ? (
@@ -52,13 +53,13 @@ const MentorPlans = () => {
               <div className="w-full h-12 flex justify-end items-center">
                 <Link
                   to={"/mentor/new-plan"}
-                  className="mr-6 md:mr-40 border-2 px-1 py-1 rounded-md text-white bg-color-one"
+                  className="mr-6 md:mr-40 border px-1 py-1 rounded-md text-white bg-color-one"
                 >
                   Create Plans
                 </Link>
               </div>
             )}
-            <div className="w-full h-full flex justify-center items-center mt-6 md:mt-0">
+            <div className="w-full h-full flex justify-center items-center">
               <MentorPaymentCard
                 mentorPlans={isPlan ? mentorPlans : null}
                 mentor={"mentor"}
@@ -69,11 +70,11 @@ const MentorPlans = () => {
         ) : (
           <div className="h-screen flex justify-center items-center">
             <div className="shadow-lg">
-              <div className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow text-black hover:bg-gray-100 dark:hover:bg-gray-200">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight">
+              <div className="block max-w-sm p-6 bg-gray-800 border border-gray-200 rounded-lg shadow text-black hover:bg-gray-100 dark:hover:bg-gray-200">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-400">
                   You don't have any plans yet. Please create one
                 </h5>
-                <p className="font-norma">
+                <p className="font-norma text-gray-400">
                   These plans will be visible to the mentees and they can
                   purchase youre plan to Enroll for mentorship.
                 </p>
