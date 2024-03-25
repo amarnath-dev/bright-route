@@ -78,7 +78,7 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
 
   return (
     <>
-      <div className="w-full h-full flex-col px-6 md:px-0 md:flex-row md:w-3/4 md:h-4/5 flex justify-around items-center rounded-lg md:mb-10">
+      <div className="w-full h-full flex-col px-6 md:px-0 md:flex-row md:w-3/4 md:h-4/5 flex justify-around items-center rounded-lg">
         {open ? (
           <div className="w-full h-full flex justify-center items-center">
             <div
