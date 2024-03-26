@@ -38,8 +38,8 @@ interface CurrentChat {
   createdAt: string;
 }
 
-const HOST = "https://bright-route.online"
-// const HOST = "http://localhost:3000";
+// const HOST = "https://bright-route.online";
+const HOST = "http://localhost:3000";
 const MenteeMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
@@ -69,7 +69,14 @@ const MenteeMessages = () => {
 
   useEffect(() => {
     socket?.current?.emit("typing", currentChat?.members);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newMessage]);
+
+  useEffect(() => {
+    if (!newMessage) {
+      socket.current?.emit("notTyping", currentChat?.members);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newMessage]);
 
   useEffect(() => {
@@ -80,21 +87,19 @@ const MenteeMessages = () => {
   }, [socket.current]);
 
   useEffect(() => {
-    console.log("RUNNING>>>", socket.current);
+    socket.current?.on("getNoTyping", () => {
+      console.log("Not Typing...");
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket.current]);
+
+  useEffect(() => {
     socket?.current?.on("getMessage", (data) => {
       console.log("Arrival Message -> ", data);
       setArrivalMessage(data);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket?.current]);
-
-  //Adding the current user to socket.io server
-  // useEffect(() => {
-  //   socket.current?.emit("addUser", user?._id);
-  //   socket.current?.on("getUsers", (users) => {
-  //     console.log("Current Usres", users);
-  //   });
-  // }, [user]);
 
   // Creating a new Conversation
   useEffect(() => {
@@ -148,8 +153,6 @@ const MenteeMessages = () => {
       currentChat?.members.includes(arrivalMessage?.senderId as never)
     ) {
       setMessages((prev) => [...prev, arrivalMessage]);
-    } else {
-      console.log("Nop");
     }
   }, [arrivalMessage, currentChat, currentChat?.members]);
 

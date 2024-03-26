@@ -2,13 +2,15 @@ import { Router } from "express";
 import { MenteeAuthController } from "../controllers/userAuthControl";
 import { MenteeController } from "../controllers/menteeControls";
 import { PaymentControls } from "../controllers/paymentController";
-import { verifyJWT } from "../middleware/verifyJWT";
+import { Authentication } from "../middleware/verifyAuth";
+// import { verifyJWT } from "../middleware/verifyJWT";
 
 const router: Router = Router();
 const menteeAuthController = new MenteeAuthController();
 const menteeController = new MenteeController();
 const paymentController = new PaymentControls();
 
+//Authentication Routes
 router.post("/signup", menteeAuthController.signup);
 router.post("/login", menteeAuthController.signin);
 router.get("/refresh", menteeAuthController.refreshToken);
@@ -18,51 +20,101 @@ router.post("/verifyOTP", menteeAuthController.verifyOTP);
 router.post("/resendOTP", menteeAuthController.resendOTP);
 router.post("/google-auth", menteeAuthController.googleAuth);
 
-router.get("/browse-mentors", verifyJWT, menteeController.mentorProfile);
-router.get("/browse/filter", verifyJWT, menteeController.mentorSearch);
-router.get("/managment/:menteeId", verifyJWT, menteeController.menteeProfile);
+router.get(
+  "/browse-mentors",
+  Authentication.ensureAuth(["mentee"]),
+  menteeController.mentorProfile
+);
+
+router.get(
+  "/browse/filter",
+  Authentication.ensureAuth(["mentee"]),
+  menteeController.mentorSearch
+);
+
+router.get(
+  "/managment/:menteeId",
+  Authentication.ensureAuth(["mentee"]),
+  menteeController.menteeProfile
+);
+
 router.post(
   "/managment/profie-update",
-  verifyJWT,
+  Authentication.ensureAuth(["mentee"]),
   menteeController.updateProfile
 );
+
 router.post(
   "/managment/profieImage-update",
-  verifyJWT,
+  Authentication.ensureAuth(["mentee"]),
   menteeController.updateProfileImage
 );
-router.post("/change-password", verifyJWT, menteeController.changePassword);
-router.post("/managment/password/sentotp", verifyJWT, menteeController.sendOtp);
+
+router.post(
+  "/change-password",
+  Authentication.ensureAuth(["mentee", "mentor"]),
+  menteeController.changePassword
+);
+
+router.post(
+  "/managment/password/sentotp",
+  Authentication.ensureAuth(["mentee", "mentor"]),
+  menteeController.sendOtp
+);
 
 router.post(
   "/profile/changePassword/sendOTP",
-  verifyJWT,
+  Authentication.ensureAuth(["mentee", "mentor"]),
   menteeController.sendOtp
 );
 
 router.get(
   "/visit/mentor-profile/:mentorId",
-  verifyJWT,
+  Authentication.ensureAuth(["mentee"]),
   menteeController.getMentorProfile
 );
 
 router.post(
   "/report/mentor/:mentorId",
-  verifyJWT,
+  Authentication.ensureAuth(["mentee"]),
   menteeController.reportMentor
 );
-router.post("/mentorship/apply", verifyJWT, menteeController.mentorshipApply);
+
+router.post(
+  "/mentorship/apply",
+  Authentication.ensureAuth(["mentee"]),
+  menteeController.mentorshipApply
+);
+
 router.get(
   "/mentor/plans/:mentorId",
-  verifyJWT,
+  Authentication.ensureAuth(["mentee"]),
   menteeController.getMentorPlans
 );
-//using new controller class
-router.post("/create-payment-intent", verifyJWT, paymentController.payment);
-router.post("/payment-suceess", verifyJWT, paymentController.storePaymentData);
 
-router.get("/getimage/:userRole", verifyJWT, menteeController.getProfileImg);
-router.get("/my-mentors", verifyJWT, menteeController.getMyMentors);
+//Using new controller class
+router.post(
+  "/payment-suceess",
+  Authentication.ensureAuth(["mentee"]),
+  paymentController.storePaymentData
+);
 
-router.post("/sort", verifyJWT, menteeController.getSorted);
+router.get(
+  "/getimage/:userRole",
+  Authentication.ensureAuth(["mentee", "mentor"]),
+  menteeController.getProfileImg
+);
+
+router.get(
+  "/my-mentors",
+  Authentication.ensureAuth(["mentee"]),
+  menteeController.getMyMentors
+);
+
+router.post(
+  "/sort",
+  Authentication.ensureAuth(["mentee"]),
+  menteeController.getSorted
+);
+
 export default router;

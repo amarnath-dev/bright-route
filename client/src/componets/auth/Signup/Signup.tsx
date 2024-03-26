@@ -136,15 +136,14 @@ const SignupForm: React.FC = () => {
               className="flex items-center justify-center"
             >
               <div className="mt-5 flex items-center justify-center flex-col border px-5 py-5 rounded-md">
-                <h2 className="text-2xl text-center font-bold text-gray-400 py-3">
+                <h2 className="text-2xl text-center font-bold text-white py-3">
                   Sign up as Mentee
                 </h2>
                 <label>
                   <input
-                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                    className="placeholder:text-slate-400 block bg-gray-800 text-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="First name"
                     type="text"
-                    required
                     {...register("first_name")}
                   />
                   {errors.first_name && (
@@ -155,10 +154,9 @@ const SignupForm: React.FC = () => {
                 </label>
                 <label>
                   <input
-                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                    className="placeholder:text-slate-400 block bg-gray-800 text-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Last name"
                     type="text"
-                    required
                     {...register("last_name")}
                   />
                   {errors.last_name && (
@@ -169,10 +167,9 @@ const SignupForm: React.FC = () => {
                 </label>
                 <label>
                   <input
-                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                    className="placeholder:text-slate-400 block bg-gray-800 text-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Email"
                     type="text"
-                    required
                     {...register("email")}
                   />
                   {errors.email && (
@@ -183,10 +180,9 @@ const SignupForm: React.FC = () => {
                 </label>
                 <label>
                   <input
-                    className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                    className="placeholder:text-gray-400 block bg-gray-800 text-white mt-2 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                     placeholder="Password"
                     type="password"
-                    required
                     {...register("password")}
                   />
                   {errors.password && (
@@ -194,34 +190,52 @@ const SignupForm: React.FC = () => {
                       *{errors.password.message}
                     </span>
                   )}
+                  {/* Minimum 8 characters, at least one uppercase letter, one
+                  lowercase letter, one number and one special character */}
+                  <div className="py-2">
+                    <span className="text-white">Password should have :</span>
+                    <div className="">
+                      <li className="text-white text-sm">
+                        Atleast 8 characters long
+                      </li>
+                      <li className="text-white text-sm">
+                        One uppercase and Lowercase letter
+                      </li>
+                      <li className="text-white text-sm">
+                        One Number and Special Character
+                      </li>
+                    </div>
+                  </div>
                 </label>
-                <br />
                 <button
                   type="submit"
-                  className="bg-emerald-400 px-1 py-2 mt-1 rounded-md text-base shadow-md font-bold w-72 md:w-96 sm:text-sm text-white"
+                  className="mt-1 bg-emerald-400 px-1 py-2 rounded-md text-base shadow-md font-bold w-72 md:w-96 text-md text-white"
                 >
                   Sign up
                 </button>
                 {/* Google auth */}
-                <div className="flex justify-center items-center mt-5">
+                <div className="flex justify-center items-center mt-2">
                   <GoogleAuth />
                 </div>
               </div>
             </form>
 
-            <span className="w-full flex justify-center items-center mt-3 text-gray-500">
+            <span className="w-full flex justify-center items-center mt-3 text-gray-300 text-lg font-bold">
               Alredy have an account?
-              <Link to={"/signin"} className="ml-2 text-color-five font-bold">
+              <Link
+                to={"/signin"}
+                className="ml-2 text-color-five font-bold underline"
+              >
                 Log in
               </Link>
             </span>
 
-            <div className="flex justify-center items-center mt-1 mb-5">
-              <span className="text-gray-500">
+            <div className="flex justify-center items-center mt-1 mb-5 font-bold">
+              <span className="text-gray-300 text-lg">
                 Apply as a mentor?
                 <Link
                   to={"/mentor/apply"}
-                  className="ml-2 text-color-five font-bold"
+                  className="ml-2 text-color-five font-bold underline"
                 >
                   Apply now
                 </Link>

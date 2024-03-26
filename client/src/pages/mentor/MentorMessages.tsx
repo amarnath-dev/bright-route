@@ -35,8 +35,8 @@ interface CurrentChat {
   createdAt: string;
 }
 
-const HOST = "https://bright-route.online"
-// const HOST = "http://localhost:3000";
+// const HOST = "https://bright-route.online";
+const HOST = "http://localhost:3000";
 const MentorMessages = () => {
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);

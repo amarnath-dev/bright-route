@@ -9,10 +9,9 @@ import adminRouter from "./routes/adminRoutes";
 import chatRouter from "./routes/chatRoutes";
 import notificationRouter from "./routes/notificationRoutes";
 import forgotPassControl from "./routes/globalRoutes";
-import { limiter } from "./middleware/authLimit";
 
-const ORIGIN = "https://bright-route.online";
-// const ORIGIN = "http://localhost:5173";
+// const ORIGIN = "https://bright-route.online";
+const ORIGIN = "http://localhost:5173";
 const app = express();
 dotenv.config();
 const corsConfig = {
@@ -25,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsConfig));
-// app.use(limiter);
+
 
 //routes
 app.use("/api", menteeRouter);

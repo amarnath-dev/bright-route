@@ -84,13 +84,13 @@ function App() {
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/signin" element={<SigninPage />} />
-              <Route path="/video/:pairId" element={<VideoChat />} />
               <Route path="/forgotpassword" element={<NewPassword />} />
               <Route path="/mentor/apply" element={<ContainerForm />} />
               <Route path="/mentor/login" element={<SigninPage />} />
 
               {/* Mentee Roles  */}
               <Route element={<IsAuthenticated />}>
+                <Route path="/video/:pairId" element={<VideoChat />} />
                 <Route element={<ProtectedRoute allowedRole={"mentee"} />}>
                   <Route index element={<Home />} />
                   <Route path="/mentor/browse" element={<SearchMentors />} />

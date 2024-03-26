@@ -2,8 +2,10 @@ import { axiosPrivate } from "../api";
 import { useRefreshToken } from "./useRfreshToken";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { useAppSelector } from "./hooks";
 
 const useAxiosPrivate = () => {
+  const { user } = useAppSelector((state) => state.userAuth); 
   const refresh = useRefreshToken();
   const accessToken = Cookies.get("accessToken");
 
@@ -26,6 +28,7 @@ const useAxiosPrivate = () => {
       (config) => {
         if (accessToken && !config.headers["Authorization"]) {
           config.headers["Authorization"] = accessToken;
+          config.headers["Role"] = user?.role;
         }
         return config;
       },
@@ -41,3 +44,5 @@ const useAxiosPrivate = () => {
 };
 
 export default useAxiosPrivate;
+
+//Changing

@@ -23,7 +23,7 @@ const Header = () => {
     <>
       <div className="w-full h-screen bg-background-two">
         <div className="flex justify-center items-center flex-col">
-          <div className="font-bold text-2xl text-gray-400 mt-40">
+          <div className="font-bold text-2xl text-white mt-40">
             <motion.div
               className="App"
               initial="hidden"

@@ -19,7 +19,6 @@ const VideoChat = () => {
         { pairId, userId },
         { withCredentials: true }
       );
-      console.log("Response", response.data.status);
       if (response.data.status === "success") {
         try {
           const appId = 930308710;

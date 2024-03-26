@@ -36,7 +36,7 @@ export const AdminSidebar = () => {
   };
   return (
     <>
-      <div className="w-72 h-screen shadow-lg rounded-lg fixed bg-gray-800">
+      <div className="w-72 h-full rounded-lg fixed bg-gray-900">
         <div className="text-center mt-10 font-bold text-gray-700">
           <h1 className="text-gray-400">Bright Route Admin Panel</h1>
         </div>

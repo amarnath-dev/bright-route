@@ -106,8 +106,6 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const mentorId = new mongoose.Types.ObjectId(req.params.mentorId);
-      console.log("This is mentor id", mentorId);
-
       if (mentorId) {
         const mentorProfile = await MentorModel.aggregate([
           { $match: { mentor_id: mentorId } },
@@ -120,7 +118,6 @@ export class MenteeController {
             },
           },
         ]);
-
         const mentor = mentorProfile[0];
         const mentorDetails = {
           mentor_id: mentor?.mentor_id,
@@ -330,7 +327,6 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
-      console.log("Boady", req.body);
       const { oldPassword, newPassword, confirmPassword, otpNumber } = req.body;
       if (!newPassword || !confirmPassword) {
         res.status(400).json({ message: "Data fields missing" });
@@ -402,7 +398,6 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
-      console.log("Reached the server");
       if (user) {
         const userExists = await User.findById(user.id);
         if (!userExists?._id) {
@@ -538,7 +533,6 @@ export class MenteeController {
           },
         },
       ]);
-      console.log(allMentors);
       if (allMentors.length > 0) {
         res.status(200).json({ status: "success", allMentors });
       } else {

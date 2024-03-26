@@ -124,12 +124,6 @@ export const Messages: React.FC<MessagesProps> = ({
     });
   };
 
-  // useEffect(() => {
-  //   if (message) {
-  //     console.log("Message", message);
-  //   }
-  // }, [message]);
-
   return (
     <>
       {own ? (
@@ -215,9 +209,11 @@ export const Messages: React.FC<MessagesProps> = ({
                       </div>
                     </>
                   ) : (
-                    <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                      <p className="text-sm">{message?.text}</p>
-                    </div>
+                    <>
+                      <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+                        <p className="text-sm">{message?.text}</p>
+                      </div>
+                    </>
                   )}
                 </>
               ) : (
