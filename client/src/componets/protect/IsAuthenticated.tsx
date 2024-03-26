@@ -9,7 +9,7 @@ export const IsAuthenticated: React.FC = () => {
     null
   );
   useEffect(() => {
-    const checkToken = async () => {
+    (async () => {
       try {
         const response = await axiosPrivate.get("/checkToken", {
           withCredentials: true,
@@ -23,8 +23,7 @@ export const IsAuthenticated: React.FC = () => {
       } catch (error) {
         console.error("Error checking token:", error);
       }
-    };
-    checkToken();
+    })();
   }, [axiosPrivate]);
   return (
     <>

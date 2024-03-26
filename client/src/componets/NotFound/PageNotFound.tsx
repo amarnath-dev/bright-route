@@ -23,7 +23,7 @@ const PageNotFound = () => {
   return (
     <>
       <div className="w-full h-screen flex justify-center items-center flex-col bg-background-two">
-        <h1 className="text-xl font-bold text-white">
+        <h1 className="text-2xl font-bold text-white">
           Ooops...Looks like you need direction👾
         </h1>
         <img
