@@ -124,3 +124,8 @@ export interface INotification extends Document {
   messageType: string;
   senderId: string;
 }
+
+export interface MonthlyUserEntry {
+  _id: number;
+  count: number;
+}

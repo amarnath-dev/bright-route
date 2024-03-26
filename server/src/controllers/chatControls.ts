@@ -193,8 +193,9 @@ export class ChatControls {
     try {
       console.log(req.body);
       const result = await Room.findOne({
-        members: { $in: [req.body.userId, req.body.pairId] },
+        members: { $all: [req.body.userId, req.body.pairId] },
       });
+      console.log("Room Result", result);
       if (result) {
         res.status(200).json({ status: "success", roomId: result?.roomId });
       } else {

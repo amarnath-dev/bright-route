@@ -1,32 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import Stripe from "stripe";
-const stripe = new Stripe(process.env.STRIPE_KEY as string);
 import Payment from "../models/paymentModel";
 import Room from "../models/roomModel";
 
 export class PaymentControls {
-  async payment(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: 5,
-        currency: "usd",
-        automatic_payment_methods: {
-          enabled: true,
-        },
-      });
-      console.log(paymentIntent);
-      res.send({
-        clientSecret: paymentIntent.client_secret,
-      });
-    } catch (error) {
-      console.error(error);
-      return next(Error("Data fetch failed"));
-    }
-  }
+  
   async storePaymentData(
     req: Request,
     res: Response,

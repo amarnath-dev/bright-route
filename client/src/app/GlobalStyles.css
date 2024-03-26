@@ -32,3 +32,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(13 17 23);
 }
+
+/* Dashboard  */
+.main-diagram .MuiChartsAxis-line {
+  stroke: rgb(255, 255, 255) !important;
+  stroke-width: 3px !important;
+}
+.main-diagram .MuiChartsAxis-tickLabel {
+  font-size: 15px !important;
+  fill: white !important;
+}

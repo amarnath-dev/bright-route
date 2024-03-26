@@ -13,21 +13,15 @@ export const verifyJWT = async (
   try {
     const authHeader: any =
       req.headers.authorization || req.headers.Authorization;
-    // if (!authHeader?.startsWith("Bearer ")) {
-    //   return res
-    //     .status(401)
-    //     .json({ message: "Unauthorized not starting with Bearer" });
-    // }
-    // const accessToken = authHeader.split(" ")[1];
     const accessToken = authHeader;
     Jwt.verify(
       accessToken,
       process.env.ACCESS_TOKEN_SECRETE as string,
       (err: any, decoded: any) => {
         if (err) {
-          console.log("Access Token Middleware Error");
+          console.log("Access Token Not Found in Request");
           return res.status(403).json({
-            message: "Forbidden Token Please sent the refresh token request",
+            message: "Access Token Not Found",
           });
         }
         req.user = decoded.UserInfo;
@@ -35,7 +29,7 @@ export const verifyJWT = async (
       }
     );
   } catch (error) {
-    console.log("VerifyJWT middleware errror");
+    console.log("Middleware Error");
     console.log(error);
   }
 };

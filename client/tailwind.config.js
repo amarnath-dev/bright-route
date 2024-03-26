@@ -15,6 +15,7 @@ export default {
         'color-five': '#52ab98',
         'background-one': "#020914",
         'background-two': "#0d1117",
+        'home-color': "#1496BB",
       },
     },
   },
