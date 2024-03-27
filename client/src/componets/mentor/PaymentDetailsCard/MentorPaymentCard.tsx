@@ -91,7 +91,7 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
 
   return (
     <>
-      <div className="w-full h-full flex justify-around">
+      <div className="w-full h-full flex justify-around flex-col md:flex-row px-6 gap-4 md:px-0">
         {mentorPlans?.map((plan, index: number) => {
           return (
             <>

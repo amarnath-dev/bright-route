@@ -73,7 +73,7 @@ const VisitMentorProfile = () => {
           <MentorAboutSkill mentor={mentor} user={"mentee"} />
         </div>
       </div>
-      <div className="flex justify-center bg-background-two">
+      <div className="flex justify-center bg-background-two py-10">
         <MentorPaymentCard
           mentorPlans={mentorPlans ? mentorPlans : null}
           mentor={""}

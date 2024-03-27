@@ -69,7 +69,7 @@ const MentorPlans = () => {
                 </div>
               </>
             )}
-            <div className="w-full h-full flex justify-center items-center px-10 md:px-16 py-14">
+            <div className="w-full h-full flex justify-center items-center md:px-16 py-14">
               <MentorPaymentCard
                 mentorPlans={isPlan ? mentorPlans : null}
                 mentor={"mentor"}

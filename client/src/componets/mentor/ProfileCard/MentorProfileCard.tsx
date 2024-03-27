@@ -79,9 +79,9 @@ const MentorProfileCard: React.FC<MentorProfileCardProps> = ({
         </a>
       </div>
       {user === "mentor" ? (
-        <div className="text-center mt-5 mb-5 md:mb-0 md:mt-9">
+        <div className="text-center mt-5 mb-5 md:mb-0 md:mt-9 py-5 px-5">
           <button
-            className="ml-4 mb-8 text-gray-200"
+            className="text-gray-200 w-full bg-color-five py-2 rounded-full"
             onClick={() => navigate("/mentor/profile/update")}
           >
             Update

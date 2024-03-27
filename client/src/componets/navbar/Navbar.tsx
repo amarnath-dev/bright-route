@@ -21,8 +21,8 @@ interface NotType {
   type: string;
 }
 
-const HOST = "https://bright-route.online";
-// const HOST = "http://localhost:3000";
+// const HOST = "https://bright-route.online";
+const HOST = "http://localhost:3000";
 const NavBar = () => {
   const { user } = useAppSelector((state) => state.userAuth);
   const [profileImg, setProfileImg] = useState<string>();
@@ -143,7 +143,7 @@ const NavBar = () => {
         <div className="col-span-4 bg-gray-800 h-16 flex items-center">
           <img
             src={Logo}
-            className="w-16 py-6 ml-10 cursor-pointer px-2 md:px-0"
+            className="w-16 md:py-6 ml-10 cursor-pointer px-2 md:px-0"
             alt="logo"
             onClick={logoClick}
           />
