@@ -151,8 +151,8 @@ const MyMentors = () => {
                             </Link>
                           </div>
                           <div className="px-3">
-                            <h1 className="py-2 text-gray-400">
-                              {format(mentor.createdAt)}
+                            <h1 className="py-2 font-bold text-blue-400">
+                              {30 - parseInt(format(mentor.createdAt))} Days Left
                             </h1>
                           </div>
                         </figcaption>

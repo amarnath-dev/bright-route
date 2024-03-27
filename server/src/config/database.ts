@@ -1,6 +1,6 @@
 import app from "../app";
 import mongoose from "mongoose";
-// import { job } from "../utils/expiryScript";
+import { job } from "../utils/expiryScript";
 
 const PORT = process.env.PORT;
 mongoose
@@ -9,7 +9,7 @@ mongoose
     console.log("Database Connected");
     app.listen(PORT, () => {
       console.log(`Server Running on Port ${PORT}`);
-      // job
+      job;
     });
   })
   .catch((error) => {

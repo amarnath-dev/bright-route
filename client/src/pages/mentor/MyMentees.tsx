@@ -158,8 +158,8 @@ const MyMentees = () => {
                               </Link>
                             </div>
                             <div className="px-3">
-                              <h1 className="py-2 text-gray-400">
-                                {format(plan?.createdAt)}
+                              <h1 className="py-2 text-md font-bold text-blue-400">
+                                {30 - parseInt(format(plan?.createdAt))} Days Left
                               </h1>
                             </div>
                           </figcaption>

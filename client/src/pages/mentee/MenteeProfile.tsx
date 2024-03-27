@@ -22,6 +22,7 @@ import ReactCrop, {
 import "react-image-crop/dist/ReactCrop.css";
 import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
 import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
+import Swal from "sweetalert2";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -113,25 +114,38 @@ const MenteeProfile = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    formData.goal = goal;
-    try {
-      const response = await axiosPrivate.post(
-        "/managment/profie-update",
-        formData,
-        {
-          withCredentials: true,
+
+    Swal.fire({
+      title: "Do you want to save the changes?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      denyButtonText: `Don't save`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        formData.goal = goal;
+        try {
+          const response = await axiosPrivate.post(
+            "/managment/profie-update",
+            formData,
+            {
+              withCredentials: true,
+            }
+          );
+          if (response) {
+            const reqRes = response.data;
+            if (reqRes.status === "success") {
+              Swal.fire("Saved!", "", "success");
+            }
+          }
+        } catch (error) {
+          Swal.fire("Unable to save the changes", "", "error");
+          console.log(error);
         }
-      );
-      if (response) {
-        const reqRes = response.data;
-        if (reqRes.status == "success") {
-          toast.success(reqRes.message);
-        }
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
       }
-    } catch (error) {
-      toast.error("Something went wrong");
-      console.log(error);
-    }
+    });
   };
 
   //------------------> Image Crop ------------------------------>//

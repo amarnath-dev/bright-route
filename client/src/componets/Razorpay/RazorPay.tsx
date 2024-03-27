@@ -129,15 +129,18 @@ export const RazorPay = () => {
 
   return (
     <div className="w-full h-screen flex justify-center py-20 bg-background-two">
-      <div className="text-white text-lg flex flex-col">
+      <div className="text-white text-lg flex flex-col px-5 text-wrap">
         <li className="py-3">
           Please make sure that you have a stable internet connection
         </li>
         <li className="py-3">
-          Do not close or cancel the window during the Transactions
+          Do not close or cancel the window during the Transaction
         </li>
         <li className="py-3">
           Once you payment is completed you can check the payment details
+        </li>
+        <li className="py-3 font-bold">
+          Your Plan will be valid for 30 days starting from the purchase Date
         </li>
         <div className="w-full flex justify-center py-10">
           <button

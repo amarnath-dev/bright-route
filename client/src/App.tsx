@@ -5,7 +5,7 @@ import ProtectedRoute from "./componets/protect/ProtectedRoute";
 import { IsAuthenticated } from "./componets/protect/IsAuthenticated";
 import { MenteeRoutes } from "./routes/MenteeRoutes";
 import { MentorRoutes } from "./routes/MentorRoutes";
-import { AdminRoutes } from "./routes/adminRoutes";
+import { AdminRoutes } from "./routes/AdminRoutes";
 import { AuthRoutes } from "./routes/AuthRoutes";
 import "./App.css";
 import "tailwindcss/tailwind.css";
