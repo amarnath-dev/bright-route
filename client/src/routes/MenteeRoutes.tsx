@@ -48,7 +48,10 @@ export const MenteeRoutes = () => {
 
       <Route path="/managment/password" element={<ChangePassword />} />
 
-      <Route path="/mentorship/apply" element={<MentorshipApplyDetails />} />
+      <Route
+        path="/mentorship/apply/:planId"
+        element={<MentorshipApplyDetails />}
+      />
 
       <Route
         path="/mentor-profile/:mentorId"

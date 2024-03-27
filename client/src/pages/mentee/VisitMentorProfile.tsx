@@ -6,15 +6,19 @@ import { mentorProfileObj } from "../../datatypes/Datatypes";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MentorPaymentCard from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
-import { MentorPlan } from "../../datatypes/PropsTypes";
+import { MentorPlanDetails } from "../../datatypes/PropsTypes";
 import NavBar from "../../componets/navbar/Navbar";
+import { useAppSelector } from "../../app/hooks";
 
 const VisitMentorProfile = () => {
   const { mentorId } = useParams();
   const [mentor, setMentor] = useState<mentorProfileObj>();
   const axiosPrivate = useAxiosPrivate();
   const scrollRef = React.useRef<HTMLInputElement>(null);
-  const [mentorPlans, setMentorPlans] = useState<MentorPlan | null>(null);
+  const [mentorPlans, setMentorPlans] = useState<MentorPlanDetails[] | null>(
+    null
+  );
+  const { user } = useAppSelector((state) => state.userAuth);
 
   useEffect(() => {
     const fetchMentorData = async () => {
@@ -36,15 +40,18 @@ const VisitMentorProfile = () => {
   }, [axiosPrivate, mentorId]);
 
   useEffect(() => {
-    const fetchPlans = async () => {
-      const response = await axiosPrivate.get(`/mentor/plans/${mentorId}`, {
-        withCredentials: true,
-      });
-      if (response.data.status === "success") {
-        setMentorPlans(response?.data?.plans);
+    (async () => {
+      try {
+        const response = await axiosPrivate.get(`/mentor/plans/${mentorId}`, {
+          withCredentials: true,
+        });
+        if (response.data.status === "success") {
+          setMentorPlans(response.data?.plans);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    };
-    fetchPlans();
+    })();
   }, [axiosPrivate, mentorId]);
 
   useEffect(() => {
@@ -68,9 +75,12 @@ const VisitMentorProfile = () => {
       </div>
       <div className="flex justify-center bg-background-two">
         <MentorPaymentCard
-          mentorPlans={mentorPlans}
+          mentorPlans={mentorPlans ? mentorPlans : null}
           mentor={""}
           onChildData={() => {}}
+          setMentorPlans={
+            user?.role === "mentor" ? setMentorPlans : () => () => null
+          }
         />
       </div>
     </>

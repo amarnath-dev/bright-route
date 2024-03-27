@@ -40,7 +40,7 @@ const MentorHome: React.FC = () => {
                   return <AnimatedText {...item} key={index} />;
                 })}
               </div>
-              <div className="text-3xl py-3 text-gray-400">
+              <div className="text-3xl py-3 text-white">
                 {placeholderTextTwo.map((item, index) => {
                   return <AnimatedMotionTwo {...item} key={index as unknown as string} />;
                 })}

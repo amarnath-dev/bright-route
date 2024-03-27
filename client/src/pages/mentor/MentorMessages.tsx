@@ -317,7 +317,7 @@ const MentorMessages = () => {
         <div className="col-span-full md:col-span-3 px-1 py-1">
           <div className="w-full overflow-y-scroll" id="chat_header">
             <div className="rounded-full">
-              <h1 className="text-center text-xl font-bold text-gray-400">
+              <h1 className="text-center text-xl font-bold text-white">
                 Mentees
               </h1>
             </div>

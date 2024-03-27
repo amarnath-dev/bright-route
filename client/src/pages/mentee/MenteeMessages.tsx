@@ -375,7 +375,7 @@ const MenteeMessages = () => {
                             className="border rounded-md text-gray-400 bg-gray-900 px-4 py-4"
                             target="_blank"
                           >
-                            <VideoChatIcon />
+                            <VideoChatIcon className="text-gray-200"/>
                           </Link>
                         )}
                         {user?.role === "mentor" && (

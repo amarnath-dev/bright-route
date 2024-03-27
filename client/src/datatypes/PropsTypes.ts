@@ -42,6 +42,7 @@ export interface PlanService {
 
 export interface MentorPlanDetails {
   _id: string;
+  mentor_id: string;
   isDeleted: boolean;
   planAmount: number;
   planDescription: string;

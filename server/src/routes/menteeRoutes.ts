@@ -86,12 +86,6 @@ router.post(
   menteeController.mentorshipApply
 );
 
-router.get(
-  "/mentor/plans/:mentorId",
-  Authentication.ensureAuth(["mentee"]),
-  menteeController.getMentorPlans
-);
-
 //Using new controller class
 router.post(
   "/payment-suceess",

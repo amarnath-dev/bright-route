@@ -37,13 +37,13 @@ router.post(
 );
 
 router.get(
-  "/plans",
-  Authentication.ensureAuth(["mentor"]),
+  "/plans/:mentorId",
+  Authentication.ensureAuth(["mentee", "mentor"]),
   mentorController.getPlans
 );
 
 router.delete(
-  "/plans/delete/:planId/:planType",
+  "/plans/delete/:planId",
   Authentication.ensureAuth(["mentor"]),
   mentorController.deletePlan
 );
@@ -64,6 +64,12 @@ router.get(
   "/plan/:planId",
   Authentication.ensureAuth(["mentee", "mentor"]),
   mentorController.planDetails
+);
+
+router.get(
+  "/checkPlan/:planId",
+  Authentication.ensureAuth(["mentee", "mentor"]),
+  mentorController.checkPlan
 );
 
 export default router;

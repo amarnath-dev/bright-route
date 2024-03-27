@@ -1,8 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
+import "react-toastify/dist/ReactToastify.css";
 
 const ChangePassword = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -151,7 +151,7 @@ const ChangePassword = () => {
           <div className="relative p-4 w-full max-w-md max-h-full">
             <div className="relative rounded-lg shadow-lg border">
               <div className="flex items-center justify-center p-4 md:p-5 border-b rounded-t">
-                <h3 className="text-xl font-semibold text-gray-400">
+                <h3 className="text-xl font-semibold text-white">
                   Change Password
                 </h3>
               </div>
@@ -159,7 +159,7 @@ const ChangePassword = () => {
                 <form className="space-y-4" onSubmit={handleSubmit}>
                   {otpSend === false ? (
                     <div>
-                      <label className="block mb-2 text-sm font-medium text-gray-400">
+                      <label className="block mb-2 text-sm font-medium text-white">
                         Enter the current password
                       </label>
                       <input
@@ -239,7 +239,7 @@ const ChangePassword = () => {
                     ) : (
                       ""
                     )}
-                    <label className="block mb-2 text-sm font-medium text-gray-400">
+                    <label className="block mb-2 text-sm font-medium text-white">
                       New Password
                     </label>
                     <input
@@ -250,7 +250,7 @@ const ChangePassword = () => {
                     />
                   </div>
                   <div>
-                    <label className="block mb-2 text-sm font-medium text-gray-400">
+                    <label className="block mb-2 text-sm font-medium text-white">
                       Confirm New Password
                     </label>
                     <input

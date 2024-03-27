@@ -290,7 +290,7 @@ const MentorProfileEdit: React.FC = () => {
     <>
       <NavBar />
       <ToastContainer className="w-40 md:w-80" />
-      <div className="w-full h-full flex-row md:flex md:items-center md:flex-col bg-background-two text-gray-400">
+      <div className="w-full h-full flex-row md:flex md:items-center md:flex-col bg-background-two text-white">
         <div className="w-full ml-1 mr-1 md:ml-0 md:mr-0  md:w-2/3 md:h-40 mt-10 rounded-lg flex flex-row">
           <div className="w-40 h-full flex justify-center items-center flex-col px-2 py-2">
             <img
@@ -394,7 +394,7 @@ const MentorProfileEdit: React.FC = () => {
         <div className="w-full h-full md:w-2/3 mt-2 rounded-lg mb-72 md:mb-3 bg-background-two">
           <div className="flex flex-col items-center md:flex-row md:justify-between px-2 py-2">
             <label>
-              <h1>First Name</h1>
+              <h1 className="text-gray-400">First Name</h1>
               <input
                 type="text"
                 id="first_name"
@@ -405,7 +405,7 @@ const MentorProfileEdit: React.FC = () => {
               />
             </label>
             <label className="mt-2">
-              <h1>Last Name</h1>
+              <h1 className="text-gray-400">Last Name</h1>
               <input
                 type="text"
                 id="last_name"
@@ -416,7 +416,7 @@ const MentorProfileEdit: React.FC = () => {
               />
             </label>
             <label className="mt-2">
-              <h1>Email</h1>
+              <h1 className="text-gray-400">Email</h1>
               <input
                 type="text"
                 id="email"
@@ -430,7 +430,7 @@ const MentorProfileEdit: React.FC = () => {
 
           <div className="flex flex-col md:flex-row px-2 py-2 items-center md:justify-between">
             <label>
-              <h1>Company </h1>
+              <h1 className="text-gray-400">Company </h1>
               <input
                 type="text"
                 id="company"
@@ -441,7 +441,7 @@ const MentorProfileEdit: React.FC = () => {
               />
             </label>
             <label>
-              <h1>LinkedIn</h1>
+              <h1 className="text-gray-400">LinkedIn</h1>
               <input
                 type="text"
                 id="linkedIn"
@@ -452,7 +452,7 @@ const MentorProfileEdit: React.FC = () => {
               />
             </label>
             <label>
-              <h1>Twitter</h1>
+              <h1 className="text-gray-400">Twitter</h1>
               <input
                 type="text"
                 id="twitter"
@@ -466,7 +466,7 @@ const MentorProfileEdit: React.FC = () => {
 
           <div className="flex flex-col md:flex-row md:px-2 md:py-2 items-center">
             <label>
-              <h1>Personal Website</h1>
+              <h1 className="text-gray-400">Personal Website</h1>
               <input
                 type="text"
                 id="personal_web"
@@ -477,7 +477,7 @@ const MentorProfileEdit: React.FC = () => {
               />
             </label>
             <label className="md:ml-8">
-              <h1>Job Title</h1>
+              <h1 className="text-gray-400">Job Title</h1>
               <input
                 type="text"
                 id="job_title"
@@ -488,7 +488,7 @@ const MentorProfileEdit: React.FC = () => {
               />
             </label>
             <label className="md:ml-8">
-              <h1>State</h1>
+              <h1 className="text-gray-400">State</h1>
               <input
                 type="text"
                 id="state"
@@ -502,7 +502,7 @@ const MentorProfileEdit: React.FC = () => {
 
           <div className="flex flex-col md:flex-row md:px-2 md:py-2 items-center">
             <label>
-              <h1 className="font-bold">Select Category</h1>
+              <h1 className="font-bold ">Select Category</h1>
               <select
                 name="category"
                 id="category"
@@ -536,7 +536,7 @@ const MentorProfileEdit: React.FC = () => {
               rows={10}
               defaultValue={mentorData?.bio}
               onChange={handleInputChange}
-              className="block p-2.5 w-full text-lg rounded-lg focus:border-gray bg-gray-800 text-gray-400 border"
+              className="block p-2.5 w-full text-lg rounded-lg focus:border-gray bg-gray-800 text-white border"
             ></textarea>
           </div>
           <h1 className="mt-4 font-bold">Update your Skills</h1>

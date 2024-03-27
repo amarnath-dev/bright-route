@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { Form, submitForm } from "../../redux/applyForm/applySlice";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
+import useAxiosPrivate from "../../app/useAxiosPrivate";
+import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
 
 export const MentorshipApplyDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
+  const { planId } = useParams();
   const { form, planAmount } = useAppSelector((state) => state.applySlice);
 
   const [formData, setFormData] = useState<Form>({
@@ -19,6 +24,36 @@ export const MentorshipApplyDetails = () => {
     time_to_reach: "",
     message_to_mentor: "",
   });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axiosPrivate.get(`mentor/checkPlan/${planId}`, {
+          withCredentials: true,
+        });
+        if (response.data.status === "failed") {
+          Swal.fire({
+            title: "Plan Not Found",
+            text: "This plan does not exists",
+            allowOutsideClick: false,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate(`/mentor-profile/${response.data?.mentorId}`);
+            }
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [
+    axiosPrivate,
+    form,
+    form?.mentor_id,
+    form?.mentor_plan_id,
+    navigate,
+    planId,
+  ]);
 
   const handleChange: React.ChangeEventHandler<
     HTMLSelectElement | HTMLTextAreaElement
@@ -36,7 +71,7 @@ export const MentorshipApplyDetails = () => {
       !formData.time_to_reach ||
       !formData.message_to_mentor
     ) {
-      toast.error("Please select all fields");
+      toast.error("Please select All fields");
       return;
     }
     const result = dispatch(submitForm(formData));
@@ -55,7 +90,7 @@ export const MentorshipApplyDetails = () => {
 
   return (
     <>
-      <div className="w-full h-screen bg-background-two text-gray-400">
+      <div className="w-full h-screen bg-background-two text-white">
         <div className="w-full h-screen flex justify-center items-center px-2 py-5">
           <div className="w-full h-full md:w-3/4 rounded-lg md:px-4">
             <div className="mt-10 md:mt-4">
@@ -70,7 +105,7 @@ export const MentorshipApplyDetails = () => {
                 name="mentorship_goal"
                 onChange={handleChange}
                 value={formData.mentorship_goal}
-                className="block w-full px-4 py-3 text-base bg-background-two text-gray-400 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="block w-full px-4 py-3 text-base bg-background-two text-white border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option>Choose an option</option>
                 <option value="Do not wish to disclose.">
@@ -108,7 +143,7 @@ export const MentorshipApplyDetails = () => {
                 name="time_to_reach"
                 value={formData.time_to_reach}
                 onChange={handleChange}
-                className="block w-full px-4 py-3 text-base bg-background-two text-gray-400 border border-gray-300 rounded-lg focus:ring-gray-800 focus:border-gray-800 dark:placeholder-gray-400 dark:focus:ring-gray-800 dark:focus:border-blue-500"
+                className="block w-full px-4 py-3 text-base bg-background-two text-white border border-gray-300 rounded-lg focus:ring-gray-800 focus:border-gray-800 dark:placeholder-gray-400 dark:focus:ring-gray-800 dark:focus:border-blue-500"
               >
                 <option>Choose an option</option>
                 <option value="I don't have a timeline in mind.">
@@ -144,7 +179,7 @@ export const MentorshipApplyDetails = () => {
                 value={formData.message_to_mentor}
                 name="message_to_mentor"
                 onChange={handleChange}
-                className="placeholder:text-gray-900 block p-2.5 w-full text-sm bg-gray-800 text-gray-400 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="placeholder:text-gray-300 block p-2.5 w-full text-sm bg-gray-800 text-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Write your message here..."
               ></textarea>
               <div className="mt-2 flex-wrap">
@@ -156,9 +191,9 @@ export const MentorshipApplyDetails = () => {
                 <option value="">3.You can express your needs</option>
               </div>
             </div>
-            <div className="mt-10 flex justify-center md:justify-end">
+            <div className="flex justify-center md:justify-end">
               <button
-                className="border-2 bg-color-one text-white px-2 py-2 rounded-md"
+                className="border bg-color-five text-white px-2 py-2 rounded-md"
                 onClick={handleSubmit}
               >
                 Procced to Payment

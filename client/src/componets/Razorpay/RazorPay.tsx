@@ -19,8 +19,8 @@ export const RazorPay = () => {
   const socket = useRef<Socket | null>(null);
 
   useEffect(() => {
-    // socket.current = io("http://localhost:3000");
-    socket.current = io("ws:https://bright-route.online");
+    socket.current = io("http://localhost:3000");
+    // socket.current = io("ws:https://bright-route.online");
   }, []);
 
   const { form, planId, mentorId, planAmount } = useAppSelector(
@@ -129,7 +129,7 @@ export const RazorPay = () => {
 
   return (
     <div className="w-full h-screen flex justify-center py-20 bg-background-two">
-      <div className="text-gray-400 flex flex-col">
+      <div className="text-white text-lg flex flex-col">
         <li className="py-3">
           Please make sure that you have a stable internet connection
         </li>
@@ -142,7 +142,7 @@ export const RazorPay = () => {
         <div className="w-full flex justify-center py-10">
           <button
             onClick={handlePayment}
-            className="border px-6 py-2 rounded-sm text-white bg-black"
+            className="border px-6 py-2 rounded-sm text-white bg-color-five"
           >
             Proceed to Transaction
           </button>
