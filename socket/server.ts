@@ -48,9 +48,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", (message) => {
-    // console.log("Message ->", message);
     const user = getUser(message?.receiverId);
-    // console.log("Got User -> ", user);
     if (user && message) {
       const { socketId } = user;
       console.log("Sending Message to ->", socketId);

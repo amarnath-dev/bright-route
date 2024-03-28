@@ -8,8 +8,8 @@ import { MentorRoutes } from "./routes/MentorRoutes";
 import { AdminRoutes } from "./routes/AdminRoutes";
 import { AuthRoutes } from "./routes/AuthRoutes";
 import { Socket, io } from "socket.io-client";
-import { useAppSelector, useAppDispatch } from "./app/hooks";
-import { setUsers, setConnected } from "./redux/socket/socketSlice";
+import { useAppSelector } from "./app/hooks";
+// import { setUsers, setConnected } from "./redux/socket/socketSlice";
 import SocketContext from "./redux/socket/socketContext";
 import "./App.css";
 import "tailwindcss/tailwind.css";
@@ -30,15 +30,16 @@ const HOST = "http://localhost:3000";
 function App() {
   const socket = useRef<Socket | null>(null);
   const { user } = useAppSelector((state) => state.userAuth);
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (user) {
       socket.current = io(HOST);
       socket.current?.emit("addUser", user?._id);
       socket.current?.on("getUsers", (users) => {
-        dispatch(setUsers(users));
-        dispatch(setConnected(true));
+        // dispatch(setUsers(users));
+        // dispatch(setConnected(true));
+        console.log(users);
         if (socket.current) {
           console.log("Socket.Current", socket);
         }

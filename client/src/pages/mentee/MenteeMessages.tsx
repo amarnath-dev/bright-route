@@ -39,7 +39,6 @@ interface CurrentChat {
   createdAt: string;
 }
 
-
 const MenteeMessages = () => {
   const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
@@ -215,19 +214,22 @@ const MenteeMessages = () => {
         const receiverId = currentChat?.members.find(
           (userId: string) => userId !== user?._id
         );
+
         const ChatMessage = {
           userId: receiverId,
           content: "You have New Message 🔔",
-          role: "mentor",
+          role: user?.role === "mentee" ? "mentor" : "mentee",
           messageType: "new chat",
           senderId: user?._id,
         };
+
         const response = await axiosPrivate.post(
           `/notification/chatNotification/${user?._id}`,
           { ChatMessage },
           { withCredentials: true }
         );
-        if (response) {
+
+        if (response.data.status === "success") {
           socket?.current?.emit("sendNotification", {
             senderId: user?._id,
             receiverId: receiverId,

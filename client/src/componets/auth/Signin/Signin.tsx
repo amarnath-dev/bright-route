@@ -15,11 +15,11 @@ import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 
 const SigninForm: React.FC = () => {
-  const [user, setUser] = useState(false);
+  const [userData, setUser] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const userData = useAppSelector((state) => state.userAuth.user);
+  const { user } = useAppSelector((state) => state.userAuth);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -28,17 +28,15 @@ const SigninForm: React.FC = () => {
           withCredentials: true,
         });
         if (response.data.status === "exists") {
-          if (userData?.role === "mentee") {
+          if (user?.role === "mentee") {
             navigate("/");
-            return;
           }
-          if (userData?.role === "mentor") {
+          if (user?.role === "mentor") {
+            console.log("Navigating");
             navigate("/mentor/home");
-            return;
           }
-          if (userData?.role === "admin") {
+          if (user?.role === "admin") {
             navigate("/admin/dashboard");
-            return;
           }
         } else {
           console.log("User not logged In");
@@ -48,7 +46,7 @@ const SigninForm: React.FC = () => {
       }
     };
     checkToken();
-  }, [axiosPrivate, navigate, userData?.role]);
+  }, [axiosPrivate, navigate, user?.role]);
 
   const {
     register,
@@ -65,14 +63,13 @@ const SigninForm: React.FC = () => {
       if (response) {
         const payloadData = response.payload;
         if (payloadData.status === "success") {
-          const user = payloadData.user;
-          if (user.role === "mentee") {
+          const userData = payloadData.user;
+          if (userData.role === "mentee") {
             navigate("/");
-            return;
-          } else if (user?.role === "mentor") {
+          } else if (userData?.role === "mentor") {
             //error because mentor have seperate login page
             toast.error("Canno't Find Email");
-          } else if (user.role === "admin") {
+          } else if (userData.role === "admin") {
             //error because admin have seperate login page
             toast.error("Canno't Find Email");
           }
@@ -104,7 +101,7 @@ const SigninForm: React.FC = () => {
 
   return (
     <>
-      {user ? (
+      {userData ? (
         <>
           {/* Mentee Login  */}
           {/* <ToastContainer className="w-40 md:w-80" /> */}

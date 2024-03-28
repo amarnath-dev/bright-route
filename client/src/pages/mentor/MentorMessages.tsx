@@ -1,10 +1,9 @@
 import { Conversations } from "../../componets/conversation/Conversations";
 import SendIcon from "@mui/icons-material/Send";
 import { Messages } from "../../componets/message/Messages";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { useAppSelector } from "../../app/hooks";
-import { Socket, io } from "socket.io-client";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import CloseIcon from "@mui/icons-material/Close";
@@ -17,6 +16,8 @@ import {
 import { storage } from "../../app/firebase";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import NavBar from "../../componets/navbar/Navbar";
+import SocketContext from "../../redux/socket/socketContext";
+import { useContext } from "react";
 import "../../app/GlobalStyles.css";
 
 interface Message {
@@ -35,9 +36,8 @@ interface CurrentChat {
   createdAt: string;
 }
 
-// const HOST = "https://bright-route.online";
-const HOST = "http://localhost:3000";
 const MentorMessages = () => {
+  const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
   const [currentChat, setCurrentChat] = useState<CurrentChat>();
@@ -46,24 +46,20 @@ const MentorMessages = () => {
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState<Message | null>(null);
   const scrollRef = React.useRef<HTMLInputElement>(null);
-  const socket = useRef<Socket | null>(null);
-
   const [imoji, setImoji] = useState<boolean>(false);
-
   const [openImg, setOpenImg] = useState<boolean>();
   const [currentImg, setCurrentImg] = useState("");
 
   //Connecting to the Server
   useEffect(() => {
-    socket.current = io(HOST);
-    socket.current?.on("getMessage", (data) => {
+    socket?.current?.on("getMessage", (data) => {
       setArrivalMessage(data);
     });
-  }, []);
+  }, [socket]);
 
   //Getting Current user All conversations
   useEffect(() => {
-    const thisUserConversations = async () => {
+    (async () => {
       try {
         const response = await axiosPrivate.get("chat/conversation", {
           withCredentials: true,
@@ -72,8 +68,7 @@ const MentorMessages = () => {
       } catch (error) {
         console.log(error);
       }
-    };
-    thisUserConversations();
+    })();
   }, [axiosPrivate]);
 
   // Creating a new Conversation
@@ -103,34 +98,28 @@ const MentorMessages = () => {
 
   //Fetching both users all conversations.
   useEffect(() => {
-    try {
-      const fetchConversationMessages = async () => {
+    (async () => {
+      try {
         const response = await axiosPrivate.get(
           `chat/allConversation/${currentChat?._id}`
         );
-        if (response.data.allMessages) {
+        if (response.data?.allMessages) {
           setMessages(response.data.allMessages);
         }
-      };
-      fetchConversationMessages();
-    } catch (error) {
-      console.log(error);
-    }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   }, [conversation, axiosPrivate, user?._id, currentChat?._id]);
 
   useEffect(() => {
-    arrivalMessage &&
-      currentChat?.members.includes(arrivalMessage?.senderId as never) &&
+    if (
+      arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage?.senderId as never)
+    ) {
       setMessages((prev) => [...prev, arrivalMessage]);
+    }
   }, [arrivalMessage, conversation, currentChat?.members]);
-
-  //Adding the current user to socket.io server
-  useEffect(() => {
-    socket.current?.emit("addUser", user?._id);
-    socket.current?.on("getUsers", (users) => {
-      console.log(users);
-    });
-  }, [user, socket]);
 
   //Sending the new message
   const handleSubmit = async (e: React.MouseEvent<HTMLDivElement>) => {
@@ -143,7 +132,7 @@ const MentorMessages = () => {
         (userId: string) => userId !== user?._id
       );
       if (receiverId !== undefined) {
-        socket.current?.emit("sendMessage", {
+        socket?.current?.emit("sendMessage", {
           senderId: user?._id,
           receiverId,
           text: currentImg,
@@ -174,7 +163,7 @@ const MentorMessages = () => {
         (userId: string) => userId !== user?._id
       );
       if (receiverId !== undefined) {
-        socket.current?.emit("sendMessage", {
+        socket?.current?.emit("sendMessage", {
           senderId: user?._id,
           receiverId,
           text: newMessage,
@@ -207,7 +196,7 @@ const MentorMessages = () => {
       );
       const ChatMessage = {
         userId: receiverId,
-        content: "You have one new Message!!🔔",
+        content: "You have one new Message 🔔",
         role: "mentee",
         messageType: "new chat",
         senderId: user?._id,
@@ -218,7 +207,7 @@ const MentorMessages = () => {
         { withCredentials: true }
       );
       if (response) {
-        socket.current?.emit("sendNotification", {
+        socket?.current?.emit("sendNotification", {
           senderId: user?._id,
           receiverId: receiverId,
           content: "You have a new message 🔔",
@@ -340,7 +329,7 @@ const MentorMessages = () => {
         </div>
         <div className="col-span-12 md:col-span-9 bg-gray-800 rounded-md">
           <div className="flex flex-col items-center justify-center w-full min-h-full text-gray-800 rounded relative">
-            <div className="w-full absolute bottom-15 left-36">
+            <div className="w-full absolute bottom-15">
               <div id="imoji-picker">
                 {imoji && <EmojiPicker onEmojiClick={handleImojiClick} />}
               </div>

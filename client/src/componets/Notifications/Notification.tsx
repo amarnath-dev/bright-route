@@ -42,7 +42,7 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
   };
 
   useEffect(() => {
-    const fetchMessages = async () => {
+    (async () => {
       try {
         const response = await axiosPrivate.get(
           `/notification/getNotifications/${user?._id}`,
@@ -50,12 +50,11 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
             withCredentials: true,
           }
         );
-        setNotifications(response.data.notifications);
+        setNotifications(response.data?.notifications);
       } catch (error) {
         console.log(error);
       }
-    };
-    fetchMessages();
+    })();
   }, [notData, user?._id, axiosPrivate]);
 
   const handleDelete = async (notificationId: string) => {
