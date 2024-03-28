@@ -194,22 +194,6 @@ export class MenteeController {
     }
   }
 
-  async getMentorPlans(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const mentorId = req.params.mentorId;
-      const plans = await Plans.findOne({ mentor_id: mentorId });
-      if (plans?._id) {
-        res.status(200).json({ status: "success", plans });
-      }
-    } catch (error) {
-      console.error(error);
-      return next(Error("Data fetch failed"));
-    }
-  }
 
   async menteeProfile(
     req: Request,

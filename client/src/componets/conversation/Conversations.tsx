@@ -64,7 +64,7 @@ export const Conversations: React.FC<ConversationProps> = ({
     <>
       <div
         key={index}
-        className="w-full bg-gray-900 hover:bg-gray-250 rounded-lg px-1 py-1 flex items-center text-gray-400"
+        className="w-full bg-gray-900 hover:bg-gray-250 rounded-lg px-1 py-1 flex items-center text-white"
       >
         <div className="md:px-1 md:py-1">
           <img

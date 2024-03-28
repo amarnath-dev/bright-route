@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Notification from "../models/notificationModal";
+import { ObjectId } from "mongodb";
 
 export class NotificationControl {
   async paymentMessage(
@@ -30,7 +31,7 @@ export class NotificationControl {
     const userId = req.params.userId;
     try {
       const notifications = await Notification.find({
-        userId: userId,
+        userId: new ObjectId(userId),
         isDeleted: false,
       });
       if (notifications) {

@@ -60,15 +60,7 @@ const AnimatedText: React.FC<AnimatedTextProps> = (props) => {
           <Wrapper key={index}>
             {words[index].flat().map((element, index) => {
               return (
-                <span
-                  style={{
-                    overflow: "hidden",
-                    display: "inline-block",
-                    fontSize: "55px",
-                    height: "65px",
-                  }}
-                  key={index}
-                >
+                <span className="text-4xl md:text-6xl" key={index}>
                   <motion.span
                     style={{ display: "inline-block" }}
                     variants={item}

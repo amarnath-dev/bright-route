@@ -2,8 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./auth/authSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-
 import applySlice from "./applyForm/applySlice";
+// import socketSlice from "./socket/socketSlice";
 
 const persistConfig = {
   key: "root",
@@ -12,10 +12,12 @@ const persistConfig = {
 
 const persistAuthReducer = persistReducer(persistConfig, authSlice);
 const persistApplyReducer = persistReducer(persistConfig, applySlice);
+// const persistSocketReducer = persistReducer(persistConfig, socketSlice);
 const store = configureStore({
   reducer: {
     userAuth: persistAuthReducer,
     applySlice: persistApplyReducer,
+    // socketSlice: persistSocketReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -3,7 +3,7 @@ import Payment from "../models/paymentModel";
 
 const job = schedule.scheduleJob("0 0 * * *", async () => {
   try {
-    console.log("Cron job exicuted");
+    console.log("Cron Job Exicuted");
     const thresholdDuration = 30 * 24 * 60 * 60 * 1000;
     await Payment.updateMany(
       {

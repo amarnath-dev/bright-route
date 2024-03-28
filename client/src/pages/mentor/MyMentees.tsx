@@ -63,6 +63,7 @@ const MyMentees = () => {
       };
       fetchProfileImages();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myMentees.length]);
 
   useEffect(() => {
@@ -94,7 +95,7 @@ const MyMentees = () => {
           <>
             <div className="px-2 md:px-10 md:py-10 w-full">
               <div className="py-5 font-bold text-2xl">
-                <h1 className="text-gray-400">My Mentees</h1>
+                <h1 className="text-white">My Mentees</h1>
               </div>
               <hr />
               <div className="flex flex-col md:flex-row w-full h-full flex-wrap py-3">
@@ -109,11 +110,11 @@ const MyMentees = () => {
                             src={plan?.profile_img ? plan?.profile_img : "https://www.pngkey.com/png/full/52-522921_kathrine-vangen-profile-pic-empty-png.png"}
                           />
                           <div className="px-2 py-2 font-bold">
-                            <h1 className="text-xl text-gray-400">
+                            <h1 className="text-xl text-white">
                               {plan?.menteeDetails?.first_name}
                               {plan?.menteeDetails?.last_name}
                             </h1>
-                            <h1 className="mt-2 uppercase text-sm text-gray-400">
+                            <h1 className="mt-2 uppercase text-sm text-white">
                               {plan?.menteeDetails?.job_title}
                             </h1>
                           </div>
@@ -140,25 +141,25 @@ const MyMentees = () => {
                                   );
                                 }}
                               >
-                                <PaymentsIcon className="text-gray-400" />
+                                <PaymentsIcon className="text-gray-300" />
                               </button>
                               <Link
                                 to={`/mentor/chat/${plan?.mentee_id}`}
                                 className="border px-2 py-2 rounded-md text-black"
                               >
-                                <MessageIcon className="text-gray-400" />
+                                <MessageIcon className="text-gray-300" />
                               </Link>
                               <Link
                                 to={`/video/${plan?.mentee_id}`}
                                 className="border px-2 py-2 rounded-md text-white"
                                 target="_blank"
                               >
-                                <VideoChatIcon className="text-gray-400" />
+                                <VideoChatIcon className="text-gray-300" />
                               </Link>
                             </div>
                             <div className="px-3">
-                              <h1 className="py-2 text-gray-400">
-                                {format(plan?.createdAt)}
+                              <h1 className="py-2 text-md font-bold text-blue-400">
+                                {30 - parseInt(format(plan?.createdAt))} Days Left
                               </h1>
                             </div>
                           </figcaption>

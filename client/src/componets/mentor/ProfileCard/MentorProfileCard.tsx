@@ -7,7 +7,6 @@ import { storage } from "../../../app/firebase";
 import { useNavigate } from "react-router-dom";
 import { mentorProfileObj } from "../../../datatypes/Datatypes";
 
-
 interface MentorProfileCardProps {
   mentor: mentorProfileObj | undefined;
   user: string;
@@ -52,37 +51,37 @@ const MentorProfileCard: React.FC<MentorProfileCardProps> = ({
         />
       </div>
       <div className="flex justify-center">
-        <h1 className="font-bold text-xl py-1 text-gray-400">
+        <h1 className="font-bold text-xl py-1 text-white">
           {mentor?.first_name} {mentor?.last_name}
         </h1>
       </div>
       <div className="flex justify-center">
-        <h1 className="text-md font-bold text-gray-400">{mentor?.job_title}</h1>
+        <h1 className="text-md font-bold text-white">{mentor?.job_title}</h1>
       </div>
       <div className="flex justify-center">
-        <h1 className="text-md py-2 text-gray-400">{mentor?.mentorEmail}</h1>
+        <h1 className="text-md py-2 text-white">{mentor?.mentorEmail}</h1>
       </div>
       <div className="text-center">
-        <h1 className="underline text-gray-400">{mentor?.company}</h1>
+        <h1 className="underline text-white">{mentor?.company}</h1>
       </div>
       <div className="text-center">
-        <h1 className="mt-3 text-sm text-gray-400">
+        <h1 className="mt-3 text-sm text-white">
           <PublicIcon className="font-sm" />
           {mentor?.state}
         </h1>
       </div>
       <div className="text-center mt-4 md:mt-8 mb-5 md:mb-0">
         <a href={mentor?.twitter} target="_blank">
-          <XIcon className="cursor-pointer text-gray-400" />
+          <XIcon className="cursor-pointer text-gray-300" />
         </a>
         <a className="ml-10" href={mentor?.linkedIn}>
-          <LinkedInIcon className="cursor-pointer text-gray-400" />
+          <LinkedInIcon className="cursor-pointer text-gray-300" />
         </a>
       </div>
       {user === "mentor" ? (
-        <div className="text-center mt-5 mb-5 md:mb-0 md:mt-9">
+        <div className="text-center mt-5 mb-5 md:mb-0 md:mt-9 py-5 px-5">
           <button
-            className="ml-4 mb-8 text-gray-400"
+            className="text-gray-200 w-full bg-color-five py-2 rounded-full"
             onClick={() => navigate("/mentor/profile/update")}
           >
             Update
@@ -92,14 +91,14 @@ const MentorProfileCard: React.FC<MentorProfileCardProps> = ({
         <div className="mb-4">
           <div className="px-5">
             <button
-              className="bg-gray-800 w-full px-1 py-2 rounded-full md:mt-5 mb-5 text-gray-300"
+              className="w-full px-1 py-2 rounded-full md:mt-5 mb-5 text-white bg-color-five"
               onClick={() => navigate(`/chat/${mentor?.mentor_id}`)}
             >
               Message Mentor
             </button>
           </div>
           <div className="px-5 text-start">
-            <small className="w-full font-bold text-gray-400">
+            <small className="w-full font-bold text-white">
               You can message {mentor?.first_name} to ask questions before
               booking their services.
             </small>

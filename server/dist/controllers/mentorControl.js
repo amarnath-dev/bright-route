@@ -127,6 +127,7 @@ class MentorController {
         });
     }
     createPlan(req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
@@ -141,6 +142,7 @@ class MentorController {
                     return;
                 }
                 const newPlanDetails = {
+                    mentor_id: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
                     planAmount: req.body.planAmount,
                     planType: req.body.planType,
                     planDescription: req.body.planDescription,
@@ -195,11 +197,13 @@ class MentorController {
     getPlans(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = req.user;
-                const plans = yield mentorPlansModel_1.default.findOne({ mentor_id: user === null || user === void 0 ? void 0 : user.id });
-                if (plans === null || plans === void 0 ? void 0 : plans._id) {
-                    console.log("Please", plans);
-                    res.status(200).json({ status: "success", plans });
+                const mentorId = req.params.mentorId;
+                const plans = yield mentorPlansModel_1.default.findOne({
+                    mentor_id: new mongodb_1.ObjectId(mentorId),
+                });
+                if ((plans === null || plans === void 0 ? void 0 : plans.planDetails) && plans.planDetails.length > 0) {
+                    const activePlans = plans.planDetails.filter((plan) => plan.isDeleted === false);
+                    res.status(200).json({ status: "success", plans: activePlans });
                 }
                 else {
                     res.status(200).json({ status: "Not plans Exists" });
@@ -215,12 +219,9 @@ class MentorController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const planId = req.params.planId;
-                const planType = req.params.planType;
-                console.log(planId);
-                console.log(planType);
                 if (planId) {
-                    const remove = yield mentorPlansModel_1.default.updateOne({ _id: planId }, { $pull: { planDetails: { planType: planType } } });
-                    if (remove.modifiedCount > 0) {
+                    const updateResult = yield mentorPlansModel_1.default.updateOne({ "planDetails._id": new mongodb_1.ObjectId(planId) }, { $set: { "planDetails.$.isDeleted": true } });
+                    if (updateResult.modifiedCount > 0) {
                         res
                             .status(200)
                             .json({ status: "success", message: "Plan Deleted Successfully" });
@@ -301,6 +302,54 @@ class MentorController {
             }
             catch (error) {
                 console.error(error);
+                return next(Error("Mentor Application fetch failed"));
+            }
+        });
+    }
+    checkPlan(req, res, next) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log("Inside the route");
+                const planId = (_a = req.params) === null || _a === void 0 ? void 0 : _a.planId;
+                if (planId) {
+                    const plan = yield mentorPlansModel_1.default.findOne({
+                        "planDetails._id": planId,
+                    });
+                    console.log("Plan:", plan);
+                    if (plan === null || plan === void 0 ? void 0 : plan._id) {
+                        const applyPlan = plan.planDetails.find((p) => (p === null || p === void 0 ? void 0 : p._id.toString()) === planId);
+                        console.log("Apply Plan:", applyPlan);
+                        if (applyPlan) {
+                            if (applyPlan.isDeleted) {
+                                res
+                                    .status(200)
+                                    .json({ status: "failed", mentorId: applyPlan === null || applyPlan === void 0 ? void 0 : applyPlan.mentor_id });
+                            }
+                            else {
+                                res
+                                    .status(200)
+                                    .json({ status: "success", message: "Plan is valid" });
+                            }
+                        }
+                        else {
+                            res
+                                .status(404)
+                                .json({ status: "failed", message: "Plan not found" });
+                        }
+                    }
+                    else {
+                        res.status(404).json({ status: "failed", message: "Plan not found" });
+                    }
+                }
+                else {
+                    res
+                        .status(400)
+                        .json({ status: "failed", message: "Plan ID not found" });
+                }
+            }
+            catch (error) {
+                console.error("Error checking plan:", error);
                 return next(Error("Mentor Application fetch failed"));
             }
         });

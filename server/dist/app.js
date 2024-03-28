@@ -14,8 +14,8 @@ const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 const chatRoutes_1 = __importDefault(require("./routes/chatRoutes"));
 const notificationRoutes_1 = __importDefault(require("./routes/notificationRoutes"));
 const globalRoutes_1 = __importDefault(require("./routes/globalRoutes"));
-const ORIGIN = "https://bright-route.online";
-// const ORIGIN = "http://localhost:5173";
+// const ORIGIN = "https://bright-route.online";
+const ORIGIN = "http://localhost:5173";
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 const corsConfig = {
@@ -27,7 +27,6 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)(corsConfig));
-// app.use(limiter);
 //routes
 app.use("/api", menteeRoutes_1.default);
 app.use("/api/mentor", mentorRoutes_1.default);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useContext } from "react";
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
 import { useAppSelector } from "../../app/hooks";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
@@ -10,18 +10,13 @@ import {
   submitPlanAmount,
   submitPlanId,
 } from "../../redux/applyForm/applySlice";
-import { Socket, io } from "socket.io-client";
+import SocketContext from "../../redux/socket/socketContext";
 
 export const RazorPay = () => {
+  const socket = useContext(SocketContext);
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.userAuth);
   const dispatch = useDispatch();
-  const socket = useRef<Socket | null>(null);
-
-  useEffect(() => {
-    // socket.current = io("http://localhost:3000");
-    socket.current = io("ws:https://bright-route.online");
-  }, []);
 
   const { form, planId, mentorId, planAmount } = useAppSelector(
     (state) => state.applySlice
@@ -71,13 +66,13 @@ export const RazorPay = () => {
                 { mentorText },
                 { withCredentials: true }
               );
-              socket.current?.emit("sendNotification", {
+              socket?.current?.emit("sendNotification", {
                 senderId: user?._id,
                 receiverId: user?._id,
                 content: text,
                 type: "mentee",
               });
-              socket.current?.emit("sendNotification", {
+              socket?.current?.emit("sendNotification", {
                 senderId: user?._id,
                 receiverId: mentorId?.mentor_id,
                 content: mentorText,
@@ -111,6 +106,7 @@ export const RazorPay = () => {
     };
     const rzpay = new Razorpay(options);
     rzpay.open();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     Razorpay,
     axiosPrivate,
@@ -129,20 +125,23 @@ export const RazorPay = () => {
 
   return (
     <div className="w-full h-screen flex justify-center py-20 bg-background-two">
-      <div className="text-gray-400 flex flex-col">
+      <div className="text-white text-lg flex flex-col px-5 text-wrap">
         <li className="py-3">
           Please make sure that you have a stable internet connection
         </li>
         <li className="py-3">
-          Do not close or cancel the window during the Transactions
+          Do not close or cancel the window during the Transaction
         </li>
         <li className="py-3">
           Once you payment is completed you can check the payment details
         </li>
+        <li className="py-3 font-bold">
+          Your Plan will be valid for 30 days starting from the purchase Date
+        </li>
         <div className="w-full flex justify-center py-10">
           <button
             onClick={handlePayment}
-            className="border px-6 py-2 rounded-sm text-white bg-black"
+            className="border px-6 py-2 rounded-sm text-white bg-color-five"
           >
             Proceed to Transaction
           </button>

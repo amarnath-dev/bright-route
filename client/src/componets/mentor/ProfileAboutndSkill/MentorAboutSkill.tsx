@@ -38,7 +38,7 @@ const MentorAboutSkill: React.FC<MentorProfileCardProps> = ({
           </div>
           <label
             htmlFor="bio"
-            className="block mb-2 text-sm font-medium text-gray-400"
+            className="block mb-2 text-sm font-medium text-white"
           >
             ABOUT ME
           </label>
@@ -47,11 +47,11 @@ const MentorAboutSkill: React.FC<MentorProfileCardProps> = ({
             rows={12}
             disabled
             defaultValue={mentor?.bio}
-            className="block p-2.5 w-full text-lg rounded-lg border border-gray-400 focus:border-gray text-gray-400 bg-background-two"
+            className="block p-2.5 w-full text-lg rounded-lg border border-gray-400 focus:border-gray text-white bg-background-two"
           ></textarea>
         </div>
         <div className="mt-5 rounded-md px-2 py-2">
-          <h1 className="block mb-2 text-lg font-medium text-gray-400">
+          <h1 className="block mb-2 text-lg font-medium text-white">
             Skills
           </h1>
           <div className="mt-3 h-full flex flex-wrap">
@@ -59,7 +59,7 @@ const MentorAboutSkill: React.FC<MentorProfileCardProps> = ({
               return (
                 <span
                   key={index}
-                  className="rounded-full bg-gray-600 px-6 py-1 ml-2 mb-2"
+                  className="rounded-full bg-blue-200 px-6 py-1 ml-2 mb-2"
                   style={{ whiteSpace: "nowrap" }}
                 >
                   {skill}

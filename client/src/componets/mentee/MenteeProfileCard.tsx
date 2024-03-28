@@ -12,7 +12,7 @@ export const MenteeProfileCard = () => {
                 className="ml-1 h-6 w-6"
               />
             </span>
-            <ul className="text-gray-400">
+            <ul className="text-white">
               <li className="text-md md:mt-2">
                 Adding your photo and social media profiles helps mentors feel
                 confident that you’re a real person (e.g. not a bot).

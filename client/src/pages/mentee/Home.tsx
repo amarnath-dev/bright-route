@@ -1,16 +1,26 @@
-import { lazy, Suspense } from "react";
-import Spinner from "../../componets/fallback/Spinner";
-
-const LazyNavBar = lazy(() => import("../../componets/navbar/Navbar"));
-const LazyHeader = lazy(() => import("../../componets/header/Header"));
+import NavBar from "../../componets/navbar/Navbar";
+import Header from "../../componets/header/Header";
 
 const Home = () => {
   return (
     <div className="w-full h-screen bg-background-two">
-      <Suspense fallback={<Spinner />}>
-        <LazyNavBar />
-        <LazyHeader />
-      </Suspense>
+      <NavBar />
+      <Header />
+      <div className="w-full h-full flex justify-end flex-col md:flex-row px-4">
+        <div className="flex-1"></div>
+        <div className="flex-1 text-5xl font-bold">
+          <div className="md:py-6">
+            <h1>At your fingertips:</h1>
+            <h1 className="py-3">A dedicated career coach</h1>
+            <p className="text-xl font-medium py-2"> 
+              Want to start a new dream career? Successfully build your startup?
+              Itching to learn high-demand skills? Work smart with an online
+              mentor by your side to offer expert advice and guidance to match
+              your zeal. Become unstoppable using Bright Route.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -35,7 +35,6 @@ const tagMap: TagMap = {
 
 // Define the AnimatedMotionTwo component with its props type
 export const AnimatedMotionTwo: React.FC<AnimatedMotionTwoProps> = (props) => {
-  console.log("Hello Two", props);
 
   // Define the animation variants
   const item: AnimationVariants = {

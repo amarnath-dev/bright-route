@@ -13,7 +13,7 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
       {filtered.length === 0 ? (
         <>
           <div className="w-full min-h-screen bg-background-two flex justify-center">
-            <h1 className="text-balck text-3xl text-gray-300">
+            <h1 className="text-balck text-3xl text-white">
               No results found
             </h1>
           </div>
@@ -26,7 +26,7 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
                 key={index}
                 className="w-full mt-5 border-2 border-gray-700 rounded-lg px-4 py-4 md:px-2 md:py-2 md:w-9/12 md:mt-10"
               >
-                <div className="flex flex-col px-4 py-4 md:flex-row text-gray-400">
+                <div className="flex flex-col px-4 py-4 md:flex-row text-white">
                   <div className="relative flex justify-center h-full">
                     <img
                       alt="mentor_img"
@@ -69,7 +69,7 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
                         {mentor.skills.map((skill, index) => (
                           <button
                             key={index}
-                            className="rounded-full px-3 text-gray-900 bg-gray-500 mt-2 ml-2"
+                            className="rounded-full px-3 text-gray-900 bg-gray-300 text-semibold mt-2 ml-2"
                           >
                             {skill}
                           </button>

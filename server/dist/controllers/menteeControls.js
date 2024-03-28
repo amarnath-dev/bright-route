@@ -20,7 +20,6 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const crypto_js_1 = __importDefault(require("crypto-js"));
 const sendEmail_1 = __importDefault(require("../utils/sendEmail"));
 const otpModel_1 = __importDefault(require("../models/otpModel"));
-const mentorPlansModel_1 = __importDefault(require("../models/mentorPlansModel"));
 const mentorReportModel_1 = __importDefault(require("../models/mentorReportModel"));
 const mongodb_1 = require("mongodb");
 // import PaymentModel from "../models/PaymentModel";
@@ -81,7 +80,6 @@ class MenteeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const mentorId = new mongoose_1.default.Types.ObjectId(req.params.mentorId);
-                console.log("This is mentor id", mentorId);
                 if (mentorId) {
                     const mentorProfile = yield mentorProfileModel_1.default.aggregate([
                         { $match: { mentor_id: mentorId } },
@@ -169,21 +167,6 @@ class MenteeController {
             catch (error) {
                 console.log(error);
                 return next(Error("Report submission failed"));
-            }
-        });
-    }
-    getMentorPlans(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const mentorId = req.params.mentorId;
-                const plans = yield mentorPlansModel_1.default.findOne({ mentor_id: mentorId });
-                if (plans === null || plans === void 0 ? void 0 : plans._id) {
-                    res.status(200).json({ status: "success", plans });
-                }
-            }
-            catch (error) {
-                console.error(error);
-                return next(Error("Data fetch failed"));
             }
         });
     }
@@ -287,7 +270,6 @@ class MenteeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
-                console.log("Boady", req.body);
                 const { oldPassword, newPassword, confirmPassword, otpNumber } = req.body;
                 if (!newPassword || !confirmPassword) {
                     res.status(400).json({ message: "Data fields missing" });
@@ -348,7 +330,6 @@ class MenteeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
-                console.log("Reached the server");
                 if (user) {
                     const userExists = yield userModel_1.default.findById(user.id);
                     if (!(userExists === null || userExists === void 0 ? void 0 : userExists._id)) {
@@ -483,7 +464,6 @@ class MenteeController {
                         },
                     },
                 ]);
-                console.log(allMentors);
                 if (allMentors.length > 0) {
                     res.status(200).json({ status: "success", allMentors });
                 }

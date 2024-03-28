@@ -42,7 +42,7 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
   };
 
   useEffect(() => {
-    const fetchMessages = async () => {
+    (async () => {
       try {
         const response = await axiosPrivate.get(
           `/notification/getNotifications/${user?._id}`,
@@ -50,12 +50,11 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
             withCredentials: true,
           }
         );
-        setNotifications(response.data.notifications);
+        setNotifications(response.data?.notifications);
       } catch (error) {
         console.log(error);
       }
-    };
-    fetchMessages();
+    })();
   }, [notData, user?._id, axiosPrivate]);
 
   const handleDelete = async (notificationId: string) => {
@@ -84,11 +83,11 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
   return (
     <>
       <div className="w-96 h-screen shadow-lg rounded-lg bg-gray-800 overflow-y-scroll px-5 py-2">
-        <div className="text-start font-bold text-gray-700 flex justify-between">
-          <h1 className="py-2 px-2 text-xl text-gray-400">Alerts</h1>
+        <div className="text-start font-bold text-white flex justify-between">
+          <h1 className="py-2 px-2 text-xl text-white">Alerts</h1>
           <span className="px-1 py-2">
             <IoMdClose
-              className="text-3xl cursor-pointer rounded-full hover:bg-gray-400"
+              className="text-3xl cursor-pointer rounded-full hover:bg-gray-200"
               onClick={handleClose}
             />
           </span>
@@ -100,7 +99,7 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
                 (notification: NotificationMentor, index: number) => {
                   return (
                     <div
-                      className="px-2 py-1 w-full hover:bg-slate-300 cursor-pointer rounded-md"
+                      className="px-2 py-1 w-full cursor-pointer rounded-md"
                       key={index}
                     >
                       {notification?.isDeleted ? (
@@ -110,18 +109,18 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
                           <div>
                             <span className="flex justify-end">
                               <MdDelete
-                                className="text-xl text-gray-400 rounded-full"
+                                className="text-xl text-white rounded-full"
                                 onClick={() => handleDelete(notification?._id)}
                               />
                             </span>
                             <p
-                              className="text-gray-400 rounded-md px-2"
+                              className="text-white rounded-md px-2"
                               key={index}
                               // onClick={() => messageClick(notification)}
                             >
                               {notification?.content}
                             </p>
-                            <small className="text-black px-2">
+                            <small className="text-gray-300 px-2">
                               {format(notification?.createdAt)}
                             </small>
                           </div>
@@ -135,7 +134,7 @@ const Notification: React.FC<NotificationProps> = ({ setOpen, notData }) => {
           ) : (
             <>
               <div>
-                <h1 className="text-black px-4 py-4 text-xl text-gray-400">
+                <h1 className="px-4 py-4 text-xl text-gray-400">
                   No Notifications
                 </h1>
               </div>

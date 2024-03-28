@@ -67,7 +67,7 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
         <div className="relative p-4 w-full max-w-md max-h-full rounded-lg bg-gray-800">
           <div className="relative rounded-lg shadow bg-gray-800">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-              <h3 className="text-lg font-semibold text-gray-400">
+              <h3 className="text-lg font-semibold text-white">
                 Report Mentor
               </h3>
               <button
@@ -103,7 +103,7 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                 <div className="w-full flex flex-col">
                   <label
                     htmlFor="countries"
-                    className="block mb-2 text-sm font-medium text-gray-400"
+                    className="block mb-2 text-sm font-medium text-white"
                   >
                     What issue do you faced ?
                   </label>
@@ -112,7 +112,7 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                     name="issueFaced"
                     value={reportData?.issueFaced}
                     onChange={handleChage}
-                    className="bg-gray-800 border border-gray-300 text-md rounded-lg w-72 md:w-96 p-2.5 dark:placeholder-gray-400 text-gray-400"
+                    className="bg-gray-800 border border-gray-300 text-md rounded-lg w-72 md:w-96 p-2.5 dark:placeholder-gray-400 text-white"
                   >
                     <option>Choose the Type</option>
                     <option value="Harrasment">Harrasment</option>
@@ -125,7 +125,7 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                 <div className="col-span-2">
                   <label
                     htmlFor="description"
-                    className="block mb-2 text-sm font-medium text-gray-400"
+                    className="block mb-2 text-sm font-medium text-white"
                   >
                     Describe the issue you Faced
                   </label>
@@ -135,7 +135,7 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                     value={reportData?.issueDescription}
                     onChange={handleChage}
                     rows={4}
-                    className="block p-2.5 w-full text-sm text-gray-400 rounded-lg bg-gray-800 border-2 border-gray-400 placeholder:text-gray-400"
+                    className="block p-2.5 w-full text-sm text-gray-400 rounded-lg bg-gray-800 border-2 border-gray-400 placeholder:text-gray-300"
                     placeholder="Write here..."
                   ></textarea>
                 </div>
@@ -146,7 +146,7 @@ const Reportmentor: React.FC<ReportmentorProps> = ({ setOpen, mentor }) => {
                   name="date"
                   value={reportData?.date}
                   onChange={handleChage}
-                  className="w-full rounded h-10 mb-6 indent-2 bg-gray-800 text-gray-400"
+                  className="w-full rounded h-10 mb-6 indent-2 bg-gray-800 text-white"
                 />
               </div>
               <div>

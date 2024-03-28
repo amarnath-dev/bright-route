@@ -17,4 +17,6 @@ router.patch("/block/:userId", verifyJWT_1.verifyJWT, adminControls.blockUser);
 router.patch("/unblock/:userId", verifyJWT_1.verifyJWT, adminControls.unBlock);
 router.post("/mentee/search", verifyJWT_1.verifyJWT, adminControls.search);
 router.get("/mentor", verifyJWT_1.verifyJWT, adminControls.getMentors);
+router.get("/monthly-users/:year", verifyJWT_1.verifyJWT, adminControls.getMonthlyUsers);
+router.get("/analytics", verifyJWT_1.verifyJWT, adminControls.getAnalytics);
 exports.default = router;

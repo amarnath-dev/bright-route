@@ -17,7 +17,6 @@ const GoogleAuth = () => {
     if (response.credential) {
       const responseData = await dispatch(googleAuth(response.credential));
       const payloadData = responseData.payload;
-      console.log("Payload Data", payloadData);
       if (payloadData.status === "success") {
         navigate("/");
       } else if (payloadData.status == 409) {

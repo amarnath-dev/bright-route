@@ -4,8 +4,8 @@ import { IPlans } from "../Interfaces";
 const planSchema: Schema<IPlans> = new mongoose.Schema<IPlans>(
   {
     mentor_id: {
-      type: String,
-      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     planDetails: [
       {
@@ -31,6 +31,10 @@ const planSchema: Schema<IPlans> = new mongoose.Schema<IPlans>(
         isDeleted: {
           type: Boolean,
           default: false,
+        },
+        mentor_id: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
         },
       },
     ],
