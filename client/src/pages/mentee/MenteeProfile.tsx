@@ -11,6 +11,8 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import NavBar from "../../componets/navbar/Navbar";
+import NoImage from "../../assets/no-profile-image.png"
+
 
 import ReactCrop, {
   centerCrop,
@@ -322,7 +324,7 @@ const MenteeProfile = () => {
                   src={
                     formData?.profile_img
                       ? ""
-                      : "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
+                      : NoImage
                   }
                   alt="profile_img"
                   className="md:h-28 md:w-28 rounded-full object-cover"

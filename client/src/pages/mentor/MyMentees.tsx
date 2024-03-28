@@ -22,7 +22,7 @@ const MyMentees = () => {
   const { user } = useAppSelector((state) => state.userAuth);
 
   useEffect(() => {
-    const fetchApplications = async () => {
+    (async () => {
       try {
         const response = await axiosPrivate.get("/mentor/menteeApplications", {
           withCredentials: true,
@@ -35,8 +35,7 @@ const MyMentees = () => {
       } catch (error) {
         console.log(error);
       }
-    };
-    fetchApplications();
+    })();
   }, [axiosPrivate]);
 
   useEffect(() => {
@@ -49,7 +48,6 @@ const MyMentees = () => {
               if (imageId) {
                 const imageRef = ref(storage, imageId);
                 const url = await getDownloadURL(imageRef);
-
                 return { ...menteeObj, profile_img: url };
               } else {
                 return menteeObj;
@@ -63,7 +61,7 @@ const MyMentees = () => {
       };
       fetchProfileImages();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myMentees.length]);
 
   useEffect(() => {
@@ -107,7 +105,11 @@ const MyMentees = () => {
                           <img
                             className="w-24 h-24 rounded-full object-cover"
                             alt="profile_img"
-                            src={plan?.profile_img ? plan?.profile_img : "https://www.pngkey.com/png/full/52-522921_kathrine-vangen-profile-pic-empty-png.png"}
+                            src={
+                              plan?.profile_img
+                                ? plan?.profile_img
+                                : "https://www.pngkey.com/png/full/52-522921_kathrine-vangen-profile-pic-empty-png.png"
+                            }
                           />
                           <div className="px-2 py-2 font-bold">
                             <h1 className="text-xl text-white">
@@ -159,7 +161,8 @@ const MyMentees = () => {
                             </div>
                             <div className="px-3">
                               <h1 className="py-2 text-md font-bold text-blue-400">
-                                {30 - parseInt(format(plan?.createdAt))} Days Left
+                                {30 - parseInt(format(plan?.createdAt))} Days
+                                Left
                               </h1>
                             </div>
                           </figcaption>

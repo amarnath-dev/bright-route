@@ -305,7 +305,6 @@ export class MentorController {
           $unwind: "$menteeDetails",
         },
       ]);
-      console.log(mentorApplication);
       if (mentorApplication) {
         res.status(200).json({ status: "success", mentorApplication });
       }
