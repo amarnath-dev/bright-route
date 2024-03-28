@@ -17,18 +17,12 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const verifyJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const authHeader = req.headers.authorization || req.headers.Authorization;
-        // if (!authHeader?.startsWith("Bearer ")) {
-        //   return res
-        //     .status(401)
-        //     .json({ message: "Unauthorized not starting with Bearer" });
-        // }
-        // const accessToken = authHeader.split(" ")[1];
         const accessToken = authHeader;
         jsonwebtoken_1.default.verify(accessToken, process.env.ACCESS_TOKEN_SECRETE, (err, decoded) => {
             if (err) {
-                console.log("Access Token Middleware Error");
+                console.log("Access Token Not Found in Request");
                 return res.status(403).json({
-                    message: "Forbidden Token Please sent the refresh token request",
+                    message: "Access Token Not Found",
                 });
             }
             req.user = decoded.UserInfo;
@@ -36,7 +30,7 @@ const verifyJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         });
     }
     catch (error) {
-        console.log("VerifyJWT middleware errror");
+        console.log("Middleware Error");
         console.log(error);
     }
 });

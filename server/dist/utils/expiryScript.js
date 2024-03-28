@@ -17,7 +17,7 @@ const node_schedule_1 = __importDefault(require("node-schedule"));
 const paymentModel_1 = __importDefault(require("../models/paymentModel"));
 const job = node_schedule_1.default.scheduleJob("0 0 * * *", () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("Cron job exicuted");
+        console.log("Cron Job Exicuted");
         const thresholdDuration = 30 * 24 * 60 * 60 * 1000;
         yield paymentModel_1.default.updateMany({
             isExpired: false,

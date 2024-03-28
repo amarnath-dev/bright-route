@@ -3,7 +3,7 @@ import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import Cookies from "js-cookie";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import { IoNotifications } from "react-icons/io5";
@@ -11,8 +11,8 @@ import { FaChalkboardTeacher } from "react-icons/fa";
 import Notification from "../Notifications/Notification";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { BsPersonLinesFill } from "react-icons/bs";
-import { Socket, io } from "socket.io-client";
 import Logo from "../../assets/BRLogo.png";
+import SocketContext from "../../redux/socket/socketContext";
 
 interface NotType {
   content: string;
@@ -21,9 +21,8 @@ interface NotType {
   type: string;
 }
 
-// const HOST = "https://bright-route.online";
-const HOST = "http://localhost:3000";
 const NavBar = () => {
+  const socket = useContext(SocketContext);
   const { user } = useAppSelector((state) => state.userAuth);
   const [profileImg, setProfileImg] = useState<string>();
   const [firebaseImgId, setFirebaseImgId] = useState<string>();
@@ -32,12 +31,10 @@ const NavBar = () => {
 
   const [open, setOpen] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<NotType | null>(null);
-  const socket = useRef<Socket | null>(null);
 
-  //Connecting to the Server
+  // Connecting to the Server
   useEffect(() => {
-    socket.current = io(HOST);
-    socket.current?.on("getNotification", (data) => {
+    socket?.current?.on("getNotification", (data) => {
       setNotifications({
         senderId: data?.senderId,
         content: data?.content,
@@ -45,11 +42,7 @@ const NavBar = () => {
         createdAt: Date.now(),
       });
     });
-  }, []);
-
-  useEffect(() => {
-    socket.current?.emit("addUser", user?._id);
-  }, [user]);
+  }, [socket]);
 
   const toProfile = () => {
     if (user?.role === "mentee") {
@@ -244,5 +237,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-

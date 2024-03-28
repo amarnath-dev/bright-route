@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useContext } from "react";
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
 import { useAppSelector } from "../../app/hooks";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
@@ -10,18 +10,13 @@ import {
   submitPlanAmount,
   submitPlanId,
 } from "../../redux/applyForm/applySlice";
-import { Socket, io } from "socket.io-client";
+import SocketContext from "../../redux/socket/socketContext";
 
 export const RazorPay = () => {
+  const socket = useContext(SocketContext);
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.userAuth);
   const dispatch = useDispatch();
-  const socket = useRef<Socket | null>(null);
-
-  useEffect(() => {
-    socket.current = io("http://localhost:3000");
-    // socket.current = io("ws:https://bright-route.online");
-  }, []);
 
   const { form, planId, mentorId, planAmount } = useAppSelector(
     (state) => state.applySlice
@@ -71,13 +66,13 @@ export const RazorPay = () => {
                 { mentorText },
                 { withCredentials: true }
               );
-              socket.current?.emit("sendNotification", {
+              socket?.current?.emit("sendNotification", {
                 senderId: user?._id,
                 receiverId: user?._id,
                 content: text,
                 type: "mentee",
               });
-              socket.current?.emit("sendNotification", {
+              socket?.current?.emit("sendNotification", {
                 senderId: user?._id,
                 receiverId: mentorId?.mentor_id,
                 content: mentorText,
@@ -111,6 +106,7 @@ export const RazorPay = () => {
     };
     const rzpay = new Razorpay(options);
     rzpay.open();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     Razorpay,
     axiosPrivate,

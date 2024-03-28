@@ -39,22 +39,21 @@ io.on("connection", (socket) => {
 
   socket.on("typing", (value) => {
     console.log("VALU___>", value);
-    const socketIdOne = getUser(value?.[0]);
-    const socketIdTwo = getUser(value?.[1]);
-    if (socketIdOne && socketIdTwo) {
-      socket
-        .to([socketIdOne?.socketId, socketIdTwo?.socketId])
-        .emit("getTyping");
+    const socketIdOne = getUser(value);
+    console.log("Reciver Id", socketIdOne);
+    if (socketIdOne) {
+      console.log("Sending the typing", socketIdOne);
+      socket.to([socketIdOne?.socketId]).emit("getTyping");
     }
   });
 
   socket.on("sendMessage", (message) => {
-    console.log("Message ->", message);
+    // console.log("Message ->", message);
     const user = getUser(message?.receiverId);
-    console.log("Got User -> ", user);
+    // console.log("Got User -> ", user);
     if (user && message) {
       const { socketId } = user;
-      console.log("SOCKET ID", socketId, message);
+      console.log("Sending Message to ->", socketId);
       io.to(socketId).emit("getMessage", message);
     } else {
       console.error(`User with ID ${message?.receiverId} not found`);

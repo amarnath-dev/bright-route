@@ -68,7 +68,8 @@ const SigninForm: React.FC = () => {
           const user = payloadData.user;
           if (user.role === "mentee") {
             navigate("/");
-          } else if (user.role === "mentor") {
+            return;
+          } else if (user?.role === "mentor") {
             //error because mentor have seperate login page
             toast.error("Canno't Find Email");
           } else if (user.role === "admin") {
@@ -268,11 +269,9 @@ const SigninForm: React.FC = () => {
             </div>
           </div>
         </>
-      )} 
+      )}
     </>
   );
 };
 
 export default SigninForm;
-
- 

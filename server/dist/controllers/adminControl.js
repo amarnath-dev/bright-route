@@ -233,7 +233,6 @@ class AdminControls {
                         },
                     },
                 ]);
-                console.log("Mentors", mentors);
                 if (mentors) {
                     res.status(200).json({ status: "success", mentors });
                 }
@@ -243,6 +242,64 @@ class AdminControls {
                     console.log(error);
                     return next(error);
                 }
+            }
+        });
+    }
+    getMonthlyUsers(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const year = req.params.year;
+                const monthMap = {
+                    1: "January",
+                    2: "February",
+                    3: "March",
+                    4: "April",
+                    5: "May",
+                    6: "June",
+                    7: "July",
+                    8: "August",
+                    9: "September",
+                    10: "October",
+                    11: "November",
+                    12: "December",
+                };
+                const monthlyUsers = yield userModel_1.default.aggregate([
+                    {
+                        $group: {
+                            _id: { $month: "$createdAt" },
+                            count: { $sum: 1 },
+                        },
+                    },
+                ]);
+                const monthlyData = {};
+                monthlyUsers.forEach((entry) => {
+                    const monthName = monthMap[entry._id];
+                    monthlyData[monthName] = entry.count;
+                });
+                res.json({ monthlyData });
+            }
+            catch (error) {
+                console.log(error);
+                return next(error);
+            }
+        });
+    }
+    getAnalytics(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log("Request User", req.user);
+                const mentees = yield userModel_1.default.find({ role: "mentee" }).countDocuments();
+                const mentors = yield userModel_1.default.find({ role: "mentor" }).countDocuments();
+                if (mentees > 0 && mentors > 0) {
+                    res.json({ mentees, mentors });
+                }
+                else {
+                    res.status(404).json({ error: "No data found" });
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return next(error);
             }
         });
     }

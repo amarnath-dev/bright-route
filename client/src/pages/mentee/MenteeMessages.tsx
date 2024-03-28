@@ -1,10 +1,9 @@
 import { Conversations } from "../../componets/conversation/Conversations";
 import SendIcon from "@mui/icons-material/Send";
 import { Messages } from "../../componets/message/Messages";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import { useAppSelector } from "../../app/hooks";
-import { Socket, io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
@@ -21,6 +20,8 @@ import { storage } from "../../app/firebase";
 import CloseIcon from "@mui/icons-material/Close";
 import "../../app/GlobalStyles.css";
 import NavBar from "../../componets/navbar/Navbar";
+import { useContext } from "react";
+import SocketContext from "../../redux/socket/socketContext";
 
 interface Message {
   _id: string;
@@ -38,9 +39,9 @@ interface CurrentChat {
   createdAt: string;
 }
 
-// const HOST = "https://bright-route.online";
-const HOST = "http://localhost:3000";
+
 const MenteeMessages = () => {
+  const socket = useContext(SocketContext);
   const axiosPrivate = useAxiosPrivate();
   const [conversation, setConversation] = useState([]);
   const [currentChat, setCurrentChat] = useState<CurrentChat | null>(null);
@@ -52,46 +53,33 @@ const MenteeMessages = () => {
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState<Message | null>(null);
   const scrollRef = React.useRef<HTMLInputElement>(null);
-  const socket = useRef<Socket | null>(null);
   const [imoji, setImoji] = useState<boolean>(false);
 
   const [openImg, setOpenImg] = useState<boolean>();
   const [currentImg, setCurrentImg] = useState("");
 
-  //Connecting to the Server
   useEffect(() => {
-    socket.current = io(HOST);
-    socket.current?.emit("addUser", user?._id);
-    socket.current?.on("getUsers", (users) => {
-      console.log("Current Usres", users);
-    });
-  }, [user]);
-
-  useEffect(() => {
-    socket?.current?.emit("typing", currentChat?.members);
+    const receiverId = currentChat?.members.find(
+      (userId: string) => userId !== user?._id
+    );
+    socket?.current?.emit("typing", receiverId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newMessage]);
 
   useEffect(() => {
     if (!newMessage) {
-      socket.current?.emit("notTyping", currentChat?.members);
+      socket?.current?.emit("notTyping", currentChat?.members);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newMessage]);
 
   useEffect(() => {
-    socket.current?.on("getTyping", () => {
-      console.log("TYPING");
+    console.log("Get typing is running...");
+    socket?.current?.on("getTyping", () => {
+      console.log("TYPING...");
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket.current]);
-
-  useEffect(() => {
-    socket.current?.on("getNoTyping", () => {
-      console.log("Not Typing...");
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket.current]);
+  }, []);
 
   useEffect(() => {
     socket?.current?.on("getMessage", (data) => {
@@ -130,7 +118,6 @@ const MenteeMessages = () => {
                 withCredentials: true,
               }
             );
-            console.log("-->", conversations.data);
             if (conversations.data) {
               setConversation(conversations.data.conversation);
               setCurrentChat(conversations.data.conversation[0]);
@@ -145,9 +132,6 @@ const MenteeMessages = () => {
   }, [axiosPrivate, menteeID, mentorId, user?._id]);
 
   useEffect(() => {
-    // arrivalMessage &&
-    //   currentChat?.members.includes(arrivalMessage?.senderId as never) &&
-    //   setMessages((prev) => [...prev, arrivalMessage]);
     if (
       arrivalMessage &&
       currentChat?.members.includes(arrivalMessage?.senderId as never)
@@ -194,7 +178,7 @@ const MenteeMessages = () => {
           withCredentials: true,
         });
         if (response) {
-          socket.current?.emit("sendMessage", {
+          socket?.current?.emit("sendMessage", {
             ...response.data.savedMessage,
             receiverId,
           });
@@ -217,7 +201,7 @@ const MenteeMessages = () => {
           withCredentials: true,
         });
         if (response) {
-          socket.current?.emit("sendMessage", {
+          socket?.current?.emit("sendMessage", {
             ...response.data.savedMessage,
             receiverId,
           });
@@ -244,7 +228,7 @@ const MenteeMessages = () => {
           { withCredentials: true }
         );
         if (response) {
-          socket.current?.emit("sendNotification", {
+          socket?.current?.emit("sendNotification", {
             senderId: user?._id,
             receiverId: receiverId,
             content: "You have a New Message 🔔",
@@ -263,7 +247,7 @@ const MenteeMessages = () => {
 
   //To Scroll Down to the Bottom
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleImoji = () => {
@@ -359,9 +343,9 @@ const MenteeMessages = () => {
         <div className="col-span-12 md:col-span-6 bg-gray-800 rounded-md">
           <div className="flex flex-col items-center justify-center w-full min-h-screen text-gray-800 rounded">
             <div className="w-full" id="chat_header">
-              {conversation.map((c, index) => {
-                return (
-                  <>
+              <div>
+                {conversation.map((c, index) => {
+                  return (
                     <div key={index} className="flex">
                       <Conversations
                         conversation={c}
@@ -375,7 +359,7 @@ const MenteeMessages = () => {
                             className="border rounded-md text-gray-400 bg-gray-900 px-4 py-4"
                             target="_blank"
                           >
-                            <VideoChatIcon className="text-gray-200"/>
+                            <VideoChatIcon className="text-gray-200" />
                           </Link>
                         )}
                         {user?.role === "mentor" && (
@@ -391,9 +375,9 @@ const MenteeMessages = () => {
                         )}
                       </div>
                     </div>
-                  </>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
             <div id="imoji-picker">
               {imoji && <EmojiPicker onEmojiClick={handleImojiClick} />}

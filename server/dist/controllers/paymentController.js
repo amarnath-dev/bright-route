@@ -13,32 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentControls = void 0;
-const stripe_1 = __importDefault(require("stripe"));
-const stripe = new stripe_1.default(process.env.STRIPE_KEY);
 const paymentModel_1 = __importDefault(require("../models/paymentModel"));
 const roomModel_1 = __importDefault(require("../models/roomModel"));
 class PaymentControls {
-    payment(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const paymentIntent = yield stripe.paymentIntents.create({
-                    amount: 5,
-                    currency: "usd",
-                    automatic_payment_methods: {
-                        enabled: true,
-                    },
-                });
-                console.log(paymentIntent);
-                res.send({
-                    clientSecret: paymentIntent.client_secret,
-                });
-            }
-            catch (error) {
-                console.error(error);
-                return next(Error("Data fetch failed"));
-            }
-        });
-    }
     storePaymentData(req, res, next) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         return __awaiter(this, void 0, void 0, function* () {

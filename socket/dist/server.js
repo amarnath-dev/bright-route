@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const socket_io_1 = require("socket.io");
 const io = new socket_io_1.Server({
     cors: {
-        origin: "https://bright-route.online",
-        // origin: "http://localhost:5173",
+        // origin: "https://bright-route.online",
+        origin: "http://localhost:5173",
         credentials: true,
     },
 });
@@ -29,21 +29,20 @@ io.on("connection", (socket) => {
     });
     socket.on("typing", (value) => {
         console.log("VALU___>", value);
-        const socketIdOne = getUser(value === null || value === void 0 ? void 0 : value[0]);
-        const socketIdTwo = getUser(value === null || value === void 0 ? void 0 : value[1]);
-        if (socketIdOne && socketIdTwo) {
-            socket
-                .to([socketIdOne === null || socketIdOne === void 0 ? void 0 : socketIdOne.socketId, socketIdTwo === null || socketIdTwo === void 0 ? void 0 : socketIdTwo.socketId])
-                .emit("getTyping");
+        const socketIdOne = getUser(value);
+        console.log("Reciver Id", socketIdOne);
+        if (socketIdOne) {
+            console.log("Sending the typing", socketIdOne);
+            socket.to([socketIdOne === null || socketIdOne === void 0 ? void 0 : socketIdOne.socketId]).emit("getTyping");
         }
     });
     socket.on("sendMessage", (message) => {
-        console.log("Message ->", message);
+        // console.log("Message ->", message);
         const user = getUser(message === null || message === void 0 ? void 0 : message.receiverId);
-        console.log("Got User -> ", user);
+        // console.log("Got User -> ", user);
         if (user && message) {
             const { socketId } = user;
-            console.log("SOCKET ID", socketId, message);
+            console.log("Sending Message to ->", socketId);
             io.to(socketId).emit("getMessage", message);
         }
         else {
