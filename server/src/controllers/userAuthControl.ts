@@ -407,7 +407,6 @@ export class MenteeAuthController {
   async checkToken(req: Request, res: Response, next: NextFunction) {
     try {
       const cookies = req.cookies;
-      console.log(cookies)
       if (cookies.refreshToken) {
         res.json({ status: "exists" });
       } else {

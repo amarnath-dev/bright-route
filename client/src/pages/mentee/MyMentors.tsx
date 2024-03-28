@@ -27,6 +27,7 @@ const MyMentors = () => {
           withCredentials: true,
         });
         if (response.data?.mentors.length > 0) {
+          console.log("Details->", response.data?.mentors);
           setMyMentors(response.data?.mentors);
         } else {
           setIsMentor(true);
@@ -90,75 +91,84 @@ const MyMentors = () => {
             <div className="flex w-full flex-wrap">
               {myMentors?.map((mentor, index: number) => {
                 return (
-                  <div key={index}>
-                    <figure
-                      key={index}
-                      className="md:w-96 min-h-full rounded-xl p-8 shadow-lg mt-2 ml-2 bg-gray-800"
-                    >
-                      <div className="flex">
-                        <img
-                          className="w-24 h-24 rounded-full object-cover"
-                          id="profile_img"
-                          alt="profile_img"
-                          src={mentor?.mentorProfile[0]?.profile_img}
-                        />
-                        <div className="px-2 py-2 font-bold">
-                          <h1 className="text-xl text-white">
-                            {mentor?.mentorProfile[0]?.first_name}
-                            {mentor?.mentorProfile[0]?.last_name}
-                          </h1>
-                          <h1 className="mt-2 uppercase text-sm text-white">
-                            {mentor?.mentorProfile[0]?.job_title}
-                          </h1>
+                  <>
+                    {mentor.isExpired ? (
+                      ""
+                    ) : (
+                      <>
+                        <div key={index}>
+                          <figure
+                            key={index}
+                            className="md:w-96 min-h-full rounded-xl p-8 shadow-lg mt-2 ml-2 bg-gray-800"
+                          >
+                            <div className="flex">
+                              <img
+                                className="w-24 h-24 rounded-full object-cover"
+                                id="profile_img"
+                                alt="profile_img"
+                                src={mentor?.mentorProfile[0]?.profile_img}
+                              />
+                              <div className="px-2 py-2 font-bold">
+                                <h1 className="text-xl text-white">
+                                  {mentor?.mentorProfile[0]?.first_name}
+                                  {mentor?.mentorProfile[0]?.last_name}
+                                </h1>
+                                <h1 className="mt-2 uppercase text-sm text-white">
+                                  {mentor?.mentorProfile[0]?.job_title}
+                                </h1>
+                              </div>
+                            </div>
+                            <div className="flex justify-center">
+                              <a href={mentor?.mentorProfile[0]?.linkedIn}>
+                                <LinkedInIcon className="text-blue-500" />
+                              </a>
+                              <a
+                                href={mentor?.mentorProfile[0]?.twitter}
+                                className="ml-10"
+                              >
+                                <XIcon className="text-gray-300" />
+                              </a>
+                            </div>
+                            <div className="pt-6 space-y-4">
+                              <figcaption>
+                                <div className="flex justify-around">
+                                  <button
+                                    className="border px-2 py-2 rounded-md text-black"
+                                    onClick={() => {
+                                      navigate(
+                                        `/my-mentors/paymentDetails/${mentor?._id}`
+                                      );
+                                    }}
+                                  >
+                                    <PaymentsIcon className="text-gray-300" />
+                                  </button>
+                                  <Link
+                                    to={`/chat/${mentor?.mentor_id}`}
+                                    className="border px-2 py-2 rounded-md text-gray-300"
+                                  >
+                                    <MessageIcon />
+                                  </Link>
+                                  <Link
+                                    to={`/video/${mentor?.mentor_id}`}
+                                    className="border px-2 py-2 rounded-md text-gray-300"
+                                    target="_blank"
+                                  >
+                                    <VideoChatIcon />
+                                  </Link>
+                                </div>
+                                <div className="px-3">
+                                  <h1 className="py-2 font-bold text-blue-400">
+                                    {30 - parseInt(format(mentor.createdAt))}{" "}
+                                    Days Left
+                                  </h1>
+                                </div>
+                              </figcaption>
+                            </div>
+                          </figure>
                         </div>
-                      </div>
-                      <div className="flex justify-center">
-                        <a href={mentor?.mentorProfile[0]?.linkedIn}>
-                          <LinkedInIcon className="text-blue-500" />
-                        </a>
-                        <a
-                          href={mentor?.mentorProfile[0]?.twitter}
-                          className="ml-10"
-                        >
-                          <XIcon className="text-gray-300" />
-                        </a>
-                      </div>
-                      <div className="pt-6 space-y-4">
-                        <figcaption>
-                          <div className="flex justify-around">
-                            <button
-                              className="border px-2 py-2 rounded-md text-black"
-                              onClick={() => {
-                                navigate(
-                                  `/my-mentors/paymentDetails/${mentor?._id}`
-                                );
-                              }}
-                            >
-                              <PaymentsIcon className="text-gray-300" />
-                            </button>
-                            <Link
-                              to={`/chat/${mentor?.mentor_id}`}
-                              className="border px-2 py-2 rounded-md text-gray-300"
-                            >
-                              <MessageIcon />
-                            </Link>
-                            <Link
-                              to={`/video/${mentor?.mentor_id}`}
-                              className="border px-2 py-2 rounded-md text-gray-300"
-                              target="_blank"
-                            >
-                              <VideoChatIcon />
-                            </Link>
-                          </div>
-                          <div className="px-3">
-                            <h1 className="py-2 font-bold text-blue-400">
-                              {30 - parseInt(format(mentor.createdAt))} Days Left
-                            </h1>
-                          </div>
-                        </figcaption>
-                      </div>
-                    </figure>
-                  </div>
+                      </>
+                    )}
+                  </>
                 );
               })}
             </div>
