@@ -51,7 +51,7 @@ const MenteePaymentDetails = () => {
   const { user } = useAppSelector((state) => state.userAuth);
 
   useEffect(() => {
-    const fetchPaymetData = async () => {
+    (async () => {
       try {
         const response = await axiosPrivate.get(
           `/mentor/paymentDetails/${paymentId}`,
@@ -64,8 +64,7 @@ const MenteePaymentDetails = () => {
       } catch (error) {
         console.log(error);
       }
-    };
-    fetchPaymetData();
+    })();
   }, [axiosPrivate, paymentId]);
 
   useEffect(() => {
@@ -91,9 +90,10 @@ const MenteePaymentDetails = () => {
   return (
     <>
       <NavBar />
-      <div className="w-full h-full bg-background-two text-gray-400">
-        <div className="w-full h-full flex justify-center px-3 py-2">
-          <figure className="w-full h-full bg-gray-800 rounded-xl p-8 md:w-1/2 mt-10">
+      <div className="w-full h-screen bg-background-two text-white">
+        <div className="w-full h-full flex justify-center px-6 py-3">
+          
+          <figure className="w-full bg-gray-800 rounded-xl px-8 md:w-1/2">
             {user?.role === "mentor" ? (
               <div className="pt-6 space-y-4">
                 <blockquote>
@@ -117,35 +117,35 @@ const MenteePaymentDetails = () => {
             )}
             <div className="flex justify-center py-5 mt-2">
               <div className="w-full rounded-md px-2 py-2 bg-gray-800">
-                <h1 className="uppercase text-gray-400 font-bold">
+                <h1 className="uppercase text-white font-bold py-2">
                   Payment Details
                 </h1>
                 <hr />
                 <div>
-                  <h1 className="py-2 text-gray-400">
+                  <h1 className="py-2 text-white">
                     Status:
-                    <span className="text-green-700 font-bold px-2 bg-gray-800">
+                    <span className="text-green-500 font-bold px-2 bg-gray-800">
                       Completed <CheckCircleIcon />
                     </span>
                   </h1>
-                  <h1 className="text-gray-400">
+                  <h1 className="text-white">
                     Amount:
                     <span className="font-bold text-green-700 px-2">
                       {planDetails?.planAmount}
                     </span>
                   </h1>
-                  <h1 className="mt-2 text-gray-400">
+                  <h1 className="mt-2 text-white">
                     Plan Type:
                     <span className="font-bold px-2">
                       {planDetails?.planType}
                     </span>
                   </h1>
                   <div className="mt-3">
-                    <h1 className="text-gray-400">Services:</h1>
+                    <h1 className="text-white">Services:</h1>
                     {planDetails?.planServices.map((service, index: number) => {
                       return (
                         <>
-                          <div key={index} className="py-1 text-gray-400">
+                          <div key={index} className="py-1 text-white">
                             <h1 className="font-bold">
                               <span className="px-1">
                                 {index + 1}
@@ -165,7 +165,7 @@ const MenteePaymentDetails = () => {
                       );
                     })}
                   </div>
-                  <h1 className="mt-2 text-gray-400">Razor Pay ID</h1>
+                  <h1 className="mt-2 text-white">Razor Pay ID</h1>
                   <div className="mt-1">
                     <span className="cursor-pointer hover:bg-gray-300 rounded-full">
                       <div>

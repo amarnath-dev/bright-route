@@ -8,12 +8,13 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import { IoNotifications } from "react-icons/io5";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { FaHistory } from "react-icons/fa";
 import Notification from "../Notifications/Notification";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { BsPersonLinesFill } from "react-icons/bs";
 import Logo from "../../assets/BRLogo.png";
 import SocketContext from "../../redux/socket/socketContext";
-import NoImage from "../../assets/no-profile-image.png"
+import NoImage from "../../assets/no-profile-image.png";
 
 interface NotType {
   content: string;
@@ -131,6 +132,14 @@ const NavBar = () => {
       navigate("/admin/dashboard");
     }
   };
+  const handleHistory = () => {
+    if (user?.role === "mentor") {
+      navigate("/mentor/history");
+    }
+    if (user?.role === "mentee") {
+      navigate("/history");
+    }
+  };
   return (
     <>
       <div className="grid grid-cols-12 w-full items-center sticky shadow-lg z-10">
@@ -146,6 +155,12 @@ const NavBar = () => {
           <div className="flex justify-end items-center text-gray-400">
             <div className="flex">
               <div className="flex gap-4 md:gap-7 items-center">
+                <div
+                  onClick={handleHistory}
+                  className={open ? "hidden" : "block"}
+                >
+                  <FaHistory className="text-2xl hover:text-blue-600 text-gray-400" />
+                </div>
                 <div
                   onClick={handleClickOne}
                   className={open ? "hidden" : "block"}

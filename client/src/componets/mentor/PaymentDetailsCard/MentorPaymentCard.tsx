@@ -85,10 +85,6 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
     navigate(`/mentorship/apply/${mentor_plan_id}`);
   };
 
-  if (mentorPlans) {
-    console.log("Mentor plans", mentorPlans);
-  }
-
   return (
     <>
       <div className="w-full h-full flex justify-around flex-col md:flex-row px-6 gap-4 md:px-0">

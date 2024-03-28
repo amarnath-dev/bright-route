@@ -72,4 +72,10 @@ router.get(
   mentorController.checkPlan
 );
 
+router.get(
+  "/expired",
+  Authentication.ensureAuth(["mentor"]),
+  mentorController.getExpired
+);
+
 export default router;

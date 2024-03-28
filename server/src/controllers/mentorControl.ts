@@ -32,8 +32,6 @@ interface SinglePlan {
   planDetails: planDetails[];
 }
 
-
-
 export class MentorController {
   async mentorprofileDetails(
     req: Request,
@@ -319,8 +317,10 @@ export class MentorController {
     next: NextFunction
   ): Promise<void> {
     try {
+      console.log("Reached at payment details");
       const paymentId = req.params.paymentId;
       const paymentDetails = await Payment.findById(paymentId);
+      console.log("Payment Details", paymentDetails);
       if (paymentDetails?._id) {
         res.status(200).json({ status: "success", paymentDetails });
       }
@@ -339,11 +339,11 @@ export class MentorController {
       const planId = req.params.planId;
       if (planId) {
         const plan = await Plans.find(
-          { "planDetails._id": planId },
+          { "planDetails._id": new ObjectId(planId) },
           { "planDetails.$": 1 }
         );
         if (plan) {
-          res.status(200).json({ plan: plan[0].planDetails[0] });
+          res.status(200).json({ plan: plan[0]?.planDetails[0] });
         } else {
           console.log("Plan not found in database");
         }
@@ -380,7 +380,7 @@ export class MentorController {
             if (applyPlan.isDeleted) {
               res
                 .status(200)
-                .json({ status: "failed", mentorId: applyPlan?.mentor_id  });
+                .json({ status: "failed", mentorId: applyPlan?.mentor_id });
             } else {
               res
                 .status(200)
@@ -401,6 +401,44 @@ export class MentorController {
       }
     } catch (error) {
       console.error("Error checking plan:", error);
+      return next(Error("Mentor Application fetch failed"));
+    }
+  }
+
+  async getExpired(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const mentor = req?.user;
+      if (mentor) {
+        const expired = await Payment.aggregate([
+          {
+            $match: {
+              mentor_id: new ObjectId(mentor.id),
+              isExpired: true,
+            },
+          },
+          {
+            $lookup: {
+              from: "menteeprofiles",
+              localField: "mentee_id",
+              foreignField: "mentee_id",
+              as: "menteeDetails",
+            },
+          },
+          {
+            $unwind: "$menteeDetails",
+          },
+        ]);
+        console.log("Expired", expired);
+        res.status(200).json({ status: "success", expired });
+      } else {
+        console.log("Mentor Object Not Found");
+      }
+    } catch (error) {
+      console.error(error);
       return next(Error("Mentor Application fetch failed"));
     }
   }

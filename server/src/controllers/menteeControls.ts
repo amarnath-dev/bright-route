@@ -194,7 +194,6 @@ export class MenteeController {
     }
   }
 
-
   async menteeProfile(
     req: Request,
     res: Response,
@@ -520,6 +519,41 @@ export class MenteeController {
         res.status(200).json({ status: "success", allMentors });
       } else {
         res.status(200).json({ status: "empty" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Email send failed"));
+    }
+  }
+
+  async getExpired(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const mentee = req?.user;
+      if (mentee) {
+        const expired = await PaymentModel.aggregate([
+          {
+            $match: {
+              mentee_id: new ObjectId(mentee?.id),
+              isExpired: true,
+            },
+          },
+          {
+            $lookup: {
+              from: "mentorprofiles",
+              localField: "mentor_id",
+              foreignField: "mentor_id",
+              as: "mentorDetails",
+            },
+          },
+          {
+            $unwind: "$mentorDetails",
+          },
+        ]);
+        res.status(200).json({ status: "success", expired });
       }
     } catch (error) {
       console.log(error);

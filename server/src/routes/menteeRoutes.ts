@@ -111,4 +111,10 @@ router.post(
   menteeController.getSorted
 );
 
+router.get(
+  "/mentee/expired",
+  Authentication.ensureAuth(["mentee"]),
+  menteeController.getExpired
+);
+
 export default router;

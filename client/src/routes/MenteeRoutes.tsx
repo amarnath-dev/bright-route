@@ -37,6 +37,8 @@ const MenteePaymentDetails = React.lazy(
   () => import("../componets/PaymentDetails/MenteePaymentDetails")
 );
 
+const MenteeHistory = React.lazy(() => import("../pages/mentee/MenteeHistory"));
+
 export const MenteeRoutes = () => {
   return (
     <>
@@ -81,6 +83,8 @@ export const MenteeRoutes = () => {
         path="/my-mentors/mentor-profile/:mentorId"
         element={<VisitMentorProfile />}
       />
+
+      <Route path="/history" element={<MenteeHistory />} />
     </>
   );
 };
