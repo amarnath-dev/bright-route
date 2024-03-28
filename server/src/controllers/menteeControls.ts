@@ -405,7 +405,7 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
-      const userRole = req.params?.userRole;
+      const userRole = req.params.userRole;
       if (user) {
         if (userRole === "mentee") {
           const menteeData = await MenteeModel.findOne({
@@ -425,7 +425,6 @@ export class MenteeController {
           const mentorData = await MentorModel.findOne({
             mentor_id: new ObjectId(user?.id),
           });
-          console.log("Metor Data", mentorData);
           if (mentorData) {
             res.status(200).json({
               status: "success",

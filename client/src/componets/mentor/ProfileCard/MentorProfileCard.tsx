@@ -6,6 +6,7 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../../app/firebase";
 import { useNavigate } from "react-router-dom";
 import { mentorProfileObj } from "../../../datatypes/Datatypes";
+import NoImage from "../../../assets/no-profile-image.png";
 
 interface MentorProfileCardProps {
   mentor: mentorProfileObj | undefined;
@@ -45,7 +46,7 @@ const MentorProfileCard: React.FC<MentorProfileCardProps> = ({
           src={
             profileImage
               ? profileImage
-              : "https://www.menusltd.com/image/avatar.jpeg"
+              : NoImage
           }
           className="w-28 md:w-36 h-auto rounded-full px-2 py-2 border border-gray-400 object-cover"
         />

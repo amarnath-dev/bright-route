@@ -13,6 +13,7 @@ import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { BsPersonLinesFill } from "react-icons/bs";
 import Logo from "../../assets/BRLogo.png";
 import SocketContext from "../../redux/socket/socketContext";
+import NoImage from "../../assets/no-profile-image.png"
 
 interface NotType {
   content: string;
@@ -136,7 +137,7 @@ const NavBar = () => {
         <div className="col-span-4 bg-gray-800 h-16 flex items-center">
           <img
             src={Logo}
-            className="w-16 md:py-6 ml-10 cursor-pointer px-2 md:px-0"
+            className="w-16 md:py-6 md:ml-10 cursor-pointer px-2 md:px-0"
             alt="logo"
             onClick={logoClick}
           />
@@ -144,7 +145,7 @@ const NavBar = () => {
         <div className="col-span-8 bg-gray-800 h-16">
           <div className="flex justify-end items-center text-gray-400">
             <div className="flex">
-              <div className="flex gap-7 items-center">
+              <div className="flex gap-4 md:gap-7 items-center">
                 <div
                   onClick={handleClickOne}
                   className={open ? "hidden" : "block"}
@@ -177,14 +178,14 @@ const NavBar = () => {
                 </div>
               </div>
               <Navbar fluid rounded className={open ? "hidden" : "block"}>
-                <div className="flex px-2">
+                <div className="flex">
                   <Dropdown
                     arrowIcon={false}
                     inline
                     label={
                       <Avatar
                         alt="User_settings"
-                        img={firebaseImgId ? firebaseImgId : ""}
+                        img={firebaseImgId ? firebaseImgId : NoImage}
                         rounded
                       />
                     }

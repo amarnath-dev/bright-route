@@ -30,6 +30,7 @@ export class Authentication {
             if (!userExists) {
               return next(new Error("Unauthorized Access"));
             }
+            console.log(roles)
             if (!roles.includes(userExists?.role)) {
               return next(new Error("Unauthorized: Role not Allowed"));
             } else {
