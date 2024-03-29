@@ -23,8 +23,8 @@ const PageNotFound = React.lazy(
 );
 const VideoChat = React.lazy(() => import("./componets/VideoChat/VideoChat"));
 
-// const HOST = "https://bright-route.online";
-const HOST = "http://localhost:3000";
+const HOST = "https://bright-route.online";
+// const HOST = "http://localhost:3000";
 
 function App() {
   const socket = useRef<Socket | null>(null);

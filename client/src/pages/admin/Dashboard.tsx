@@ -22,7 +22,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="grid grid-cols-12 bg-background-two">
-        <div className="grid col-span-3 h-full">
+        <div className="grid col-span-3 h-full bg-background-two">
           <AdminSidebar />
         </div>
         <div className="grid h-screen col-span-9">
@@ -40,7 +40,7 @@ const Dashboard = () => {
             <figure className="md:w-80 h-32 rounded-xl py-5 shadow-lg bg-gray-900">
               <div className="">
                 <div className="font-bold text-center">
-                  <h1 className="text-white text-xl">Total Mentors</h1>
+                  <h1 className="text-white text-xl">Total Mentees</h1>
                   <h1 className="mt-2 uppercase text-color-five text-3xl">
                     {analytics?.mentees}
                   </h1>

@@ -159,7 +159,7 @@ const MentorManagement = () => {
             </div>
           </div>
 
-          <div className="mt-5 mb-2 w-full">
+          {/* <div className="mt-5 mb-2 w-full">
             <div>
               <input
                 type="text"
@@ -170,11 +170,11 @@ const MentorManagement = () => {
                 placeholder="Search Users..."
               />
             </div>
-          </div>
+          </div> */}
 
           {mentor?.length > 0 ? (
             <>
-              <div className="relative overflow-x-auto">
+              <div className="relative overflow-x-auto py-10">
                 <table className="w-full text-sm text-left rtl:text-right rounded">
                   <thead className="text-xs border border-gray-800 rounded-md">
                     <tr className="text-gray-400">

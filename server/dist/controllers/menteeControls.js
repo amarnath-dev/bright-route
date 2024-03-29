@@ -348,11 +348,10 @@ class MenteeController {
         });
     }
     getProfileImg(req, res, next) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
-                const userRole = (_a = req.params) === null || _a === void 0 ? void 0 : _a.userRole;
+                const userRole = req.params.userRole;
                 if (user) {
                     if (userRole === "mentee") {
                         const menteeData = yield menteeProfileModel_1.default.findOne({
@@ -374,7 +373,6 @@ class MenteeController {
                         const mentorData = yield mentorProfileModel_1.default.findOne({
                             mentor_id: new mongodb_1.ObjectId(user === null || user === void 0 ? void 0 : user.id),
                         });
-                        console.log("Metor Data", mentorData);
                         if (mentorData) {
                             res.status(200).json({
                                 status: "success",
@@ -469,6 +467,39 @@ class MenteeController {
                 }
                 else {
                     res.status(200).json({ status: "empty" });
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return next(Error("Email send failed"));
+            }
+        });
+    }
+    getExpired(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const mentee = req === null || req === void 0 ? void 0 : req.user;
+                if (mentee) {
+                    const expired = yield paymentModel_1.default.aggregate([
+                        {
+                            $match: {
+                                mentee_id: new mongodb_1.ObjectId(mentee === null || mentee === void 0 ? void 0 : mentee.id),
+                                isExpired: true,
+                            },
+                        },
+                        {
+                            $lookup: {
+                                from: "mentorprofiles",
+                                localField: "mentor_id",
+                                foreignField: "mentor_id",
+                                as: "mentorDetails",
+                            },
+                        },
+                        {
+                            $unwind: "$mentorDetails",
+                        },
+                    ]);
+                    res.status(200).json({ status: "success", expired });
                 }
             }
             catch (error) {

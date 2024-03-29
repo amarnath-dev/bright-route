@@ -141,6 +141,7 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
                             )}
                             <span className="ml-2">
                               {service?.serviceName} {service?.serviceCount}
+                              {service?.serviceCount ? " (Weekly)" : ""}
                             </span>
                           </li>
                         )

@@ -367,7 +367,6 @@ class MenteeAuthController {
     checkToken(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("Reached on Check Token");
                 const cookies = req.cookies;
                 if (cookies.refreshToken) {
                     res.json({ status: "exists" });

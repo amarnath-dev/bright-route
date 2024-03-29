@@ -257,7 +257,6 @@ class MentorController {
                         $unwind: "$menteeDetails",
                     },
                 ]);
-                console.log(mentorApplication);
                 if (mentorApplication) {
                     res.status(200).json({ status: "success", mentorApplication });
                 }
@@ -271,8 +270,10 @@ class MentorController {
     paymentDetails(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log("Reached at payment details");
                 const paymentId = req.params.paymentId;
                 const paymentDetails = yield paymentModel_1.default.findById(paymentId);
+                console.log("Payment Details", paymentDetails);
                 if (paymentDetails === null || paymentDetails === void 0 ? void 0 : paymentDetails._id) {
                     res.status(200).json({ status: "success", paymentDetails });
                 }
@@ -284,13 +285,14 @@ class MentorController {
         });
     }
     planDetails(req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const planId = req.params.planId;
                 if (planId) {
-                    const plan = yield mentorPlansModel_1.default.find({ "planDetails._id": planId }, { "planDetails.$": 1 });
+                    const plan = yield mentorPlansModel_1.default.find({ "planDetails._id": new mongodb_1.ObjectId(planId) }, { "planDetails.$": 1 });
                     if (plan) {
-                        res.status(200).json({ plan: plan[0].planDetails[0] });
+                        res.status(200).json({ plan: (_a = plan[0]) === null || _a === void 0 ? void 0 : _a.planDetails[0] });
                     }
                     else {
                         console.log("Plan not found in database");
@@ -350,6 +352,43 @@ class MentorController {
             }
             catch (error) {
                 console.error("Error checking plan:", error);
+                return next(Error("Mentor Application fetch failed"));
+            }
+        });
+    }
+    getExpired(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const mentor = req === null || req === void 0 ? void 0 : req.user;
+                if (mentor) {
+                    const expired = yield paymentModel_1.default.aggregate([
+                        {
+                            $match: {
+                                mentor_id: new mongodb_1.ObjectId(mentor.id),
+                                isExpired: true,
+                            },
+                        },
+                        {
+                            $lookup: {
+                                from: "menteeprofiles",
+                                localField: "mentee_id",
+                                foreignField: "mentee_id",
+                                as: "menteeDetails",
+                            },
+                        },
+                        {
+                            $unwind: "$menteeDetails",
+                        },
+                    ]);
+                    console.log("Expired", expired);
+                    res.status(200).json({ status: "success", expired });
+                }
+                else {
+                    console.log("Mentor Object Not Found");
+                }
+            }
+            catch (error) {
+                console.error(error);
                 return next(Error("Mentor Application fetch failed"));
             }
         });
