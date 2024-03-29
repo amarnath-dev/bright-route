@@ -53,9 +53,7 @@ const AdminLogin: React.FC = () => {
             onSubmit={handleSubmit(submitData)}
             className="border px-4 py-4 rounded-md shadow-lg"
           >
-            <h1 className="px-2 py-2 font-bold text-gray-400">
-              Express Administration
-            </h1>
+            <h1 className="px-2 py-2 font-bold text-white">Admin Login</h1>
             <label>
               <input
                 className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 mt-2 md:w-96 sm:text-lg"
@@ -73,7 +71,7 @@ const AdminLogin: React.FC = () => {
               <input
                 className="placeholder:text-slate-400 block bg-gray-800 text-gray-400 border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 mt-4 md:w-96 sm:text-lg"
                 placeholder="Password"
-                type="text"
+                type="password"
                 {...register("password")}
               />
               {errors.password && (

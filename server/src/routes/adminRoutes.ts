@@ -4,6 +4,7 @@ import { AdminControls } from "../controllers/adminControl";
 import { verifyJWT } from "../middleware/verifyJWT";
 import { protectAdmin } from "../middleware/authMiddleware";
 
+
 const router: Router = Router();
 
 const adminAuthControl = new AdminAuthControls();
@@ -44,5 +45,7 @@ router.get("/mentor", verifyJWT, adminControls.getMentors);
 router.get("/monthly-users/:year", verifyJWT, adminControls.getMonthlyUsers);
 
 router.get("/analytics", verifyJWT, adminControls.getAnalytics);
+
+router.get("/yearSort", verifyJWT, adminControls.getYearData);
 
 export default router;

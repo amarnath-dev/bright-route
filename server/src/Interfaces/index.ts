@@ -41,6 +41,14 @@ export interface IOtp extends Document {
   createdAt: Date;
 }
 
+export interface ISession extends Document {
+  mentee_id: ObjectId;
+  mentor_id: ObjectId;
+  plan_id: ObjectId;
+  session_count: Number;
+  createdAt: Date;
+}
+
 export interface IRoom extends Document {
   members: [];
   roomId: string;

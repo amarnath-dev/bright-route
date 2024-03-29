@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationControl = void 0;
 const notificationModal_1 = __importDefault(require("../models/notificationModal"));
+const mongodb_1 = require("mongodb");
 class NotificationControl {
     paymentMessage(req, res, next) {
         var _a;
@@ -40,7 +41,7 @@ class NotificationControl {
             const userId = req.params.userId;
             try {
                 const notifications = yield notificationModal_1.default.find({
-                    userId: userId,
+                    userId: new mongodb_1.ObjectId(userId),
                     isDeleted: false,
                 });
                 if (notifications) {

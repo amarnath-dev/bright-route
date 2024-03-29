@@ -92,7 +92,6 @@ const MenteePaymentDetails = () => {
       <NavBar />
       <div className="w-full h-screen bg-background-two text-white">
         <div className="w-full h-full flex justify-center px-6 py-3">
-          
           <figure className="w-full bg-gray-800 rounded-xl px-8 md:w-1/2">
             {user?.role === "mentor" ? (
               <div className="pt-6 space-y-4">
@@ -130,7 +129,7 @@ const MenteePaymentDetails = () => {
                   </h1>
                   <h1 className="text-white">
                     Amount:
-                    <span className="font-bold text-green-700 px-2">
+                    <span className="font-bold text-green-500 text-xl px-2">
                       {planDetails?.planAmount}
                     </span>
                   </h1>
@@ -153,8 +152,9 @@ const MenteePaymentDetails = () => {
                               </span>
                               {service?.serviceName}
                               <span className="px-2">
-                                {service?.serviceCount ? "Count - " : ""}
-
+                                {service?.serviceCount
+                                  ? "(Weekly) Count - "
+                                  : ""}
                                 {service?.serviceCount
                                   ? service.serviceCount
                                   : ""}

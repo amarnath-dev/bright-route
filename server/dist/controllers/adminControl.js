@@ -16,6 +16,7 @@ exports.AdminControls = void 0;
 const mentorProfileModel_1 = __importDefault(require("../models/mentorProfileModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const mongodb_1 = require("mongodb");
+const menteeProfileModel_1 = __importDefault(require("../models/menteeProfileModel"));
 class AdminControls {
     mentorApplications(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -142,7 +143,7 @@ class AdminControls {
                     {
                         $unwind: "$profileDetails",
                     },
-                ]);
+                ]).limit(6);
                 if (mentees) {
                     res.status(200).json({ status: "success", mentees });
                 }
@@ -196,9 +197,40 @@ class AdminControls {
     search(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(req.body);
-                const query = req.body.search;
-                console.log("In Server", query);
+                const { q: query } = req.query;
+                let mentees;
+                if (query) {
+                    mentees = yield menteeProfileModel_1.default.aggregate([
+                        { $match: { first_name: { $regex: query, $options: "i" } } },
+                        {
+                            $lookup: {
+                                from: "users",
+                                foreignField: "_id",
+                                localField: "mentee_id",
+                                as: "userDetails",
+                            },
+                        },
+                        {
+                            $unwind: "$userDetails",
+                        },
+                    ]);
+                }
+                else {
+                    mentees = yield menteeProfileModel_1.default.aggregate([
+                        {
+                            $lookup: {
+                                from: "users",
+                                foreignField: "_id",
+                                localField: "mentee_id",
+                                as: "userDetails",
+                            },
+                        },
+                        {
+                            $unwind: "$userDetails",
+                        },
+                    ]);
+                }
+                res.status(200).json({ mentees });
             }
             catch (error) {
                 console.log(error);
@@ -276,6 +308,7 @@ class AdminControls {
                     const monthName = monthMap[entry._id];
                     monthlyData[monthName] = entry.count;
                 });
+                console.log("First Monthly Data", monthlyData);
                 res.json({ monthlyData });
             }
             catch (error) {
@@ -287,7 +320,6 @@ class AdminControls {
     getAnalytics(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("Request User", req.user);
                 const mentees = yield userModel_1.default.find({ role: "mentee" }).countDocuments();
                 const mentors = yield userModel_1.default.find({ role: "mentor" }).countDocuments();
                 if (mentees > 0 && mentors > 0) {
@@ -296,6 +328,62 @@ class AdminControls {
                 else {
                     res.status(404).json({ error: "No data found" });
                 }
+            }
+            catch (error) {
+                console.log(error);
+                return next(error);
+            }
+        });
+    }
+    getYearData(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const year = req.query.year;
+                console.log("->", year);
+                const monthMap = {
+                    1: "January",
+                    2: "February",
+                    3: "March",
+                    4: "April",
+                    5: "May",
+                    6: "June",
+                    7: "July",
+                    8: "August",
+                    9: "September",
+                    10: "October",
+                    11: "November",
+                    12: "December",
+                };
+                const yearString = year;
+                let matchCondition = {};
+                if (year) {
+                    matchCondition = {
+                        $match: {
+                            $expr: { $eq: [{ $year: "$createdAt" }, parseInt(yearString)] },
+                        },
+                    };
+                }
+                const monthlyUsers = yield userModel_1.default.aggregate([
+                    matchCondition,
+                    {
+                        $group: {
+                            _id: {
+                                year: { $year: "$createdAt" },
+                                month: { $month: "$createdAt" },
+                            },
+                            count: { $sum: 1 },
+                        },
+                    },
+                ]);
+                const monthlyData = {};
+                monthlyUsers.forEach((entry) => {
+                    const monthName = monthMap[entry._id.month];
+                    const year = entry._id.year;
+                    const yearMonth = monthName;
+                    monthlyData[yearMonth] = entry.count;
+                });
+                console.log("Monthly Data", monthlyData);
+                res.json({ monthlyData });
             }
             catch (error) {
                 console.log(error);

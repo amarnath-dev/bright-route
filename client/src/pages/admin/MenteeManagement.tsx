@@ -1,6 +1,6 @@
 import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -86,12 +86,12 @@ const MenteeManagement = () => {
     }
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
+  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setSearch(e.target.value);
+  // };
 
   useEffect(() => {
-    const fetch = async () => {
+    async () => {
       try {
         const response = await axiosPrivate.post(
           "/admin/mentee/search",
@@ -103,8 +103,15 @@ const MenteeManagement = () => {
         console.log(error);
       }
     };
-    fetch();
   }, [axiosPrivate, search, setSearch]);
+
+  const handleNext = () => {
+    try {
+      console.log("Get Next");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -121,13 +128,13 @@ const MenteeManagement = () => {
                   className="cursor-pointer"
                 >
                   Dashboard
-                </span>{" "}
+                </span>
                 / <small>Mentee Management</small>
               </h1>
             </div>
           </div>
 
-          <div className="mt-5 mb-2 w-full">
+          {/* <div className="mt-5 mb-2 w-full">
             <div>
               <input
                 type="text"
@@ -138,11 +145,11 @@ const MenteeManagement = () => {
                 placeholder="Search Users..."
               />
             </div>
-          </div>
+          </div> */}
 
           {mentee.length > 0 ? (
             <>
-              <div className="relative overflow-x-auto">
+              <div className="relative overflow-x-auto py-10">
                 <table className="w-full text-sm text-left rtl:text-right rounded">
                   <thead className="text-xs border border-gray-800 rounded-md">
                     <tr className="text-gray-400">
@@ -152,12 +159,12 @@ const MenteeManagement = () => {
                       <th scope="col" className="px-6 py-3">
                         Email
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      {/* <th scope="col" className="px-6 py-3">
                         Reports
                       </th>
                       <th scope="col" className="px-6 py-3">
                         View
-                      </th>
+                      </th> */}
                       <th scope="col" className="px-6 py-3">
                         Block/Unblock
                       </th>
@@ -173,12 +180,12 @@ const MenteeManagement = () => {
                               {mentee.profileDetails?.last_name}
                             </th>
                             <td className="px-6 py-4">{mentee?.email}</td>
-                            <td className="px-6 py-4">0</td>
+                            {/* <td className="px-6 py-4">0</td>
                             <td className="px-6 py-4">
                               <button className="underline hover:text-blue-500">
                                 View
                               </button>
-                            </td>
+                            </td> */}
                             <td className="px-6 py-4">
                               {mentee.is_blocked ? (
                                 <button
@@ -212,7 +219,10 @@ const MenteeManagement = () => {
                   <button className="flex items-center justify-center px-3 h-8 text-sm font-medium bg-color-one rounded text-white">
                     Prev
                   </button>
-                  <button className="flex items-center justify-center px-3 h-8 text-sm font-medium bg-gray-200 hover:bg-gray-300 border-0 border-s rounded-e">
+                  <button
+                    className="flex items-center justify-center px-3 h-8 text-sm font-medium bg-gray-200 hover:bg-gray-300 border-0 border-s rounded-e"
+                    onClick={handleNext}
+                  >
                     Next
                   </button>
                 </div>

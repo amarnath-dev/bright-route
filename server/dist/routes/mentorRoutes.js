@@ -21,4 +21,5 @@ router.get("/menteeApplications", verifyAuth_1.Authentication.ensureAuth(["mento
 router.get("/paymentDetails/:paymentId", verifyAuth_1.Authentication.ensureAuth(["mentee", "mentor"]), mentorController.paymentDetails);
 router.get("/plan/:planId", verifyAuth_1.Authentication.ensureAuth(["mentee", "mentor"]), mentorController.planDetails);
 router.get("/checkPlan/:planId", verifyAuth_1.Authentication.ensureAuth(["mentee", "mentor"]), mentorController.checkPlan);
+router.get("/expired", verifyAuth_1.Authentication.ensureAuth(["mentor"]), mentorController.getExpired);
 exports.default = router;

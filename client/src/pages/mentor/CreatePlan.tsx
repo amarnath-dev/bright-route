@@ -162,7 +162,7 @@ const CreatePlan = () => {
                         htmlFor="default-checkbox"
                         className="ms-2 text-sm font-medium text-white"
                       >
-                        Video Call Sessions
+                        Video Call Sessions(Weekly)
                       </label>
                       <div>
                         <label htmlFor="video_call_count" className="ml-10">

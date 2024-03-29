@@ -22,6 +22,7 @@ const Chart = () => {
   });
   const containerRef = useRef<HTMLOptionElement | null>(null);
   const [year, setYear] = useState<number>(1111);
+
   useEffect(() => {
     const date = new Date();
     setYear(date.getFullYear());
@@ -35,20 +36,34 @@ const Chart = () => {
 
   useEffect(() => {
     (async () => {
-      if (year > 1111) {
-        const response = await axiosPrivate.get(
-          `admin/monthly-users/${year ? year : ""}`,
-          {
-            withCredentials: true,
-          }
-        );
-        if (response.data) {
-          console.log(response.data);
-          setUserReport(response.data.monthlyData);
-        }
+      try {
+        const response = await axiosPrivate.get("admin/yearSort", {
+          params: { year: year },
+          withCredentials: true,
+        });
+        setUserReport(response.data?.monthlyData);
+      } catch (error) {
+        console.log(error);
       }
     })();
   }, [year, axiosPrivate]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     if (year > 1111) {
+  //       const response = await axiosPrivate.get(
+  //         `admin/monthly-users/${year ? year : ""}`,
+  //         {
+  //           withCredentials: true,
+  //         }
+  //       );
+  //       if (response.data) {
+  //         console.log(response.data);
+  //         setUserReport(response.data.monthlyData);
+  //       }
+  //     }
+  //   })();
+  // }, [year, axiosPrivate]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -64,8 +79,8 @@ const Chart = () => {
   }, []);
 
   const [dimensions, setDimensions] = useState({
-    width: 500,
-    height: 300,
+    width: 300,
+    height: 800,
   });
   return (
     <>

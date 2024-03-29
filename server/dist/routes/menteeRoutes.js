@@ -35,4 +35,5 @@ router.post("/payment-suceess", verifyAuth_1.Authentication.ensureAuth(["mentee"
 router.get("/getimage/:userRole", verifyAuth_1.Authentication.ensureAuth(["mentee", "mentor"]), menteeController.getProfileImg);
 router.get("/my-mentors", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.getMyMentors);
 router.post("/sort", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.getSorted);
+router.get("/mentee/expired", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.getExpired);
 exports.default = router;
