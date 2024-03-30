@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// const baseURL = "http://localhost:5000/api";
-const baseURL = "https://bright-route.online/api"
+const baseURL = import.meta.env.VITE_API;
 
 export default axios.create({
   baseURL,
