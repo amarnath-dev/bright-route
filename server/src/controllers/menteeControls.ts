@@ -468,6 +468,7 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
+      console.log("Reached at the server", user);
       const mentors = await PaymentModel.aggregate([
         {
           $match: { mentee_id: new ObjectId(user?.id) },

@@ -23,16 +23,13 @@ const PageNotFound = React.lazy(
 );
 const VideoChat = React.lazy(() => import("./componets/VideoChat/VideoChat"));
 
-const HOST = "https://bright-route.online";
-// const HOST = "http://localhost:3000";
-
 function App() {
   const socket = useRef<Socket | null>(null);
   const { user } = useAppSelector((state) => state.userAuth);
 
   useEffect(() => {
     if (user) {
-      socket.current = io(HOST);
+      socket.current = io(import.meta.env.VITE_SOCKET_HOST);
       socket.current?.emit("addUser", user?._id);
       socket.current?.on("getUsers", (users) => {
         console.log(users);

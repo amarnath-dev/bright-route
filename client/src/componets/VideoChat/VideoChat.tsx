@@ -21,8 +21,8 @@ const VideoChat = () => {
       );
       if (response.data.status === "success") {
         try {
-          const appId = 930308710;
-          const serverSecret = "1623916fe2dd602dd32cfcb6873eb8d6";
+          const appId = parseInt(import.meta.env.VITE_VIDEOCHAT_APPID);
+          const serverSecret = import.meta.env.VITE_VIDEOCHAT_SECRETE;
           const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
             appId,
             serverSecret,
