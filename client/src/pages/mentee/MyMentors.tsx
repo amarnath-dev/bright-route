@@ -21,7 +21,7 @@ const MyMentors = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchApplications = async () => {
+    (async () => {
       try {
         const response = await axiosPrivate.get("/my-mentors", {
           withCredentials: true,
@@ -35,8 +35,7 @@ const MyMentors = () => {
       } catch (error) {
         console.log(error);
       }
-    };
-    fetchApplications();
+    })();
   }, [axiosPrivate]);
 
   useEffect(() => {
