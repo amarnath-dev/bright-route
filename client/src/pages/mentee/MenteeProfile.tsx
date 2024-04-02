@@ -1,58 +1,23 @@
-import { styled } from "@mui/material/styles";
-import Button from "@mui/material/Button";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { MenteeProfileCard } from "../../componets/mentee/MenteeProfileCard";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
 import NavBar from "../../componets/navbar/Navbar";
-import NoImage from "../../assets/no-profile-image.png"
-
-
-import ReactCrop, {
-  centerCrop,
-  makeAspectCrop,
-  Crop,
-  PixelCrop,
-  convertToPixelCrop,
-} from "react-image-crop";
+import NoImage from "../../assets/no-profile-image.png";
+import Crop from "../../componets/ImageCrop/Croper";
 import "react-image-crop/dist/ReactCrop.css";
-import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
-import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
 import Swal from "sweetalert2";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
 
 const MenteeProfile = () => {
   const { user } = useAppSelector((state) => state.userAuth);
   const axiosPrivate = useAxiosPrivate();
-  const [controlCrop, setControlCrop] = useState(false);
   const [goal, setGoal] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_profileImg, setProfileImg] = useState("");
-  const [imgSrc, setImgSrc] = useState("");
-  const [aspect, setAspect] = useState<number | undefined>(16 / 9);
-  const [crop, setCrop] = useState<Crop>();
-  const imgRef = useRef<HTMLImageElement>(null);
-  const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
-  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
-  const blobUrlRef = useRef("");
-  const hiddenAnchorRef = useRef<HTMLAnchorElement>(null);
 
   const [menteeEmail, setMenteeEmail] = useState<string>("");
   const [formData, setFormdata] = useState({
@@ -116,7 +81,6 @@ const MenteeProfile = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     Swal.fire({
       title: "Do you want to save the changes?",
       showDenyButton: true,
@@ -150,147 +114,10 @@ const MenteeProfile = () => {
     });
   };
 
-  //------------------> Image Crop ------------------------------>//
-
-  function centerAspectCrop(
-    mediaWidth: number,
-    mediaHeight: number,
-    aspect: number
-  ) {
-    return centerCrop(
-      makeAspectCrop(
-        {
-          unit: "%",
-          width: 90,
-        },
-        aspect,
-        mediaWidth,
-        mediaHeight
-      ),
-      mediaWidth,
-      mediaHeight
-    );
-  }
-
-  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setCrop(undefined);
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setImgSrc(reader.result?.toString() || "");
-      });
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
-
-  const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    if (aspect) {
-      const { width, height } = e.currentTarget;
-      setCrop(centerAspectCrop(width, height, aspect));
-    }
-  };
-
-  function handleToggleAspectClick() {
-    if (aspect) {
-      setAspect(undefined);
-    } else {
-      setAspect(15 / 8);
-
-      if (imgRef.current) {
-        const { width, height } = imgRef.current;
-        const newCrop = centerAspectCrop(width, height, 16 / 9);
-        setCrop(newCrop);
-        setCompletedCrop(convertToPixelCrop(newCrop, width, height));
-      }
-    }
-  }
-
-  async function onDownloadCropClick() {
-    const image = imgRef.current;
-    const previewCanvas = previewCanvasRef.current;
-    if (!image || !previewCanvas || !completedCrop) {
-      throw new Error("Crop canvas does not exist");
-    }
-
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-
-    const offscreen = new OffscreenCanvas(
-      completedCrop.width * scaleX,
-      completedCrop.height * scaleY
-    );
-    const ctx = offscreen.getContext("2d");
-    if (!ctx) {
-      throw new Error("No 2d context");
-    }
-
-    ctx.drawImage(
-      previewCanvas,
-      0,
-      0,
-      previewCanvas.width,
-      previewCanvas.height,
-      0,
-      0,
-      offscreen.width,
-      offscreen.height
-    );
-
-    const blob = await offscreen.convertToBlob({
-      type: "image/png",
-    });
-
-    if (blobUrlRef.current) {
-      URL.revokeObjectURL(blobUrlRef.current);
-    }
-
-    blobUrlRef.current = URL.createObjectURL(blob);
-
-    if (hiddenAnchorRef.current) {
-      hiddenAnchorRef.current.href = blobUrlRef.current;
-
-      const imgId =
-        Math.random().toString(16).slice(2) +
-        (new Date().getTime() / 1000).toString();
-      const reference = ref(storage, imgId);
-      const snapshot = await uploadBytes(reference, blob);
-      if (snapshot.metadata) {
-        const img_firebase_id: string = snapshot.metadata.fullPath;
-        const response = await axiosPrivate.post(
-          "/managment/profieImage-update",
-          { img_firebase_id },
-          { withCredentials: true }
-        );
-        if (response?.data?.status === "success") {
-          toast.success(response?.data?.message);
-          location.reload();
-        } else {
-          toast.error("Image Updation Failed");
-        }
-      }
-    }
-  }
-
-  useDebounceEffect(
-    async () => {
-      if (
-        completedCrop?.width &&
-        completedCrop?.height &&
-        imgRef.current &&
-        previewCanvasRef.current
-      ) {
-        canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
-      }
-    },
-    100,
-    [completedCrop]
-  );
-
   return (
     <>
-      {/* <ToastContainer className="w-40 md:w-80" /> */}
       <NavBar />
-      <div className="w-full h-full flex justify-center bg-background-two">
+      <div className="w-full h-full flex justify-center bg-background-two py-4">
         <div className="w-full md:w-2/3 h-full border border-gray-500 mt-10 rounded-md">
           <div className="w-full h-full flex justify-center flex-col">
             <h1 className="text-center mt-4 text-md md:text-lg font-bold text-white">
@@ -317,111 +144,18 @@ const MenteeProfile = () => {
               </h1>
             </div>
           )}
-          <div className="px-2 md:px-5 md:py-2 flex items-center">
-            <div className="flex w-full flex-row items-center">
+          <div className="px-2 md:px-5 md:py-2 flex items-center py-3">
+            <div className="flex w-full flex-col items-center">
               <span className="flex items-center h-36 w-36 rounded-full overflow-hidden md:ml-4">
                 <img
-                  src={
-                    formData?.profile_img
-                      ? ""
-                      : NoImage
-                  }
+                  src={NoImage}
                   alt="profile_img"
-                  className="md:h-28 md:w-28 rounded-full object-cover"
+                  className="md:h-38 md:w-38 rounded-full object-cover"
                   id="profile-image"
                 />
               </span>
-
-              <div className="px-6 md:px-0 w-full">
-                <Button
-                  onClick={() => setControlCrop(true)}
-                  id="img_btn"
-                  style={{
-                    background: "rgb(31 41 55)",
-                    color: "white",
-                    border: "1px solid black",
-                  }}
-                  component="label"
-                  variant="contained"
-                  startIcon={<CloudUploadIcon />}
-                >
-                  Upload Photo
-                  <VisuallyHiddenInput
-                    type="file"
-                    accept="image/*"
-                    onChange={onSelectFile}
-                    onClick={handleToggleAspectClick}
-                  />
-                </Button>
-
-                {controlCrop ? (
-                  <div>
-                    {!!imgSrc && (
-                      <div className="w-full">
-                        <ReactCrop
-                          crop={crop}
-                          onChange={(_, percentCrop) => setCrop(percentCrop)}
-                          onComplete={(c) => setCompletedCrop(c)}
-                          aspect={aspect}
-                          minWidth={100}
-                          minHeight={100}
-                        >
-                          <img
-                            width={300}
-                            ref={imgRef}
-                            alt="Crop Me"
-                            src={imgSrc}
-                            onLoad={onImageLoad}
-                          />
-                        </ReactCrop>
-                      </div>
-                    )}
-
-                    {!!completedCrop && (
-                      <>
-                        <div>
-                          <canvas
-                            ref={previewCanvasRef}
-                            style={{
-                              border: "1px solid black",
-                              objectFit: "contain",
-                              width: completedCrop.width,
-                              height: completedCrop.height,
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <button
-                            onClick={onDownloadCropClick}
-                            className="border-2 px-1 py-1 bg-color-one text-white rounded-md"
-                          >
-                            Save Image
-                          </button>
-                          <button
-                            className="border-2 py-1 px-1 rounded-md bg-color-five"
-                            onClick={() => setControlCrop(false)}
-                          >
-                            Discard
-                          </button>
-                          <a
-                            href="#hidden"
-                            ref={hiddenAnchorRef}
-                            download
-                            style={{
-                              position: "absolute",
-                              top: "-200vh",
-                              visibility: "hidden",
-                            }}
-                          >
-                            Hidden download
-                          </a>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                ) : (
-                  ""
-                )}
+              <div className="w-full flex justify-center items-center py-2">
+                <Crop />
               </div>
             </div>
           </div>
@@ -520,7 +254,7 @@ const MenteeProfile = () => {
                 of yours. This is shared with mentors.
               </h1>
             </div>
-            <div className="flex md:justify-end justify-center md:px-9">
+            <div className="flex md:justify-end justify-center py-4 md:px-9">
               <button
                 type="submit"
                 id="saveBtn"

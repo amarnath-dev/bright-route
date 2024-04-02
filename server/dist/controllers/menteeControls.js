@@ -416,6 +416,7 @@ class MenteeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
+                console.log("Reached at the server", user);
                 const mentors = yield paymentModel_1.default.aggregate([
                     {
                         $match: { mentee_id: new mongodb_1.ObjectId(user === null || user === void 0 ? void 0 : user.id) },

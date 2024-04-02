@@ -161,16 +161,18 @@ const NavBar = () => {
                 >
                   <FaHistory className="text-2xl hover:text-blue-600 text-gray-400" />
                 </div>
-                <div
-                  onClick={handleClickOne}
-                  className={open ? "hidden" : "block"}
-                >
-                  {user?.role === "mentor" ? (
+
+                {user?.role === "mentor" ? (
+                  <div
+                    onClick={handleClickOne}
+                    className={open ? "hidden" : "block"}
+                  >
                     <BsPersonLinesFill className="text-3xl text-gray-400 hover:text-blue-600 cursor-pointer" />
-                  ) : (
-                    ""
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  ""
+                )}
+
                 <div
                   onClick={handleClickTwo}
                   className={open ? "hidden" : "block"}

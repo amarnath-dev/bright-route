@@ -24,6 +24,7 @@ const SearchMentors = () => {
         });
         if (response.data) {
           const mentorProfile = response.data;
+          console.log("Mentor Details", mentorProfile.allMentors);
           setFiltered(mentorProfile.allMentors);
         }
       } catch (error) {

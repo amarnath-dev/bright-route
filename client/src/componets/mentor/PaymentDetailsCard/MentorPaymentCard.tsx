@@ -73,11 +73,27 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
     });
   };
 
-  const handleNavigate = (
+  const handleNavigate = async (
     mentor_plan_id: string,
     mentor_id: string,
     mentor_plan_amount: number
   ) => {
+    try {
+      const response = await axiosPrivate.get(`/check/${mentor_id}`, {
+        withCredentials: true,
+      });
+      console.log(response);
+      if (response.data.status === "spots") {
+        Swal.fire("This Mentor has No Spots Left");
+        return;
+      }
+      if (response.data.status === "exists") {
+        Swal.fire("You have Alredy Applied");
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
     const plan_amount = mentor_plan_amount.toString();
     dispatch(submitPlanId({ mentor_plan_id }));
     dispatch(submitMentorId({ mentor_id }));
@@ -91,7 +107,7 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
         {mentorPlans?.map((plan, index: number) => {
           return (
             <>
-              {plan.isDeleted ? (
+              {plan?.isDeleted ? (
                 ""
               ) : (
                 <div

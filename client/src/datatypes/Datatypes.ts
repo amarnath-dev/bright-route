@@ -139,6 +139,7 @@ export interface mentorProfileObj {
   twitter: string;
   web_url: string;
   skills: string[];
+  spots: number;
   reports: Report[];
   approved: boolean;
 }

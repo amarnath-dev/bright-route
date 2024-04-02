@@ -18,11 +18,11 @@ router.get(
   mentorController.mentorprofileDetails
 );
 
-router.post(
-  "/profile/profileImg-update",
-  Authentication.ensureAuth(["mentor"]),
-  mentorController.updateProfileImg
-);
+// router.post(
+//   "/profile/profileImg-update",
+//   Authentication.ensureAuth(["mentor"]),
+//   mentorController.updateProfileImg
+// );
 
 router.post(
   "/profile/update",

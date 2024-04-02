@@ -6,10 +6,8 @@ import User from "../models/userModel";
 import CryptoJS from "crypto-js";
 import sendEmailOtp from "../utils/sendEmail";
 import OTP from "../models/otpModel";
-import Plans from "../models/mentorPlansModel";
 import Report from "../models/mentorReportModel";
 import { ObjectId } from "mongodb";
-// import PaymentModel from "../models/PaymentModel";
 import PaymentModel from "../models/paymentModel";
 
 export interface mentorProfileObj {
@@ -278,23 +276,29 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
-      const { img_firebase_id } = req.body;
+      const { img_firebase_id, role } = req.body;
       if (user) {
         if (!img_firebase_id) {
-          res.status(400).json({ status: "error", message: "ID not found" });
+          res
+            .status(400)
+            .json({ status: "error", message: "Image ID not found" });
         } else {
-          const updateMentee = await MenteeModel.findOneAndUpdate(
-            {
-              mentee_id: user.id,
-            },
-            { $set: { profile_img: img_firebase_id } },
-            { new: true }
-          );
-          if (updateMentee?._id) {
-            res
-              .status(200)
-              .json({ status: "success", message: "Profile Image Updated" });
+          if (role === "mentee") {
+            await MenteeModel.findOneAndUpdate(
+              {
+                mentee_id: new ObjectId(user?.id),
+              },
+              { $set: { profile_img: img_firebase_id } }
+            );
+          } else {
+            await MentorModel.findOneAndUpdate(
+              { mentor_id: new ObjectId(user?.id) },
+              { $set: { profile_img: img_firebase_id } }
+            );
           }
+          res
+            .status(200)
+            .json({ status: "success", message: "Profile Image Updated" });
         }
       }
     } catch (error) {
@@ -468,7 +472,6 @@ export class MenteeController {
   ): Promise<void> {
     try {
       const user = req.user;
-      console.log("Reached at the server", user);
       const mentors = await PaymentModel.aggregate([
         {
           $match: { mentee_id: new ObjectId(user?.id) },
@@ -555,6 +558,37 @@ export class MenteeController {
           },
         ]);
         res.status(200).json({ status: "success", expired });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Email send failed"));
+    }
+  }
+
+  async checkSpot(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req?.user;
+      const mentorId = req.params.mentorId;
+      if (!user) {
+        res.status(400).json({ message: "User Object not found" });
+      }
+      const checkSpot = await MentorModel.findOne({ mentor_id: mentorId });
+      if (checkSpot && checkSpot?.spots > 0) {
+        const isExists = await PaymentModel.findOne({
+          mentee_id: user?.id,
+          isExpired: false,
+        });
+        if (isExists) {
+          res.status(200).json({ status: "exists", message: "Alredy Applied" });
+        } else {
+          res.status(200).json({ status: "success" });
+        }
+      } else {
+        res.status(200).json({ status: "spots", message: "No Spots Left" });
       }
     } catch (error) {
       console.log(error);

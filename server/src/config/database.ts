@@ -1,6 +1,7 @@
 import app from "../app";
 import mongoose from "mongoose";
 import { job } from "../utils/expiryScript";
+import { SpotJob } from "../utils/spotRenewScript";
 
 const PORT = process.env.PORT;
 mongoose
@@ -10,6 +11,7 @@ mongoose
     app.listen(PORT, () => {
       console.log(`Server Running on Port ${PORT}`);
       job;
+      SpotJob;
     });
   })
   .catch((error) => {

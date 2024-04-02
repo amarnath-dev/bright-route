@@ -38,9 +38,6 @@ const mentorProfileSchema: Schema<IMentorProfile> =
       twitter: {
         type: String,
       },
-      web_url: {
-        type: String,
-      },
       why_mentor: {
         type: String,
       },
@@ -54,6 +51,10 @@ const mentorProfileSchema: Schema<IMentorProfile> =
       },
       skills: {
         type: [],
+      },
+      spots: {
+        type: Number,
+        default: 5,
       },
       isPaymentDetails: {
         type: Boolean,

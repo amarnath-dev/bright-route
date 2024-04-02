@@ -34,10 +34,6 @@ const paymentSchema: Schema<IApplication> = new mongoose.Schema<IApplication>(
       type: Boolean,
       default: false,
     },
-    duration: {
-      type: Number,
-      default: 1,
-    },
     isExpired: {
       type: Boolean,
       default: false,
