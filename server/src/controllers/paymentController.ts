@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import Payment from "../models/paymentModel";
 import Room from "../models/roomModel";
+import MentorProfile from "../models/mentorProfileModel";
+import { ObjectId } from "mongodb";
 
 export class PaymentControls {
-  
   async storePaymentData(
     req: Request,
     res: Response,
@@ -21,6 +22,11 @@ export class PaymentControls {
         message_to_mentor: req.body?.message_to_mentor,
       });
       await paymentDetails.save();
+      const mentorProfile = await MentorProfile.findOneAndUpdate(
+        { mentor_id: new ObjectId(req.body?.mentor_id) },
+        { $inc: { spots: -1 } },
+        { new: true }
+      );
       //Creating the video call room for both user
       const roomExists = await Room.findOne({
         members: { $all: [req.body?.mentee_id, req.body?.mentor_id] },

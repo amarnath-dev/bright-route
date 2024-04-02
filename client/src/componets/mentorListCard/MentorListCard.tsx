@@ -13,9 +13,7 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
       {filtered.length === 0 ? (
         <>
           <div className="w-full min-h-screen bg-background-two flex justify-center">
-            <h1 className="text-balck text-3xl text-white">
-              No results found
-            </h1>
+            <h1 className="text-balck text-3xl text-white">No Results Found</h1>
           </div>
         </>
       ) : (
@@ -39,24 +37,35 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
                     />
                     <div className="bg-gradient-to-t from-gray-600 to-transparent w-full h-full px-5 py-5 rounded-lg absolute top-0 md:w-60 md:h-80">
                       <div className="md:hidden mt-36 absolute bottom-5">
-                        <h1 className="text-xl font-semibold text-white md:text-3xl md:px-5 md:py-2">
+                        <h1 className="text-lg font-semibold text-white md:text-3xl md:px-5 md:py-2">
                           {mentor?.first_name} {mentor?.last_name}
                         </h1>
-                        <h1 className="md:px-5 mt-2 md:mt-0 text-sm md:text-xl md:text-gray-800">
+                        <h1 className="md:px-5 md:mt-0 text-sm md:text-xl md:text-gray-800">
                           {mentor?.job_title}
                           <strong className="md:text-gray-800 ml-1">
                             {mentor?.company}
                           </strong>
                         </h1>
+                        <div className="text-lg font-bold text-color-five">
+                          <span className="text-lg">{mentor?.spots}</span>
+                          <span> Spots Left</span>
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="px-5 md:px-0">
                     <div className="hidden md:block">
-                      <h1 className="text-xl mt-2 font-semibold md:text-3xl md:px-5 md:py-2">
-                        {mentor.first_name} {mentor?.last_name}
-                      </h1>
+                      <div className="flex justify-between">
+                        <h1 className="text-xl font-semibold md:text-3xl md:px-5">
+                          {mentor?.first_name} {mentor?.last_name}{" "}
+                        </h1>
+                        <div className="text-xl font-bold text-color-five">
+                          <span className="text-2xl">{mentor?.spots}</span>
+                          <span> Spots Left</span>
+                        </div>
+                      </div>
+
                       <h1 className="md:px-5 mt-2 md:mt-0 text-md md:text-xl">
                         {mentor?.job_title}
                         <strong className="ml-1">{mentor?.company}</strong>
@@ -69,7 +78,7 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
                         {mentor.skills.map((skill, index) => (
                           <button
                             key={index}
-                            className="rounded-full px-3 text-gray-900 bg-gray-300 text-semibold mt-2 ml-2"
+                            className="rounded-full px-3 text-gray-900 bg-gray-300 text-semibold ml-1"
                           >
                             {skill}
                           </button>
@@ -78,7 +87,7 @@ export const MentorListCard: FC<MentorListCardProps> = ({ filtered }) => {
                       <div className="w-full mt-6 flex justify-between items-center flex-col md:flex-row">
                         <div className="w-full">
                           <button
-                            className="w-full rounded-md px-1 py-1 text-gray-300 bg-color-one text-lg font-bold md:h-10 md:w-96"
+                            className="w-full rounded-md px-1 py-1 text-gray-300 bg-color-five text-lg font-bold md:h-10 md:w-96"
                             onClick={() =>
                               navigate(`/mentor-profile/${mentor?.mentor_id}`)
                             }

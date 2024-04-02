@@ -1,42 +1,30 @@
-import API from "../../api";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { mentorProfileObj } from "../../datatypes/Datatypes";
-import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../app/firebase";
-import Button from "@mui/material/Button";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { styled } from "@mui/material/styles";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
-
-import ReactCrop, {
-  centerCrop,
-  makeAspectCrop,
-  Crop,
-  PixelCrop,
-  convertToPixelCrop,
-} from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
-// import { canvasPreview } from "../../componets/ImageCrop/CanvasPreview";
-// import { useDebounceEffect } from "../../componets/ImageCrop/UseDebounceEffect";
 import NavBar from "../../componets/navbar/Navbar";
+import "react-image-crop/dist/ReactCrop.css";
+import "react-toastify/dist/ReactToastify.css";
+import Croper from "../../componets/ImageCrop/Croper";
+import NoImage from "../../assets/no-profile-image.png";
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+const styles = {
+  autocomplete: {
+    width: 800,
+    backgroundColor: "#1f2937",
+  },
+  textField: {
+    "& .MuiInputLabel-root": {
+      color: "white",
+    },
+  },
+};
 
 const MentorProfileEdit: React.FC = () => {
   const navigate = useNavigate();
@@ -44,15 +32,7 @@ const MentorProfileEdit: React.FC = () => {
   const [defaultSkills, setDefaultSkills] = useState<{ title: string }[]>([]);
 
   const axiosPrivate = useAxiosPrivate();
-
-  const [imgSrc, setImgSrc] = useState("");
-  const [aspect, setAspect] = useState<number | undefined>(16 / 9);
-  const [crop, setCrop] = useState<Crop>();
-  const imgRef = useRef<HTMLImageElement>(null);
-  const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
-  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
-  const blobUrlRef = useRef("");
-  const hiddenAnchorRef = useRef<HTMLAnchorElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [closeCrop, seCloseCrop] = useState(false);
 
   const [mentorData, setMentorData] = useState({
@@ -97,6 +77,7 @@ const MentorProfileEdit: React.FC = () => {
       }
     };
     fetchMentorData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [closeCrop]);
 
   useEffect(() => {
@@ -137,143 +118,6 @@ const MentorProfileEdit: React.FC = () => {
     }
   };
 
-  //---------Image Crop and Upload -----------------//
-  function centerAspectCrop(
-    mediaWidth: number,
-    mediaHeight: number,
-    aspect: number
-  ) {
-    return centerCrop(
-      makeAspectCrop(
-        {
-          unit: "%",
-          width: 90,
-        },
-        aspect,
-        mediaWidth,
-        mediaHeight
-      ),
-      mediaWidth,
-      mediaHeight
-    );
-  }
-
-  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setCrop(undefined);
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setImgSrc(reader.result?.toString() || "");
-      });
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
-
-  const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    if (aspect) {
-      const { width, height } = e.currentTarget;
-      setCrop(centerAspectCrop(width, height, aspect));
-    }
-  };
-
-  function handleToggleAspectClick() {
-    if (aspect) {
-      setAspect(undefined);
-    } else {
-      setAspect(16 / 9);
-
-      if (imgRef.current) {
-        const { width, height } = imgRef.current;
-        const newCrop = centerAspectCrop(width, height, 16 / 9);
-        setCrop(newCrop);
-        setCompletedCrop(convertToPixelCrop(newCrop, width, height));
-      }
-    }
-  }
-
-  async function onDownloadCropClick() {
-    const image = imgRef.current;
-    const previewCanvas = previewCanvasRef.current;
-    if (!image || !previewCanvas || !completedCrop) {
-      throw new Error("Crop canvas does not exist");
-    }
-
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-
-    const offscreen = new OffscreenCanvas(
-      completedCrop.width * scaleX,
-      completedCrop.height * scaleY
-    );
-    const ctx = offscreen.getContext("2d");
-    if (!ctx) {
-      throw new Error("No 2d context");
-    }
-
-    ctx.drawImage(
-      previewCanvas,
-      0,
-      0,
-      previewCanvas.width,
-      previewCanvas.height,
-      0,
-      0,
-      offscreen.width,
-      offscreen.height
-    );
-
-    const blob = await offscreen.convertToBlob({
-      type: "image/png",
-    });
-
-    if (blobUrlRef.current) {
-      URL.revokeObjectURL(blobUrlRef.current);
-    }
-
-    blobUrlRef.current = URL.createObjectURL(blob);
-
-    if (hiddenAnchorRef.current) {
-      hiddenAnchorRef.current.href = blobUrlRef.current;
-
-      //Now upload it to the firebase
-      const imgId =
-        Math.random().toString(16).slice(2) +
-        (new Date().getTime() / 1000).toString();
-      const reference = ref(storage, imgId);
-      const snapshot = await uploadBytes(reference, blob);
-
-      if (snapshot.metadata) {
-        const img_firebase_id: string = snapshot.metadata.fullPath;
-        const response = await API.post(
-          "/mentor/profile/profileImg-update",
-          { img_firebase_id },
-          { withCredentials: true }
-        );
-        if (response?.data?.status === "success") {
-          seCloseCrop(true);
-          toast(response?.data?.message);
-        } else {
-          toast.error("Image Updation Failed");
-        }
-      }
-    }
-  }
-
-  // useDebounceEffect(
-  //   async () => {
-  //     if (
-  //       completedCrop?.width &&
-  //       completedCrop?.height &&
-  //       imgRef.current &&
-  //       previewCanvasRef.current
-  //     ) {
-  //       canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop);
-  //     }
-  //   },
-  //   100,
-  //   [completedCrop]
-  // );
-
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -291,102 +135,16 @@ const MentorProfileEdit: React.FC = () => {
       <NavBar />
       <ToastContainer className="w-40 md:w-80" />
       <div className="w-full h-full flex-row md:flex md:items-center md:flex-col bg-background-two text-white">
-        <div className="w-full ml-1 mr-1 md:ml-0 md:mr-0  md:w-2/3 md:h-40 mt-10 rounded-lg flex flex-row">
-          <div className="w-40 h-full flex justify-center items-center flex-col px-2 py-2">
+        <div className="w-full md:mt-10 rounded-lg flex flex-row">
+          <div className="w-full h-full flex justify-center items-center flex-col px-2 py-2">
             <img
               alt="profile_img"
-              className="mt-2 w-32 h-32 md:mt-0 rounded-full ml-2 border-2 object-cover"
+              className="w-36 h-36 rounded-full object-cover"
               id="profile_img"
+              src={NoImage}
             />
-            <div className="mt-3">
-              <Button
-                id="img_btn"
-                onClick={() => seCloseCrop(false)}
-                style={{
-                  background: "white",
-                  color: "black",
-                  border: "1px solid black",
-                  width: 180,
-                  marginLeft: 30,
-                }}
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload Photo
-                <VisuallyHiddenInput
-                  type="file"
-                  accept="image/*"
-                  onChange={onSelectFile}
-                  onClick={handleToggleAspectClick}
-                />
-              </Button>
-
-              <div className={closeCrop === false ? "" : "hidden"}>
-                {!!imgSrc && (
-                  <div className="md:ml-0">
-                    <ReactCrop
-                      crop={crop}
-                      onChange={(_, percentCrop) => setCrop(percentCrop)}
-                      onComplete={(c) => setCompletedCrop(c)}
-                      aspect={aspect}
-                      minHeight={100}
-                    >
-                      <img
-                        width={300}
-                        ref={imgRef}
-                        alt="Crop Me"
-                        src={imgSrc}
-                        onLoad={onImageLoad}
-                      />
-                    </ReactCrop>
-                  </div>
-                )}
-                {!!completedCrop && (
-                  <>
-                    <div className="hidden">
-                      <canvas
-                        ref={previewCanvasRef}
-                        style={{
-                          border: "1px solid black",
-                          objectFit: "contain",
-                          width: completedCrop.width,
-                          height: completedCrop.height,
-                        }}
-                      />
-                    </div>
-
-                    <div className="ml-1 flex flex-col">
-                      <button
-                        onClick={onDownloadCropClick}
-                        className="border-2 px-1 py-1 bg-color-one text-white rounded-md z-20"
-                      >
-                        Save Image
-                      </button>
-
-                      <button
-                        className="border-2 py-1 px-1 rounded-md bg-color-five z-20"
-                        onClick={() => seCloseCrop(true)}
-                      >
-                        Discard
-                      </button>
-
-                      <a
-                        href="#hidden"
-                        ref={hiddenAnchorRef}
-                        download
-                        style={{
-                          position: "absolute",
-                          top: "-200vh",
-                          visibility: "hidden",
-                        }}
-                      >
-                        Hidden download
-                      </a>
-                    </div>
-                  </>
-                )}
-              </div>
+            <div className="py-3">
+              <Croper />
             </div>
           </div>
         </div>
@@ -430,7 +188,7 @@ const MentorProfileEdit: React.FC = () => {
 
           <div className="flex flex-col md:flex-row px-2 py-2 items-center md:justify-between">
             <label>
-              <h1 className="text-gray-400">Company </h1>
+              <h1 className="text-gray-400">Company</h1>
               <input
                 type="text"
                 id="company"
@@ -525,9 +283,9 @@ const MentorProfileEdit: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-46 md:w-2/3 h-screen md:mt-10 rounded-lg border px-3 py-3">
+        <div className="md:w-2/3 md:mt-10 rounded-lg border px-3 py-3">
           <div className="px-2 md:px-0">
-            <label htmlFor="message" className="block mb-2 text-sm font-medium">
+            <label htmlFor="message" className="block py-2 text-sm font-medium">
               ABOUT ME
             </label>
             <textarea
@@ -536,17 +294,18 @@ const MentorProfileEdit: React.FC = () => {
               rows={10}
               defaultValue={mentorData?.bio}
               onChange={handleInputChange}
-              className="block p-2.5 w-full text-lg rounded-lg focus:border-gray bg-gray-800 text-white border"
+              className="block p-2.5 w-full text-lg rounded-lg focus:border-gray-800 bg-gray-800 text-white border"
             ></textarea>
           </div>
-          <h1 className="mt-4 font-bold">Update your Skills</h1>
-          <div className="px-1 py-1 mt-4 bg-gray-400 rounded-md">
-            <Stack spacing={3} sx={{ width: 300 }} className="text-gray-400">
+
+          <h1 className="py-2 font-bold">Update your Skills</h1>
+          <div className="px-1 py-1 bg-gray-800 rounded-md">
+            <Stack spacing={3} className="text-gray-400">
               <Autocomplete
                 multiple
                 id="tags-standard"
                 options={topSkills}
-                getOptionLabel={(option) => option.title}
+                getOptionLabel={(option) => option?.title}
                 value={defaultSkills}
                 onChange={handleAutoCompleteChange}
                 filterOptions={(options, { inputValue }) =>
@@ -560,17 +319,17 @@ const MentorProfileEdit: React.FC = () => {
                   <TextField
                     {...params}
                     variant="standard"
-                    label="Skills"
-                    placeholder="Add Skills..."
-                    className="placeholder:text-gray-400"
+                    className="placeholder:text-white"
+                    sx={styles?.textField}
                   />
                 )}
               />
             </Stack>
-            <div className="flex justify-end mt-5 md:mt-0">
+
+            <div className="flex justify-end py-4">
               <button
                 type="button"
-                className="text-gray-90 font-medium rounded-lg text-sm px-5 py-2.5 me-2 bg-color-one text-gray-400 "
+                className="text-gray-90 font-medium rounded-lg text-sm px-5 py-2.5 me-2 bg-color-five text-white"
                 onClick={handleSubmit}
               >
                 Update
@@ -584,6 +343,7 @@ const MentorProfileEdit: React.FC = () => {
 };
 
 export default MentorProfileEdit;
+
 const topSkills = [
   { title: "Node js" },
   { title: "React" },

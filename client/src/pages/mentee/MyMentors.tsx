@@ -12,6 +12,7 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import { PaymentDetails } from "../../datatypes/PropsTypes";
 import NavBar from "../../componets/navbar/Navbar";
+import NoImage from "../../assets/no-profile-image.png";
 
 const MyMentors = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -27,7 +28,6 @@ const MyMentors = () => {
           withCredentials: true,
         });
         if (response.data?.mentors.length > 0) {
-          console.log("Details->", response.data?.mentors);
           setMyMentors(response.data?.mentors);
         } else {
           setIsMentor(true);
@@ -104,8 +104,11 @@ const MyMentors = () => {
                               <img
                                 className="w-24 h-24 rounded-full object-cover"
                                 id="profile_img"
-                                alt="profile_img"
-                                src={mentor?.mentorProfile[0]?.profile_img}
+                                src={
+                                  mentor?.mentorProfile[0]?.profile_img
+                                    ? mentor?.mentorProfile[0].profile_img
+                                    : NoImage
+                                }
                               />
                               <div className="px-2 py-2 font-bold">
                                 <h1 className="text-xl text-white">

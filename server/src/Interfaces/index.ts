@@ -65,7 +65,6 @@ export interface IApplication extends Document {
   message_to_mentor: string;
   razorPay_id: string;
   paymentDone: boolean;
-  duration: Number;
   plan_price: Number;
   isExpired: boolean;
 }
@@ -105,6 +104,7 @@ export interface IMentorProfile extends Document {
   achievement: string;
   profile_state: string;
   skills: [];
+  spots: number;
   isPaymentDetails: boolean;
   is_active: boolean;
   isBlocked: boolean;

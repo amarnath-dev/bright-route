@@ -46,7 +46,7 @@ router.post(
 
 router.post(
   "/managment/profieImage-update",
-  Authentication.ensureAuth(["mentee"]),
+  Authentication.ensureAuth(["mentee", "mentor"]),
   menteeController.updateProfileImage
 );
 
@@ -115,6 +115,12 @@ router.get(
   "/mentee/expired",
   Authentication.ensureAuth(["mentee"]),
   menteeController.getExpired
+);
+
+router.get(
+  "/check/:mentorId",
+  Authentication.ensureAuth(["mentee"]),
+  menteeController.checkSpot
 );
 
 export default router;
