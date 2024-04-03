@@ -13,12 +13,14 @@ import { storage } from "../../app/firebase";
 import { PaymentDetails } from "../../datatypes/PropsTypes";
 import NavBar from "../../componets/navbar/Navbar";
 import NoImage from "../../assets/no-profile-image.png";
+import RateMentor from "../../componets/RateMentor/RateMentor";
 
 const MyMentors = () => {
   const axiosPrivate = useAxiosPrivate();
   const [myMentors, setMyMentors] = useState<PaymentDetails[]>([]);
   const [isMentor, setIsMentor] = useState<boolean>(false);
-
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [mentorId, setMentorId] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,9 +67,18 @@ const MyMentors = () => {
     fetchImage();
   }, [myMentors]);
 
+  const handleRating = (mentorId: string) => {
+    setMentorId(mentorId);
+    setOpenModal(true);
+  };
   return (
     <>
       <NavBar />
+      <RateMentor
+        openModal={openModal}
+        mentorId={mentorId ? mentorId : null}
+        setOpenModal={setOpenModal}
+      />
       <div className="w-full h-screen md:h-screen bg-background-two">
         {isMentor === true ? (
           <div className="w-full h-screen flex justify-center items-center flex-col">
@@ -100,7 +111,12 @@ const MyMentors = () => {
                             key={index}
                             className="md:w-96 min-h-full rounded-xl p-8 shadow-lg mt-2 ml-2 bg-gray-800"
                           >
-                            <div className="flex">
+                            <div
+                              className="flex cursor-pointer"
+                              onClick={() =>
+                                navigate(`/mentor-profile/${mentor?.mentor_id}`)
+                              }
+                            >
                               <img
                                 className="w-24 h-24 rounded-full object-cover"
                                 id="profile_img"
@@ -158,11 +174,19 @@ const MyMentors = () => {
                                     <VideoChatIcon />
                                   </Link>
                                 </div>
-                                <div className="px-3">
+                                <div className="px-3 flex justify-between">
                                   <h1 className="py-2 font-bold text-blue-400">
-                                    {30 - parseInt(format(mentor.createdAt))}{" "}
+                                    {30 - parseInt(format(mentor?.createdAt))}{" "}
                                     Days Left
                                   </h1>
+                                  <button
+                                    className="text-yellow-500 underline"
+                                    onClick={() =>
+                                      handleRating(mentor?.mentor_id)
+                                    }
+                                  >
+                                    Rate Mentor
+                                  </button>
                                 </div>
                               </figcaption>
                             </div>

@@ -45,7 +45,7 @@ function ContainerForm() {
       <div className="bg-background-two w-full h-full md:h-screen">
         <form onSubmit={handleSubmit}>
           <div className="flex justify-center items-center">
-            <h1 className="font-bold text-lg text-gray-400">
+            <h1 className="font-bold text-lg text-white">
               {currentStepIndex + 1} / {steps.length}
             </h1>
           </div>
@@ -54,7 +54,7 @@ function ContainerForm() {
             {!isFirststep && (
               <button
                 type="button"
-                className="border border-color-two bg-color-five text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
+                className="border border-color-two bg-color-one text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
                 onClick={back}
               >
                 Back
@@ -62,7 +62,7 @@ function ContainerForm() {
             )}
             <button
               type="submit"
-              className="border border-color-two bg-color-one text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
+              className="border border-color-two bg-color-five text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
             >
               {isLaststep ? "Finish" : "Next"}
             </button>

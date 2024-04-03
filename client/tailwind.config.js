@@ -12,7 +12,7 @@ export default {
         'color-two': '#c8d8e4',
         'color-three': '#ffffff',
         'color-four': '#f2f2f2',
-        'color-five': '#52ab98',
+        'color-five': '#0d9488',
         'background-one': "#020914",
         'background-two': "#0d1117",
         'home-color': "#1496BB",

@@ -25,10 +25,6 @@ const MentorProfileCard: React.FC<MentorProfileCardProps> = ({
       const imageRef = ref(storage, imageId);
       getDownloadURL(imageRef)
         .then((url) => {
-          // const img = document.getElementById(
-          //   "profile_img"
-          // ) as HTMLImageElement;
-          // img.src = url;
           setProfileImage(url);
         })
         .catch((error) => {
@@ -43,12 +39,8 @@ const MentorProfileCard: React.FC<MentorProfileCardProps> = ({
         <img
           alt="mentor_image"
           id="profile_img"
-          src={
-            profileImage
-              ? profileImage
-              : NoImage
-          }
-          className="w-28 md:w-36 h-auto rounded-full px-2 py-2 border border-gray-400 object-cover"
+          src={profileImage ? profileImage : NoImage}
+          className="w-28 md:w-36 h-36 rounded-full px-2 py-2 border border-gray-400 object-cover"
         />
       </div>
       <div className="flex justify-center">

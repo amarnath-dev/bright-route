@@ -27,7 +27,7 @@ export function ProfileDetails({
   return (
     <>
       <div className="w-screen mt-5 flex justify-center items-center">
-        <div className="flex justify-start items-center md:w-3/5 text-gray-400">
+        <div className="flex justify-start items-center md:w-3/5 text-white">
           <form className="md:w-full">
             <span className="ml-16 md:ml-2">Choose your Job Category</span>
 
@@ -59,7 +59,8 @@ export function ProfileDetails({
             <div className="w-screen flex flex-col justify-start items-center mt-4 md:w-full md:flex-col">
               <label className="md:w-full">
                 <h1>Select your Skills</h1>
-                <Stack spacing={3} sx={{ width: 280 }}>
+
+                {/* <Stack spacing={3} sx={{ width: 280 }}>
                   <Autocomplete
                     multiple
                     id="tags-standard"
@@ -71,13 +72,14 @@ export function ProfileDetails({
                       <TextField
                         {...params}
                         variant="standard"
-                        // label="Skills"
                         placeholder="Add Skills..."
                         className="bg-gray-800 placeholder:text-gray-400"
                       />
                     )}
                   />
-                </Stack>
+                </Stack> */}
+
+
               </label>
               <span className="w-72 mt-4 text-sm md:w-full sm:text-md">
                 Describe your expertise to connect with mentees who have similar
@@ -91,7 +93,7 @@ export function ProfileDetails({
                   className="placeholder:text-gray-400 block bg-gray-800 border border-gray-400 rounded-md py-2 pl-2 pt-2 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 h-20 text-sm md:w-full sm:text-md"
                   placeholder="Bio description..."
                   value={bio_dec}
-                  onChange={(e) => updateFields({ bio_dec: e.target.value })}
+                  onChange={(e) => updateFields({ bio_dec: e.target?.value })}
                 ></textarea>
               </label>
               <span className="w-72 mt-2 text-sm md:w-full sm:text-md">
@@ -105,7 +107,7 @@ export function ProfileDetails({
               <label>
                 <input
                   className="placeholder:text-slate-400 block bg-gray-800 mt-5 border border-gray-800 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
-                  placeholder="LinkedIn URL *"
+                  placeholder="LinkedIn URL"
                   type="text"
                   value={linkedIn_url}
                   onChange={(e) =>

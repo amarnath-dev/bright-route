@@ -17,7 +17,7 @@ export function ExperianceDetails({
         <div className="flex justify-start items-center md:w-3/5">
           <form className="w-full flex flex-col justify-start items-center">
             <div className="w-72 md:w-full">
-              <span className="font-bold">
+              <span className="font-bold text-white">
                 Why do you want to become a mentor? (Not publicly Visible)
               </span>
             </div>
@@ -34,7 +34,7 @@ export function ExperianceDetails({
             </div>
 
             <div className="w-72 mt-1 md:w-full">
-              <span className="font-bold">
+              <span className="font-bold text-white">
                 What, in your opinion, has been your greatest achievement so
                 far? (Not publicly Visible)
               </span>

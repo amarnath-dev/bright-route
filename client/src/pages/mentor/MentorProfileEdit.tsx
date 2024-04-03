@@ -14,18 +14,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Croper from "../../componets/ImageCrop/Croper";
 import NoImage from "../../assets/no-profile-image.png";
 
-const styles = {
-  autocomplete: {
-    width: 800,
-    backgroundColor: "#1f2937",
-  },
-  textField: {
-    "& .MuiInputLabel-root": {
-      color: "white",
-    },
-  },
-};
-
 const MentorProfileEdit: React.FC = () => {
   const navigate = useNavigate();
   const [mentor, setMentor] = useState<mentorProfileObj>();
@@ -157,7 +145,7 @@ const MentorProfileEdit: React.FC = () => {
                 type="text"
                 id="first_name"
                 name="first_name"
-                className="md:mb-6 bg-gray-800 border border-gray-300 text-sm rounded-lg block mt-2 md:mt-1 w-80 md:w-64 p-2.5"
+                className="md:mb-6 bg-gray-800 border-gray-800 text-sm rounded-lg block mt-2 md:mt-1 w-80 md:w-64 p-2.5"
                 value={mentorData?.first_name}
                 onChange={handleInputChange}
               />
@@ -168,7 +156,7 @@ const MentorProfileEdit: React.FC = () => {
                 type="text"
                 id="last_name"
                 name="last_name"
-                className="md:mb-6 bg-gray-800 border border-gray-300 text-sm rounded-lg block mt-2 md:mt-1 w-80 md:w-64 p-2.5"
+                className="md:mb-6 bg-gray-800 border border-gray-800 text-sm rounded-lg block mt-2 md:mt-1 w-80 md:w-64 p-2.5"
                 value={mentorData?.last_name}
                 onChange={handleInputChange}
               />
@@ -179,7 +167,7 @@ const MentorProfileEdit: React.FC = () => {
                 type="text"
                 id="email"
                 name="mentorEmail"
-                className="md:mb-6 bg-gray-800 border border-gray-300 text-sm rounded-lg block mt-2 w-80 md:w-64 p-2.5"
+                className="md:mb-6 bg-gray-800 border border-gray-800 text-sm rounded-lg block mt-2 w-80 md:w-64 p-2.5"
                 value={mentorData?.mentorEmail}
                 onChange={handleInputChange}
               />
@@ -193,7 +181,7 @@ const MentorProfileEdit: React.FC = () => {
                 type="text"
                 id="company"
                 name="company"
-                className="mb-6 bg-gray-800 border border-gray-300 text-sm rounded-lg block mt-1 w-80 md:w-64 p-2.5"
+                className="mb-6 bg-gray-800 border border-gray-800 text-sm rounded-lg block mt-1 w-80 md:w-64 p-2.5"
                 value={mentorData?.company}
                 onChange={handleInputChange}
               />
@@ -204,7 +192,7 @@ const MentorProfileEdit: React.FC = () => {
                 type="text"
                 id="linkedIn"
                 name="linkedIn"
-                className="mb-6 bg-gray-800 border border-gray-300 text-sm rounded-lg block w-80 md:w-64 p-2.5"
+                className="mb-6 bg-gray-800 border border-gray-800 text-sm rounded-lg block w-80 md:w-64 p-2.5"
                 value={mentorData?.linkedIn}
                 onChange={handleInputChange}
               />
@@ -215,7 +203,7 @@ const MentorProfileEdit: React.FC = () => {
                 type="text"
                 id="twitter"
                 name="twitter"
-                className="mb-6 bg-gray-800 border border-gray-300 text-sm rounded-lg block w-80 md:w-64 p-2.5"
+                className="mb-6 bg-gray-800 border border-gray-800 text-sm rounded-lg block w-80 md:w-64 p-2.5"
                 value={mentorData?.twitter}
                 onChange={handleInputChange}
               />
@@ -229,7 +217,7 @@ const MentorProfileEdit: React.FC = () => {
                 type="text"
                 id="personal_web"
                 name="web_url"
-                className="mb-6 bg-gray-800 border border-gray-300 text-sm rounded-lg block w-80 md:w-64 p-2.5"
+                className="mb-6 bg-gray-800 border border-gray-800 text-sm rounded-lg block w-80 md:w-64 p-2.5"
                 value={mentorData?.web_url}
                 onChange={handleInputChange}
               />
@@ -240,7 +228,7 @@ const MentorProfileEdit: React.FC = () => {
                 type="text"
                 id="job_title"
                 name="job_title"
-                className="mb-6 bg-gray-800 border border-gray-300 text-sm rounded-lg block w-80 md:w-64 p-2.5"
+                className="mb-6 bg-gray-800 border border-gray-800 text-sm rounded-lg block w-80 md:w-64 p-2.5"
                 value={mentorData?.job_title}
                 onChange={handleInputChange}
               />
@@ -251,7 +239,7 @@ const MentorProfileEdit: React.FC = () => {
                 type="text"
                 id="state"
                 name="state"
-                className="mb-6 bg-gray-800 border border-gray-300 text-sm rounded-lg block w-80 md:w-64 p-2.5"
+                className="mb-6 bg-gray-800 border border-gray-800 text-sm rounded-lg block w-80 md:w-64 p-2.5"
                 value={mentorData?.state}
                 onChange={handleInputChange}
               />
@@ -266,7 +254,7 @@ const MentorProfileEdit: React.FC = () => {
                 id="category"
                 value={mentorData?.category}
                 onChange={handleInputChange}
-                className="placeholder:text-slate-400 bg-gray-800 block border border-slate-300 rounded-md mt-1 py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-80 md:w-96 sm:text-sm"
+                className="placeholder:text-slate-400 bg-gray-800 block border border-gray-800 rounded-md mt-1 py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 w-80 md:w-96 sm:text-sm"
               >
                 <option value="null">-------</option>
                 <option value="Software Development">
@@ -294,13 +282,13 @@ const MentorProfileEdit: React.FC = () => {
               rows={10}
               defaultValue={mentorData?.bio}
               onChange={handleInputChange}
-              className="block p-2.5 w-full text-lg rounded-lg focus:border-gray-800 bg-gray-800 text-white border"
+              className="block p-2.5 w-full text-lg rounded-lg focus:border-gray-800 bg-gray-800 text-white"
             ></textarea>
           </div>
 
           <h1 className="py-2 font-bold">Update your Skills</h1>
           <div className="px-1 py-1 bg-gray-800 rounded-md">
-            <Stack spacing={3} className="text-gray-400">
+            {/* <Stack spacing={3} className="text-gray-400">
               <Autocomplete
                 multiple
                 id="tags-standard"
@@ -320,11 +308,10 @@ const MentorProfileEdit: React.FC = () => {
                     {...params}
                     variant="standard"
                     className="placeholder:text-white"
-                    sx={styles?.textField}
                   />
                 )}
               />
-            </Stack>
+            </Stack> */}
 
             <div className="flex justify-end py-4">
               <button
@@ -352,13 +339,7 @@ const topSkills = [
   { title: "Mongodb" },
   { title: "Python" },
   { title: "Java" },
-  {
-    title: "Javascript",
-  },
-  {
-    title: "Ruby",
-  },
-  {
-    title: "Fortran",
-  },
+  { title: "Javascript" },
+  { title: "Ruby" },
+  { title: "Fortran" },
 ];
