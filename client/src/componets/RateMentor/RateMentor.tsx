@@ -42,10 +42,6 @@ const RateMentor: React.FC<RateMentorProps> = ({
     }
   };
 
-  if (mentorId) {
-    console.log("Mentor ID", mentorId);
-  }
-
   return (
     <>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
@@ -65,7 +61,7 @@ const RateMentor: React.FC<RateMentorProps> = ({
                   className="bg-white rounded-md"
                   name="simple-controlled"
                   value={value}
-                  onChange={(event, newValue) => {
+                  onChange={(_event, newValue) => {
                     setValue(newValue);
                   }}
                 />

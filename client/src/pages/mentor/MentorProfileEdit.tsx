@@ -271,7 +271,7 @@ const MentorProfileEdit: React.FC = () => {
           </div>
         </div>
 
-        <div className="md:w-2/3 md:mt-10 rounded-lg border px-3 py-3">
+        <div className="md:w-2/3 md:mt-10 rounded-lg border px-2 py-2">
           <div className="px-2 md:px-0">
             <label htmlFor="message" className="block py-2 text-sm font-medium">
               ABOUT ME
@@ -285,10 +285,9 @@ const MentorProfileEdit: React.FC = () => {
               className="block p-2.5 w-full text-lg rounded-lg focus:border-gray-800 bg-gray-800 text-white"
             ></textarea>
           </div>
-
           <h1 className="py-2 font-bold">Update your Skills</h1>
-          <div className="px-1 py-1 bg-gray-800 rounded-md">
-            {/* <Stack spacing={3} className="text-gray-400">
+          <div className="px-1 py-1 bg-gray-300 rounded-md">
+            <Stack spacing={3} className="text-gray-400">
               <Autocomplete
                 multiple
                 id="tags-standard"
@@ -311,8 +310,7 @@ const MentorProfileEdit: React.FC = () => {
                   />
                 )}
               />
-            </Stack> */}
-
+            </Stack>
             <div className="flex justify-end py-4">
               <button
                 type="button"
