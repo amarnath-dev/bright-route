@@ -57,10 +57,9 @@ export function ProfileDetails({
             </div>
 
             <div className="w-screen flex flex-col justify-start items-center mt-4 md:w-full md:flex-col">
-              <label className="md:w-full">
+              <div className="md:w-full">
                 <h1>Select your Skills</h1>
-
-                {/* <Stack spacing={3} sx={{ width: 280 }}>
+                <Stack spacing={3} sx={{ width: 280 }} className="py-2">
                   <Autocomplete
                     multiple
                     id="tags-standard"
@@ -73,14 +72,12 @@ export function ProfileDetails({
                         {...params}
                         variant="standard"
                         placeholder="Add Skills..."
-                        className="bg-gray-800 placeholder:text-gray-400"
+                        className="bg-gray-300 placeholder:text-gray-400"
                       />
                     )}
                   />
-                </Stack> */}
-
-
-              </label>
+                </Stack>
+              </div>
               <span className="w-72 mt-4 text-sm md:w-full sm:text-md">
                 Describe your expertise to connect with mentees who have similar
                 interests.Mentees will use this to find you.
