@@ -1,8 +1,8 @@
+import Cookies from "js-cookie";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../app/useAxiosPrivate";
-import Cookies from "js-cookie";
 import { useContext, useEffect, useState } from "react";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../app/firebase";

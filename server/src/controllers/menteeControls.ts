@@ -9,6 +9,7 @@ import OTP from "../models/otpModel";
 import Report from "../models/mentorReportModel";
 import { ObjectId } from "mongodb";
 import PaymentModel from "../models/paymentModel";
+import Rate from "../models/rateModel";
 
 export interface mentorProfileObj {
   imageUrl: string;
@@ -115,15 +116,26 @@ export class MenteeController {
               as: "mentorEmail",
             },
           },
+          {
+            $lookup: {
+              from: "rates",
+              localField: "mentor_id",
+              foreignField: "mentor_id",
+              as: "mentorRating",
+            },
+          },
+          {
+            $unwind: "$mentorEmail",
+          },
         ]);
         const mentor = mentorProfile[0];
-        const mentorDetails = {
+        const mentorDetails = { 
           mentor_id: mentor?.mentor_id,
           profile_img: mentor?.profile_img ? mentorProfile[0].profile_img : "",
           first_name: mentor?.first_name,
           last_name: mentor?.last_name,
           job_title: mentor?.job_title ? mentor.job_title : "",
-          mentorEmail: mentor?.mentorEmail[0].email,
+          mentorEmail: mentor?.mentorEmail?.email,
           linkedIn: mentor?.linkedIn ? mentor.linkedIn : "",
           twitter: mentor?.twitter ? mentor.twitter : "",
           web_url: mentor?.web_url ? mentor.web_url : "",
@@ -132,9 +144,9 @@ export class MenteeController {
           state: mentor?.state,
           company: mentor?.company ? mentor.company : "",
           category: mentor?.category,
-          role: mentor?.mentorEmail[0].role,
+          role: mentor?.mentorEmail?.role,
+          reviews: mentor?.mentorRating,
         };
-
         if (mentorProfile) {
           res.status(200).json({ status: "sucess", mentorDetails });
         }
@@ -592,7 +604,37 @@ export class MenteeController {
       }
     } catch (error) {
       console.log(error);
-      return next(Error("Email send failed"));
+      return next(Error("Spot Check Failed"));
+    }
+  }
+
+  async rateMentor(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user;
+      const mentorId = req.params.mentorId;
+      if (user) {
+        const Rating = new Rate({
+          mentor_id: mentorId,
+          mentee_id: user?.id,
+          rating: req.body?.value,
+          description: req.body?.experiance,
+        });
+        await Rating.save();
+        res
+          .status(200)
+          .json({ status: "success", message: "Rated Successfully" });
+      } else {
+        res
+          .status(400)
+          .json({ status: "failed", message: "User Object not found" });
+      }
+    } catch (error) {
+      console.log(error);
+      return next(Error("Rating submit failed"));
     }
   }
 }

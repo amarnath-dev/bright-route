@@ -41,6 +41,13 @@ export interface IOtp extends Document {
   createdAt: Date;
 }
 
+export interface IRate extends Document {
+  mentor_id: ObjectId;
+  mentee_id: ObjectId;
+  rating: Number;
+  description: String;
+}
+
 export interface ISession extends Document {
   mentee_id: ObjectId;
   mentor_id: ObjectId;

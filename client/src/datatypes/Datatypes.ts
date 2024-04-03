@@ -142,6 +142,16 @@ export interface mentorProfileObj {
   spots: number;
   reports: Report[];
   approved: boolean;
+  reviews: Reviews[];
+}
+
+export interface Reviews {
+  _id: string;
+  mentor_id: string;
+  mentee_id: string;
+  rating: number;
+  description: string;
+  updatedAt: string;
 }
 
 export interface MentorProfileEdit {

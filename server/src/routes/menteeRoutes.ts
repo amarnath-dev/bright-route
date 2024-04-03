@@ -123,4 +123,10 @@ router.get(
   menteeController.checkSpot
 );
 
+router.post(
+  "/rate/:mentorId",
+  Authentication.ensureAuth(["mentee"]),
+  menteeController.rateMentor
+);
+
 export default router;
