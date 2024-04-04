@@ -78,12 +78,16 @@ export const Conversations: React.FC<ConversationProps> = ({
             className="h-14 w-14 rounded-full object-cover"
           />
         </div>
+
+
         <div className="px-3">
           <h1 className="font-bold">
             {user?.first_name} {user?.last_name}
           </h1>
           <h1>{user?.job_title}</h1>
         </div>
+
+
       </div>
     </>
   );

@@ -15,7 +15,6 @@ import {
 } from "firebase/storage";
 import { storage } from "../../app/firebase";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import NavBar from "../../componets/navbar/Navbar";
 import SocketContext from "../../redux/socket/socketContext";
 import { useContext } from "react";
 import "../../app/GlobalStyles.css";
@@ -301,7 +300,6 @@ const MentorMessages = () => {
   };
   return (
     <>
-      <NavBar />
       <div className="grid grid-cols-12 h-full md:h-screen px-3 py-15 bg-background-two">
         <div className="col-span-full md:col-span-3 px-1 py-1">
           <div className="w-full overflow-y-scroll" id="chat_header">
@@ -311,6 +309,7 @@ const MentorMessages = () => {
               </h1>
             </div>
             {conversation.map((c, index) => {
+              console.log(conversation);
               return (
                 <div
                   onClick={() => createConversation(c)}
@@ -327,9 +326,10 @@ const MentorMessages = () => {
             })}
           </div>
         </div>
-        <div className="col-span-12 md:col-span-9 bg-gray-800 rounded-md">
-          <div className="flex flex-col items-center justify-center w-full min-h-full text-gray-800 rounded relative">
-            <div className="w-full absolute bottom-15">
+
+        <div className="col-span-12 md:col-span-9 bg-gray-800 h-full rounded-md">
+          <div className="flex flex-col items-center justify-center w-full h-screen text-gray-800 rounded relative">
+            <div className="w-full absolute">
               <div id="imoji-picker">
                 {imoji && <EmojiPicker onEmojiClick={handleImojiClick} />}
               </div>
@@ -352,7 +352,8 @@ const MentorMessages = () => {
                       );
                     })}
                   </div>
-                  {openImg ? (
+
+                  {openImg && (
                     <div className="bg-gray-800 flex justify-center px-3 py-3">
                       <img
                         id="chat_img_main"
@@ -366,11 +367,10 @@ const MentorMessages = () => {
                         <CloseIcon className="border-2 rounded text-gray-400" />
                       </span>
                     </div>
-                  ) : (
-                    ""
                   )}
-                  <div className="flex items-center px-1 w-full mb-4">
-                    <div className="px-2 hover:bg-gray-900 rounded-full">
+
+                  <div className="flex items-center px-1 w-full">
+                    <div className="px-1 hover:bg-gray-900 rounded-full">
                       <span className="hidden">
                         <input
                           type="file"
@@ -415,10 +415,6 @@ const MentorMessages = () => {
                 <div className="text-center mt-10">
                   <span className="font-bold text-xl text-gray-400">
                     Please Select a chat to start messaging
-                    <img
-                      src="https://www.csr-online.net/wp-content/uploads/2020/06/people-speech-bubbles-chatting-communication-concept-vector-illustration-141568372-450x350.jpg"
-                      alt=""
-                    />
                   </span>
                 </div>
               )}
