@@ -31,8 +31,8 @@ export const RazorPay = () => {
       currency: "INR",
       name: "Bright Route",
       description: "Test Transaction",
-      image:
-        "https://t3.ftcdn.net/jpg/02/17/18/84/360_F_217188426_smgwnDFnQC5DHQ8mKGkdsMO7oDDP5nZn.jpg",
+      // image:
+      //   "https://t3.ftcdn.net/jpg/02/17/18/84/360_F_217188426_smgwnDFnQC5DHQ8mKGkdsMO7oDDP5nZn.jpg",
       handler: (res) => {
         const sentDetails = async () => {
           try {
@@ -106,7 +106,7 @@ export const RazorPay = () => {
     };
     const rzpay = new Razorpay(options);
     rzpay.open();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     Razorpay,
     axiosPrivate,

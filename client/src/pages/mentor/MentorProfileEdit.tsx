@@ -18,7 +18,6 @@ const MentorProfileEdit: React.FC = () => {
   const navigate = useNavigate();
   const [mentor, setMentor] = useState<mentorProfileObj>();
   const [defaultSkills, setDefaultSkills] = useState<{ title: string }[]>([]);
-
   const axiosPrivate = useAxiosPrivate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [closeCrop, seCloseCrop] = useState(false);

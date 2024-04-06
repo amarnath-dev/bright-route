@@ -19,7 +19,6 @@ import {
 import { storage } from "../../app/firebase";
 import CloseIcon from "@mui/icons-material/Close";
 import "../../app/GlobalStyles.css";
-import NavBar from "../../componets/navbar/Navbar";
 import { useContext } from "react";
 import SocketContext from "../../redux/socket/socketContext";
 
@@ -339,10 +338,10 @@ const MenteeMessages = () => {
 
   return (
     <>
-      <NavBar />
       <div className="grid grid-cols-12 h-full bg-background-two">
-        <div className="col-span-3 px-1 py-1"></div>
-        <div className="col-span-12 md:col-span-6 bg-gray-800 rounded-md">
+        <div className="col-span-3"></div>
+
+        <div className="col-span-12 md:col-span-8 bg-gray-800 rounded-md">
           <div className="flex flex-col items-center justify-center w-full min-h-screen text-gray-800 rounded">
             <div className="w-full" id="chat_header">
               <div>
@@ -353,6 +352,7 @@ const MenteeMessages = () => {
                         conversation={c}
                         currentUser={user}
                         index={index}
+                     
                       />
                       <div className="flex justify-center items-center px-4">
                         {user?.role === "mentee" && (
@@ -461,6 +461,7 @@ const MenteeMessages = () => {
             </div>
           </div>
         </div>
+
         <div className="col-span-3"></div>
       </div>
     </>
@@ -468,3 +469,8 @@ const MenteeMessages = () => {
 };
 
 export default MenteeMessages;
+
+//Changing hello
+//Hyyy
+//Helklloooooooooo
+//ehehesdfhksdflskjdfhskjdfgskdlj

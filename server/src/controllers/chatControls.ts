@@ -4,6 +4,7 @@ import Message from "../models/messageModal";
 import Mentor from "../models/mentorProfileModel";
 import Mentee from "../models/menteeProfileModel";
 import Room from "../models/roomModel";
+import Payment from "../models/paymentModel";
 import { ObjectId } from "mongodb";
 
 export class ChatControls {
@@ -109,9 +110,16 @@ export class ChatControls {
   ): Promise<void> {
     try {
       const friendId = new ObjectId(req.params.friendId);
+      const user = req?.user;
       if (friendId) {
         const friendDetails = await Mentor.findOne({ mentor_id: friendId });
         if (friendDetails?._id) {
+          const isPlanExists = await Payment.findOne({
+            mentor_id: friendId,
+            mentee_id: new ObjectId(user?.id),
+            isExpired: false,
+          });
+          console.log("Plan Exits -> ", isPlanExists);
           res.status(200).json({ status: "success", friendDetails });
         } else {
           const friendDetails = await Mentee.findOne({ mentee_id: friendId });

@@ -46,7 +46,6 @@ export const Messages: React.FC<MessagesProps> = ({
     const frndId = currentChat?.members?.find(
       (user: string) => user !== userId
     );
-
     if (frndId) {
       try {
         const fetchFrnd = async () => {
@@ -151,15 +150,13 @@ export const Messages: React.FC<MessagesProps> = ({
                           <div className="flex">
                             <p className="text-sm">{message?.text}</p>
                             <>
-                              {isHovered ? (
+                              {isHovered && (
                                 <span
                                   className="flex cursor-pointer"
                                   onClick={() => handleDelete(message?._id)}
                                 >
                                   <DeleteIcon />
                                 </span>
-                              ) : (
-                                ""
                               )}
                             </>
                           </div>
