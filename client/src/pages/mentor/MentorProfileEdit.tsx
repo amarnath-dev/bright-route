@@ -19,7 +19,7 @@ const MentorProfileEdit: React.FC = () => {
   const [mentor, setMentor] = useState<mentorProfileObj>();
   const [defaultSkills, setDefaultSkills] = useState<{ title: string }[]>([]);
   const axiosPrivate = useAxiosPrivate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const [closeCrop, seCloseCrop] = useState(false);
 
   const [mentorData, setMentorData] = useState({
@@ -36,6 +36,7 @@ const MentorProfileEdit: React.FC = () => {
     state: "",
   });
 
+  console.log(seCloseCrop);
   const handleAutoCompleteChange = (
     _event: React.SyntheticEvent,
     value: { title: string }[]

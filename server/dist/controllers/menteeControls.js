@@ -22,8 +22,8 @@ const sendEmail_1 = __importDefault(require("../utils/sendEmail"));
 const otpModel_1 = __importDefault(require("../models/otpModel"));
 const mentorReportModel_1 = __importDefault(require("../models/mentorReportModel"));
 const mongodb_1 = require("mongodb");
-// import PaymentModel from "../models/PaymentModel";
 const paymentModel_1 = __importDefault(require("../models/paymentModel"));
+const rateModel_1 = __importDefault(require("../models/rateModel"));
 class MenteeController {
     mentorProfile(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -77,6 +77,7 @@ class MenteeController {
         });
     }
     getMentorProfile(req, res, next) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const mentorId = new mongoose_1.default.Types.ObjectId(req.params.mentorId);
@@ -91,6 +92,17 @@ class MenteeController {
                                 as: "mentorEmail",
                             },
                         },
+                        {
+                            $lookup: {
+                                from: "rates",
+                                localField: "mentor_id",
+                                foreignField: "mentor_id",
+                                as: "mentorRating",
+                            },
+                        },
+                        {
+                            $unwind: "$mentorEmail",
+                        },
                     ]);
                     const mentor = mentorProfile[0];
                     const mentorDetails = {
@@ -99,7 +111,7 @@ class MenteeController {
                         first_name: mentor === null || mentor === void 0 ? void 0 : mentor.first_name,
                         last_name: mentor === null || mentor === void 0 ? void 0 : mentor.last_name,
                         job_title: (mentor === null || mentor === void 0 ? void 0 : mentor.job_title) ? mentor.job_title : "",
-                        mentorEmail: mentor === null || mentor === void 0 ? void 0 : mentor.mentorEmail[0].email,
+                        mentorEmail: (_a = mentor === null || mentor === void 0 ? void 0 : mentor.mentorEmail) === null || _a === void 0 ? void 0 : _a.email,
                         linkedIn: (mentor === null || mentor === void 0 ? void 0 : mentor.linkedIn) ? mentor.linkedIn : "",
                         twitter: (mentor === null || mentor === void 0 ? void 0 : mentor.twitter) ? mentor.twitter : "",
                         web_url: (mentor === null || mentor === void 0 ? void 0 : mentor.web_url) ? mentor.web_url : "",
@@ -108,7 +120,8 @@ class MenteeController {
                         state: mentor === null || mentor === void 0 ? void 0 : mentor.state,
                         company: (mentor === null || mentor === void 0 ? void 0 : mentor.company) ? mentor.company : "",
                         category: mentor === null || mentor === void 0 ? void 0 : mentor.category,
-                        role: mentor === null || mentor === void 0 ? void 0 : mentor.mentorEmail[0].role,
+                        role: (_b = mentor === null || mentor === void 0 ? void 0 : mentor.mentorEmail) === null || _b === void 0 ? void 0 : _b.role,
+                        reviews: mentor === null || mentor === void 0 ? void 0 : mentor.mentorRating,
                     };
                     if (mentorProfile) {
                         res.status(200).json({ status: "sucess", mentorDetails });
@@ -243,20 +256,25 @@ class MenteeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
-                const { img_firebase_id } = req.body;
+                const { img_firebase_id, role } = req.body;
                 if (user) {
                     if (!img_firebase_id) {
-                        res.status(400).json({ status: "error", message: "ID not found" });
+                        res
+                            .status(400)
+                            .json({ status: "error", message: "Image ID not found" });
                     }
                     else {
-                        const updateMentee = yield menteeProfileModel_1.default.findOneAndUpdate({
-                            mentee_id: user.id,
-                        }, { $set: { profile_img: img_firebase_id } }, { new: true });
-                        if (updateMentee === null || updateMentee === void 0 ? void 0 : updateMentee._id) {
-                            res
-                                .status(200)
-                                .json({ status: "success", message: "Profile Image Updated" });
+                        if (role === "mentee") {
+                            yield menteeProfileModel_1.default.findOneAndUpdate({
+                                mentee_id: new mongodb_1.ObjectId(user === null || user === void 0 ? void 0 : user.id),
+                            }, { $set: { profile_img: img_firebase_id } });
                         }
+                        else {
+                            yield mentorProfileModel_1.default.findOneAndUpdate({ mentor_id: new mongodb_1.ObjectId(user === null || user === void 0 ? void 0 : user.id) }, { $set: { profile_img: img_firebase_id } });
+                        }
+                        res
+                            .status(200)
+                            .json({ status: "success", message: "Profile Image Updated" });
                     }
                 }
             }
@@ -416,7 +434,6 @@ class MenteeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
-                console.log("Reached at the server", user);
                 const mentors = yield paymentModel_1.default.aggregate([
                     {
                         $match: { mentee_id: new mongodb_1.ObjectId(user === null || user === void 0 ? void 0 : user.id) },
@@ -506,6 +523,67 @@ class MenteeController {
             catch (error) {
                 console.log(error);
                 return next(Error("Email send failed"));
+            }
+        });
+    }
+    checkSpot(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = req === null || req === void 0 ? void 0 : req.user;
+                const mentorId = req.params.mentorId;
+                if (!user) {
+                    res.status(400).json({ message: "User Object not found" });
+                }
+                const checkSpot = yield mentorProfileModel_1.default.findOne({ mentor_id: mentorId });
+                if (checkSpot && (checkSpot === null || checkSpot === void 0 ? void 0 : checkSpot.spots) > 0) {
+                    const isExists = yield paymentModel_1.default.findOne({
+                        mentee_id: user === null || user === void 0 ? void 0 : user.id,
+                        isExpired: false,
+                    });
+                    if (isExists) {
+                        res.status(200).json({ status: "exists", message: "Alredy Applied" });
+                    }
+                    else {
+                        res.status(200).json({ status: "success" });
+                    }
+                }
+                else {
+                    res.status(200).json({ status: "spots", message: "No Spots Left" });
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return next(Error("Spot Check Failed"));
+            }
+        });
+    }
+    rateMentor(req, res, next) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = req.user;
+                const mentorId = req.params.mentorId;
+                if (user) {
+                    const Rating = new rateModel_1.default({
+                        mentor_id: mentorId,
+                        mentee_id: user === null || user === void 0 ? void 0 : user.id,
+                        rating: (_a = req.body) === null || _a === void 0 ? void 0 : _a.value,
+                        description: (_b = req.body) === null || _b === void 0 ? void 0 : _b.experiance,
+                    });
+                    yield Rating.save();
+                    res
+                        .status(200)
+                        .json({ status: "success", message: "Rated Successfully" });
+                }
+                else {
+                    res
+                        .status(400)
+                        .json({ status: "failed", message: "User Object not found" });
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return next(Error("Rating submit failed"));
             }
         });
     }

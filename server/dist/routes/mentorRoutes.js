@@ -12,7 +12,11 @@ const mentorController = new mentorControl_1.MentorController();
 router.post("/apply", mentorAuthController.apply);
 router.post("/mentor-login", mentorAuthController.mentorLogin);
 router.get("/profile", verifyAuth_1.Authentication.ensureAuth(["mentor"]), mentorController.mentorprofileDetails);
-router.post("/profile/profileImg-update", verifyAuth_1.Authentication.ensureAuth(["mentor"]), mentorController.updateProfileImg);
+// router.post(
+//   "/profile/profileImg-update",
+//   Authentication.ensureAuth(["mentor"]),
+//   mentorController.updateProfileImg
+// );
 router.post("/profile/update", verifyAuth_1.Authentication.ensureAuth(["mentor"]), mentorController.updateProfile);
 router.post("/plans/create", verifyAuth_1.Authentication.ensureAuth(["mentor"]), mentorController.createPlan);
 router.get("/plans/:mentorId", verifyAuth_1.Authentication.ensureAuth(["mentee", "mentor"]), mentorController.getPlans);

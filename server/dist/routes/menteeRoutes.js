@@ -23,7 +23,7 @@ router.get("/browse-mentors", verifyAuth_1.Authentication.ensureAuth(["mentee"])
 router.get("/browse/filter", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.mentorSearch);
 router.get("/managment/:menteeId", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.menteeProfile);
 router.post("/managment/profie-update", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.updateProfile);
-router.post("/managment/profieImage-update", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.updateProfileImage);
+router.post("/managment/profieImage-update", verifyAuth_1.Authentication.ensureAuth(["mentee", "mentor"]), menteeController.updateProfileImage);
 router.post("/change-password", verifyAuth_1.Authentication.ensureAuth(["mentee", "mentor"]), menteeController.changePassword);
 router.post("/managment/password/sentotp", verifyAuth_1.Authentication.ensureAuth(["mentee", "mentor"]), menteeController.sendOtp);
 router.post("/profile/changePassword/sendOTP", verifyAuth_1.Authentication.ensureAuth(["mentee", "mentor"]), menteeController.sendOtp);
@@ -36,4 +36,6 @@ router.get("/getimage/:userRole", verifyAuth_1.Authentication.ensureAuth(["mente
 router.get("/my-mentors", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.getMyMentors);
 router.post("/sort", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.getSorted);
 router.get("/mentee/expired", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.getExpired);
+router.get("/check/:mentorId", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.checkSpot);
+router.post("/rate/:mentorId", verifyAuth_1.Authentication.ensureAuth(["mentee"]), menteeController.rateMentor);
 exports.default = router;

@@ -12,21 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.job = void 0;
+exports.SpotJob = void 0;
 const node_schedule_1 = __importDefault(require("node-schedule"));
-const paymentModel_1 = __importDefault(require("../models/paymentModel"));
-const job = node_schedule_1.default.scheduleJob("0 0 * * *", () => __awaiter(void 0, void 0, void 0, function* () {
+const mentorProfileModel_1 = __importDefault(require("../models/mentorProfileModel"));
+const SpotJob = node_schedule_1.default.scheduleJob("0 0 1 * *", () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("Cron Job Exicuted");
-        const thresholdDuration = 30 * 24 * 60 * 60 * 1000;
-        yield paymentModel_1.default.updateMany({
-            isExpired: false,
-            createdAt: { $lt: new Date(Date.now() - thresholdDuration) },
-        }, { $set: { isExpired: true } });
+        console.log("Spot Job Executed");
+        yield mentorProfileModel_1.default.updateMany({}, { spot: 5 });
     }
     catch (error) {
         console.log(error);
     }
 }));
-exports.job = job;
+exports.SpotJob = SpotJob;
 // 0 0 1 * *
