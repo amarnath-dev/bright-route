@@ -24,7 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const paymentSchema = new mongoose_1.default.Schema({
+const rateSchema = new mongoose_1.default.Schema({
     mentor_id: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "User",
@@ -33,32 +33,12 @@ const paymentSchema = new mongoose_1.default.Schema({
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "User",
     },
-    razorPay_id: {
-        type: String,
-    },
-    plan_price: {
+    rating: {
         type: Number,
+        default: 0,
     },
-    mentor_plan_id: {
+    description: {
         type: String,
-        required: true,
-    },
-    goal_of_mentorship: {
-        type: String,
-    },
-    time_to_reach_goal: {
-        type: String,
-    },
-    message_to_mentor: {
-        type: String,
-    },
-    paymentDone: {
-        type: Boolean,
-        default: false,
-    },
-    isExpired: {
-        type: Boolean,
-        default: false,
     },
 }, { timestamps: true });
-exports.default = mongoose_1.default.model("payment", paymentSchema);
+exports.default = mongoose_1.default.model("Rate", rateSchema);

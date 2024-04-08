@@ -15,9 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentControls = void 0;
 const paymentModel_1 = __importDefault(require("../models/paymentModel"));
 const roomModel_1 = __importDefault(require("../models/roomModel"));
+const mentorProfileModel_1 = __importDefault(require("../models/mentorProfileModel"));
+const mongodb_1 = require("mongodb");
 class PaymentControls {
     storePaymentData(req, res, next) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const paymentDetails = new paymentModel_1.default({
@@ -31,12 +33,13 @@ class PaymentControls {
                     message_to_mentor: (_h = req.body) === null || _h === void 0 ? void 0 : _h.message_to_mentor,
                 });
                 yield paymentDetails.save();
+                const mentorProfile = yield mentorProfileModel_1.default.findOneAndUpdate({ mentor_id: new mongodb_1.ObjectId((_j = req.body) === null || _j === void 0 ? void 0 : _j.mentor_id) }, { $inc: { spots: -1 } }, { new: true });
                 //Creating the video call room for both user
                 const roomExists = yield roomModel_1.default.findOne({
-                    members: { $all: [(_j = req.body) === null || _j === void 0 ? void 0 : _j.mentee_id, (_k = req.body) === null || _k === void 0 ? void 0 : _k.mentor_id] },
+                    members: { $all: [(_k = req.body) === null || _k === void 0 ? void 0 : _k.mentee_id, (_l = req.body) === null || _l === void 0 ? void 0 : _l.mentor_id] },
                 });
                 if (!roomExists) {
-                    const roomId = ((_l = req.body) === null || _l === void 0 ? void 0 : _l.mentee_id) + ((_m = req.body) === null || _m === void 0 ? void 0 : _m.mentor_id);
+                    const roomId = ((_m = req.body) === null || _m === void 0 ? void 0 : _m.mentee_id) + ((_o = req.body) === null || _o === void 0 ? void 0 : _o.mentor_id);
                     const roomData = new roomModel_1.default({
                         members: [req.body.mentor_id, req.body.mentee_id],
                         roomId: roomId,

@@ -18,6 +18,7 @@ const messageModal_1 = __importDefault(require("../models/messageModal"));
 const mentorProfileModel_1 = __importDefault(require("../models/mentorProfileModel"));
 const menteeProfileModel_1 = __importDefault(require("../models/menteeProfileModel"));
 const roomModel_1 = __importDefault(require("../models/roomModel"));
+const paymentModel_1 = __importDefault(require("../models/paymentModel"));
 const mongodb_1 = require("mongodb");
 class ChatControls {
     makeConversation(req, res, next) {
@@ -113,9 +114,16 @@ class ChatControls {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const friendId = new mongodb_1.ObjectId(req.params.friendId);
+                const user = req === null || req === void 0 ? void 0 : req.user;
                 if (friendId) {
                     const friendDetails = yield mentorProfileModel_1.default.findOne({ mentor_id: friendId });
                     if (friendDetails === null || friendDetails === void 0 ? void 0 : friendDetails._id) {
+                        const isPlanExists = yield paymentModel_1.default.findOne({
+                            mentor_id: friendId,
+                            mentee_id: new mongodb_1.ObjectId(user === null || user === void 0 ? void 0 : user.id),
+                            isExpired: false,
+                        });
+                        console.log("Plan Exits -> ", isPlanExists);
                         res.status(200).json({ status: "success", friendDetails });
                     }
                     else {

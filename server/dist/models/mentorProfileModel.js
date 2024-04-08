@@ -59,9 +59,6 @@ const mentorProfileSchema = new mongoose_1.default.Schema({
     twitter: {
         type: String,
     },
-    web_url: {
-        type: String,
-    },
     why_mentor: {
         type: String,
     },
@@ -75,6 +72,10 @@ const mentorProfileSchema = new mongoose_1.default.Schema({
     },
     skills: {
         type: [],
+    },
+    spots: {
+        type: Number,
+        default: 5,
     },
     isPaymentDetails: {
         type: Boolean,
