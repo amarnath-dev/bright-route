@@ -31,6 +31,7 @@ export const RazorPay = () => {
       currency: "INR",
       name: "Bright Route",
       description: "Test Transaction",
+      order_id: `${user?._id} + ${Date.now()}`,
       handler: (res) => {
         const sentDetails = async () => {
           try {
