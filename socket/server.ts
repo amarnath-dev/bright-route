@@ -7,8 +7,9 @@ interface User {
 
 const io = new Server({
   cors: {
-    origin: "https://bright-route.online",
+    // origin: "https://bright-route.online",
     // origin: "http://localhost:5173",
+    origin: "https://bright-route.onrender.com",
     credentials: true,
   },
 });
