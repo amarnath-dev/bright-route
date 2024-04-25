@@ -27,12 +27,11 @@ export const RazorPay = () => {
   const handlePayment = useCallback(() => {
     const options: RazorpayOptions = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID as string,
-      amount: parseInt(planAmount?.plan_amount || "0", 10) * 100,
+      amount: (parseInt(planAmount?.plan_amount || "0", 10) * 100).toString(),
       currency: "INR",
       name: "Bright Route",
       description: "Test Transaction",
-      // image:
-      //   "https://t3.ftcdn.net/jpg/02/17/18/84/360_F_217188426_smgwnDFnQC5DHQ8mKGkdsMO7oDDP5nZn.jpg",
+      order_id: `${user?._id} + ${Date.now()}`,
       handler: (res) => {
         const sentDetails = async () => {
           try {
@@ -93,7 +92,7 @@ export const RazorPay = () => {
         sentDetails();
       },
       prefill: {
-        mentee_id: user?._id,
+        // mentee_id: user?._id,
         name: user?.first_name,
         email: user?.email,
       },

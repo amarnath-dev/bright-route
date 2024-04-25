@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "^2.1.0",
     "@stripe/react-stripe-js": "^2.5.0",
     "@stripe/stripe-js": "^3.0.5",
+    "@zegocloud/zego-uikit-prebuilt": "^2.0.1",
     "axios": "^1.6.5",
     "copy-to-clipboard": "^3.3.3",
     "emoji-picker-react": "^4.8.0",
