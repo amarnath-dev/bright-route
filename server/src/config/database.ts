@@ -4,7 +4,9 @@ import { job } from "../utils/expiryScript";
 import { SpotJob } from "../utils/spotRenewScript";
 
 const PORT = process.env.PORT;
+console.log(PORT);
 async function startServer() {
+  console.log(process.env.MONGO_CONNECTION_STRING);
   try {
     await mongoose.connect(process.env.MONGO_CONNECTION_STRING as string);
     console.log("Database Connected");
