@@ -26,6 +26,7 @@ const AdminLogin: React.FC = () => {
       const response = await dispatch(adminLogin(data));
       if (response.payload) {
         const payload = response.payload;
+        console.log("Success");
         if (payload.status == "success") {
           navigate("/admin/dashboard");
         }
