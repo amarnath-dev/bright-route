@@ -1,4 +1,4 @@
-import User from "../models/userModel";
+import User from "../models/User";
 
 const generateUsername = async (): Promise<string> => {
   const length = await User.countDocuments();

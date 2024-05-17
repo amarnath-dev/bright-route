@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from "react";
-import Spinner from "./componets/fallback/Spinner";
+import Spinner from "./componets/Spinner";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./componets/protect/ProtectedRoute";
-import { IsAuthenticated } from "./componets/protect/IsAuthenticated";
+import ProtectedRoute from "./componets/Protect/ProtectedRoute";
+import { IsAuthenticated } from "./componets/Protect/IsAuthenticated";
 import { MenteeRoutes } from "./routes/MenteeRoutes";
 import { MentorRoutes } from "./routes/MentorRoutes";
 import { AdminRoutes } from "./routes/AdminRoutes";
 import { AuthRoutes } from "./routes/AuthRoutes";
 import { Socket, io } from "socket.io-client";
-import { useAppSelector } from "./app/hooks";
-import SocketContext from "./redux/socket/socketContext";
+import { useAppSelector } from "./hooks/useAppSelector";
+import SocketContext from "./context/socketContext";
 import "./App.css";
 import "tailwindcss/tailwind.css";
 
@@ -18,10 +18,8 @@ const mentorRoutes = MentorRoutes();
 const adminRoutes = AdminRoutes();
 const authRoutes = AuthRoutes();
 
-const PageNotFound = React.lazy(
-  () => import("./componets/NotFound/PageNotFound")
-);
-const VideoChat = React.lazy(() => import("./componets/VideoChat/VideoChat"));
+const PageNotFound = React.lazy(() => import("./componets/PageNotFound/index"));
+const VideoChat = React.lazy(() => import("./componets/VideoChat"));
 
 function App() {
   const socket = useRef<Socket | null>(null);

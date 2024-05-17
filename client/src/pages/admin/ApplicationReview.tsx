@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { singleApplicationObj } from "../../datatypes/Datatypes";
+import { SingleApplicationObj } from "../../interfaces/mentor.interface";
 import { ref, getDownloadURL } from "firebase/storage";
-import { storage } from "../../app/firebase";
+import { storage } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Swal from "sweetalert2";
 
 const ApplicationReview = () => {
   const { mentor } = useParams();
   const [applicationData, setApplicationData] =
-    useState<singleApplicationObj>();
+    useState<SingleApplicationObj>();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
 

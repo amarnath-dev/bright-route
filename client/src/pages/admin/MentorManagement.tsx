@@ -1,65 +1,11 @@
 import { useEffect, useState } from "react";
-import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import { AdminSidebar } from "../../componets/AdminSidebar";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
-import CheckReport from "../../componets/checkReport/CheckReport";
+import CheckReport from "../../componets/Report";
 import { toast } from "react-toastify";
-
-//Mentor Types for state
-interface ReportDetails {
-  issue_faced: string;
-  issue_desc: string;
-  report_date: string;
-  _id: string;
-}
-
-interface MentorReport {
-  _id: string;
-  mentor_id: string;
-  mentee_id: string;
-  ReportDetails: ReportDetails[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-interface MentorProfile {
-  _id: string;
-  mentor_id: string;
-  profile_img: string;
-  first_name: string;
-  last_name: string;
-  job_title: string;
-  company: string;
-  state: string;
-  category: string;
-  bio: string;
-  linkedIn: string;
-  twitter: string;
-  web_url: string;
-  why_mentor: string;
-  achievement: string;
-  profile_state: string;
-  skills: string[];
-  reports: string[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  isPaymentDetails: boolean;
-}
-
-interface MentorData {
-  _id: string;
-  email: string;
-  password: string;
-  role: string;
-  is_blocked: boolean;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  profileDetails: MentorProfile;
-  mentorReports: MentorReport[];
-}
+import { ReportDetails } from "../../interfaces/admin.interface";
+import { MentorData } from "../../interfaces/admin.interface";
 
 const MentorManagement = () => {
   const [mentor, setMentor] = useState<MentorData[]>([]);

@@ -1,49 +1,14 @@
 import { useEffect, useState } from "react";
-import NavBar from "../../componets/navbar/Navbar";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import NavBar from "../../componets/Navbar";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../../app/firebase";
+import { storage } from "../../config/firebase";
 import { Link } from "react-router-dom";
 import MessageIcon from "@mui/icons-material/Message";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { useNavigate } from "react-router-dom";
-import NoImage from "../../assets/no-profile-image.png";
-
-interface Expired {
-  _id: string;
-  mentor_id: string;
-  mentee_id: string;
-  razorPay_id: string;
-  plan_price: number;
-  mentor_plan_id: string;
-  goal_of_mentorship: string;
-  time_to_reach_goal: string;
-  message_to_mentor: string;
-  paymentDone: boolean;
-  duration: number;
-  isExpired: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  menteeDetails: MenteeDetails;
-  profile_img: string;
-}
-
-interface MenteeDetails {
-  _id: string;
-  mentee_id: string;
-  first_name: string;
-  last_name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  __v: number;
-  profile_img: string;
-  country: string;
-  goal: string;
-  job_title: string;
-  linkedIn: string;
-  region: string;
-  twitter: string;
-}
+import NoImage from "../../assets/images/no-profile-image.png";
+import { Expired } from "../../interfaces/mentor.interface";
 
 const MentorHistory = () => {
   const axiosPrivate = useAxiosPrivate();

@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const userModel_1 = __importDefault(require("../models/userModel"));
+const User_1 = __importDefault(require("../models/User"));
 const generateUsername = () => __awaiter(void 0, void 0, void 0, function* () {
-    const length = yield userModel_1.default.countDocuments();
+    const length = yield User_1.default.countDocuments();
     console.log("length=>", length);
     return "@user" + 20;
 });

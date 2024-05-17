@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import API from "../api";
+import API from "../config/api";
 
 export const approveApplication = createAsyncThunk(
   "admin/application-review",

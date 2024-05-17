@@ -1,21 +1,12 @@
 import { useState } from "react";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-
-interface PlanDetails {
-  planAmount: string;
-  planType: string;
-  planDescription: string;
-  videoCallSession: string;
-  videoCallCount: string;
-  chatSessions: string;
-  handsOnSupport: string;
-}
+import { MentorServices } from "../../interfaces/mentor.interface";
 
 const CreatePlan = () => {
-  const [planDetails, setPlanDetails] = useState<PlanDetails>({
+  const [planDetails, setPlanDetails] = useState<MentorServices>({
     planAmount: "",
     planType: "",
     planDescription: "",

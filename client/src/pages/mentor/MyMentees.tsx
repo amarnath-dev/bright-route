@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../../app/firebase";
+import { storage } from "../../config/firebase";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -10,9 +10,9 @@ import VideoChatIcon from "@mui/icons-material/VideoChat";
 import MessageIcon from "@mui/icons-material/Message";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { format } from "timeago.js";
-import { useAppSelector } from "../../app/hooks";
-import { MyMenteePayment } from "../../datatypes/PropsTypes";
-import NavBar from "../../componets/navbar/Navbar";
+import { useAppSelector } from "../../hooks/useAppSelector";
+import { MyMenteePayment } from "../../interfaces/mentor.interface";
+import NavBar from "../../componets/Navbar";
 
 const MyMentees = () => {
   const [myMentees, setMyMentees] = useState<MyMenteePayment[]>([]);

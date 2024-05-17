@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
-import Chart from "../../componets/chart/Chart";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import { AdminSidebar } from "../../componets/AdminSidebar";
+import Chart from "../../componets/Chart";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const Dashboard = () => {
   const axiosPrivate = useAxiosPrivate();

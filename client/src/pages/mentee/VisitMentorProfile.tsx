@@ -1,21 +1,21 @@
 import React from "react";
-import MentorAboutSkill from "../../componets/mentor/ProfileAboutndSkill/MentorAboutSkill";
-import MentorProfileCard from "../../componets/mentor/ProfileCard/MentorProfileCard";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
-import { mentorProfileObj } from "../../datatypes/Datatypes";
+import MentorAboutSkill from "../../componets/mentor/AboutAndSkill";
+import MentorProfileCard from "../../componets/mentor/ProfileCard";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { MentorProfileObj } from "../../interfaces/mentor.interface";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MentorPaymentCard from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
-import { MentorPlanDetails } from "../../datatypes/PropsTypes";
-import NavBar from "../../componets/navbar/Navbar";
-import { useAppSelector } from "../../app/hooks";
-import { Reviews } from "../../datatypes/Datatypes";
-import NoImage from "../../assets/no-profile-image.png";
+import { MentorPlanDetails } from "../../interfaces/mentor.interface";
+import NavBar from "../../componets/Navbar";
+import { useAppSelector } from "../../hooks/useAppSelector";
+import { Reviews } from "../../interfaces/mentor.interface";
+import NoImage from "../../assets/images/no-profile-image.png";
 import Rating from "@mui/material/Rating";
 
 const VisitMentorProfile = () => {
   const { mentorId } = useParams();
-  const [mentor, setMentor] = useState<mentorProfileObj>();
+  const [mentor, setMentor] = useState<MentorProfileObj>();
   const axiosPrivate = useAxiosPrivate();
   const scrollRef = React.useRef<HTMLInputElement>(null);
   const [mentorPlans, setMentorPlans] = useState<MentorPlanDetails[] | null>(
@@ -33,7 +33,6 @@ const VisitMentorProfile = () => {
           }
         );
         if (response.data) {
-          console.log(response.data.mentorDetails);
           setMentor(response.data.mentorDetails);
         }
       } catch (error) {

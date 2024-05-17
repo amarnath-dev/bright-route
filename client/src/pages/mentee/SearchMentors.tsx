@@ -1,15 +1,15 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { storage } from "../../app/firebase";
+import { storage } from "../../config/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
-import { mentorProfileObj } from "../../datatypes/Datatypes";
-import { MentorListCard } from "../../componets/mentorListCard/MentorListCard";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import { MentorListCard } from "../../componets/ListMentorCard";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
-import "../../app/GlobalStyles.css";
+import { MentorProfileObj } from "../../interfaces/mentor.interface";
+import "../../styles/global-style.css";
 
 const SearchMentors = () => {
-  const [filtered, setFiltered] = useState<mentorProfileObj[]>([]);
+  const [filtered, setFiltered] = useState<MentorProfileObj[]>([]);
 
   const [jobTitle, setJobTitle] = useState("");
   const [skill, setSkill] = useState("");
@@ -74,7 +74,6 @@ const SearchMentors = () => {
           },
           { withCredentials: true }
         );
-        console.log(response.data);
         if (response.data.status === "success") {
           setFiltered(response.data?.allMentors);
         } else {
@@ -99,7 +98,14 @@ const SearchMentors = () => {
                 options={topTechnicalJobPositions}
                 className="custom-autocomplete"
                 renderInput={(params) => (
-                  <TextField {...params} label="Search by Job Title" />
+                  <TextField
+                    {...params}
+                    // label="Search by Job Title"
+                    InputProps={{
+                      ...params.InputProps,
+                      placeholder: "Select by job title",
+                    }}
+                  />
                 )}
                 onChange={(_event, value) => setJobTitle(value?.label || "")}
               />
@@ -113,7 +119,14 @@ const SearchMentors = () => {
                 className="custom-autocomplete"
                 sx={{ width: 300, marginTop: 3, padding: 1 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Search by Skills" />
+                  <TextField
+                    {...params}
+                    // label="Search by Skills"
+                    InputProps={{
+                      ...params.InputProps,
+                      placeholder: "Select by Skill",
+                    }}
+                  />
                 )}
                 onChange={(_event, value) => setSkill(value?.label || "")}
               />
@@ -124,7 +137,14 @@ const SearchMentors = () => {
                 className="custom-autocomplete"
                 sx={{ width: 300, marginTop: 3, padding: 1 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Search by Company" />
+                  <TextField
+                    {...params}
+                    // label="Search by Company"
+                    InputProps={{
+                      ...params.InputProps,
+                      placeholder: "Select by Company",
+                    }}
+                  />
                 )}
                 onChange={(_event, value) => setCompany(value?.label || "")}
               />

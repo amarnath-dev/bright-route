@@ -2,30 +2,26 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "../../validations/loginSchema";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch } from "../../hooks/useAppSelector";
 import { adminLogin } from "../../services/authServices";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { AdminCredentials } from "../../interfaces/admin.interface";
 import "react-toastify/dist/ReactToastify.css";
-
-interface Credentials {
-  email: string;
-  password: string;
-}
 
 const AdminLogin: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Credentials>({
+  } = useForm<AdminCredentials>({
     resolver: zodResolver(loginSchema),
   });
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const submitData = async (data: Credentials) => {
+  const submitData = async (data: AdminCredentials) => {
     try {
       const response = await dispatch(adminLogin(data));
       if (response.payload) {
@@ -38,9 +34,7 @@ const AdminLogin: React.FC = () => {
         }
       }
     } catch (error) {
-      if (typeof error == "string") {
-        console.log(error);
-      }
+      console.log(error);
     }
   };
 

@@ -1,9 +1,9 @@
-import { Conversations } from "../../componets/conversation/Conversations";
+import { Conversations } from "../../componets/Conversation";
 import SendIcon from "@mui/icons-material/Send";
-import { Messages } from "../../componets/message/Messages";
+import { Messages } from "../../componets/Messages";
 import React, { useEffect, useState } from "react";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
-import { useAppSelector } from "../../app/hooks";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useAppSelector } from "../../hooks/useAppSelector";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import CloseIcon from "@mui/icons-material/Close";
@@ -13,27 +13,13 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { storage } from "../../app/firebase";
+import { storage } from "../../config/firebase";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import SocketContext from "../../redux/socket/socketContext";
+import SocketContext from "../../context/socketContext";
 import { useContext } from "react";
-import "../../app/GlobalStyles.css";
-
-interface Message {
-  _id: string;
-  IsDeleted: boolean;
-  conversationId: string;
-  createdAt: number;
-  senderId: string;
-  text: string;
-  type: string;
-}
-
-interface CurrentChat {
-  _id: string;
-  members: [];
-  createdAt: string;
-}
+import { Message } from "../../interfaces/common.interface";
+import { CurrentChat } from "../../interfaces/common.interface";
+import "../../styles/global-style.css";
 
 const MentorMessages = () => {
   const socket = useContext(SocketContext);
@@ -102,8 +88,8 @@ const MentorMessages = () => {
         const response = await axiosPrivate.get(
           `chat/allConversation/${currentChat?._id}`
         );
-        if (response.data?.allMessages) {
-          setMessages(response.data.allMessages);
+        if (response.data?.messages) {
+          setMessages(response.data.messages);
         }
       } catch (error) {
         console.log(error);
@@ -298,6 +284,21 @@ const MentorMessages = () => {
         console.log("Error Occured", error);
       });
   };
+
+  //Function for Getting the deleted message id form child
+  const handleDataFromChildMentor = (id: string) => {
+    console.log("my parent mentor, deletd id -> ", id);
+    const messageIndex = messages.findIndex((message) => message._id === id);
+    if (messageIndex >= 0) {
+      const updatedMessages = [...messages];
+      updatedMessages[messageIndex] = {
+        ...updatedMessages[messageIndex],
+        IsDeleted: true,
+      };
+      setMessages(updatedMessages);
+    }
+  };
+
   return (
     <>
       <div className="grid grid-cols-12 h-full md:h-screen px-3 py-15 bg-background-two">
@@ -342,6 +343,8 @@ const MentorMessages = () => {
                       return (
                         <div ref={scrollRef} key={index}>
                           <Messages
+                            paretnType={"mentor"}
+                            sendDataToParent={handleDataFromChildMentor}
                             message={m}
                             own={m?.senderId === user?._id}
                             index={index}

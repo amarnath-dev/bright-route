@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const otpModel_1 = __importDefault(require("../models/otpModel"));
+const Otp_1 = __importDefault(require("../models/Otp"));
 const crypto_js_1 = __importDefault(require("crypto-js"));
 function generateOTP() {
     const randomNum = Math.random() * 9000;
@@ -33,7 +33,7 @@ const sendEmailOtp = (first_name, last_name, email) => __awaiter(void 0, void 0,
         });
         const otpnum = generateOTP();
         const hashedOTP = crypto_js_1.default.AES.encrypt(otpnum.toString(), process.env.HASH_KEY).toString();
-        yield otpModel_1.default.updateOne({ email: email }, { $set: { email: email, otp: hashedOTP } }, { upsert: true });
+        yield Otp_1.default.updateOne({ email: email }, { $set: { email: email, otp: hashedOTP } }, { upsert: true });
         const mailOptions = {
             from: "amarmanikavu@gmail.com",
             to: email,
@@ -52,10 +52,8 @@ const sendEmailOtp = (first_name, last_name, email) => __awaiter(void 0, void 0,
         });
     }
     catch (error) {
-        if (error instanceof Error) {
-            console.log(error.message);
-            return error;
-        }
+        console.log(error);
+        return error;
     }
 });
 exports.default = sendEmailOtp;

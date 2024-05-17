@@ -1,12 +1,12 @@
 import app from "../app";
 import mongoose from "mongoose";
 import { job } from "../utils/expiryScript";
-import { SpotJob } from "../utils/spotRenewScript";
+import { SpotJob } from "../utils/renewSpot";
 
 const PORT = process.env.PORT;
-console.log(PORT);
+
 async function startServer() {
-  console.log(process.env.MONGO_CONNECTION_STRING);
+
   try {
     await mongoose.connect(process.env.MONGO_CONNECTION_STRING as string);
     console.log("Database Connected");
@@ -16,9 +16,11 @@ async function startServer() {
       job;
       SpotJob;
     });
+    
   } catch (error) {
     console.error("Error connecting to database:", error);
   }
+
 }
 
 startServer();

@@ -1,9 +1,9 @@
-import { Conversations } from "../../componets/conversation/Conversations";
+import { Conversations } from "../../componets/Conversation";
 import SendIcon from "@mui/icons-material/Send";
-import { Messages } from "../../componets/message/Messages";
+import { Messages } from "../../componets/Messages";
 import React, { useEffect, useState } from "react";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
-import { useAppSelector } from "../../app/hooks";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useAppSelector } from "../../hooks/useAppSelector";
 import { useParams } from "react-router-dom";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
@@ -16,27 +16,13 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { storage } from "../../app/firebase";
+import { storage } from "../../config/firebase";
 import CloseIcon from "@mui/icons-material/Close";
-import "../../app/GlobalStyles.css";
 import { useContext } from "react";
-import SocketContext from "../../redux/socket/socketContext";
-
-interface Message {
-  _id: string;
-  IsDeleted: boolean;
-  conversationId: string;
-  createdAt: number;
-  senderId: string;
-  text: string;
-  type: string;
-}
-
-interface CurrentChat {
-  _id: string;
-  members: [];
-  createdAt: string;
-}
+import SocketContext from "../../context/socketContext";
+import { Message } from "../../interfaces/common.interface";
+import { CurrentChat } from "../../interfaces/common.interface";
+import "../../styles/global-style.css";
 
 const MenteeMessages = () => {
   const socket = useContext(SocketContext);
@@ -48,6 +34,7 @@ const MenteeMessages = () => {
   const { mentorId, menteeID } = useParams();
 
   const [messages, setMessages] = useState<Message[]>([]);
+
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState<Message | null>(null);
   const scrollRef = React.useRef<HTMLInputElement>(null);
@@ -146,7 +133,7 @@ const MenteeMessages = () => {
           `chat/allConversation/${currentChat?._id}`
         );
         if (response.data) {
-          setMessages(response.data.allMessages);
+          setMessages(response.data.messages);
         }
       };
       fetchConversationMessages();
@@ -331,6 +318,21 @@ const MenteeMessages = () => {
     setOpenImg(false);
   }, []);
 
+  //Function for Getting the deleted message id form child
+  const handleDataFromChildMentee = (id: string) => {
+    console.log("Menteee ");
+    console.log("My parent mentee, deletd id -> ", id);
+    const messageIndex = messages.findIndex((message) => message._id === id);
+    if (messageIndex >= 0) {
+      const updatedMessages = [...messages];
+      updatedMessages[messageIndex] = {
+        ...updatedMessages[messageIndex],
+        IsDeleted: true,
+      };
+      setMessages(updatedMessages);
+    }
+  };
+
   //To Scroll Down to the Bottom
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -352,7 +354,6 @@ const MenteeMessages = () => {
                         conversation={c}
                         currentUser={user}
                         index={index}
-                     
                       />
                       <div className="flex justify-center items-center px-4">
                         {user?.role === "mentee" && (
@@ -390,6 +391,8 @@ const MenteeMessages = () => {
                   return (
                     <div ref={scrollRef} key={index}>
                       <Messages
+                        paretnType={"mentee"}
+                        sendDataToParent={handleDataFromChildMentee}
                         message={m}
                         own={m?.senderId === user?._id}
                         index={index}
