@@ -1,11 +1,7 @@
 import { z, ZodType } from "zod";
+import { LoginSchema } from "../interfaces/validation.interface";
 
-interface loginSchema {
-  email: string;
-  password: string;
-}
-
-export const loginSchema: ZodType<loginSchema> = z.object({
+export const loginSchema: ZodType<LoginSchema> = z.object({
   email: z
     .string()
     .email()

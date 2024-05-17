@@ -15,19 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const expiryScript_1 = require("../utils/expiryScript");
-const spotRenewScript_1 = require("../utils/spotRenewScript");
+const renewSpot_1 = require("../utils/renewSpot");
 const PORT = process.env.PORT;
-console.log(PORT);
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(process.env.MONGO_CONNECTION_STRING);
         try {
             yield mongoose_1.default.connect(process.env.MONGO_CONNECTION_STRING);
             console.log("Database Connected");
             app_1.default.listen(PORT, () => {
                 console.log(`Server Running on Port ${PORT}`);
                 expiryScript_1.job;
-                spotRenewScript_1.SpotJob;
+                renewSpot_1.SpotJob;
             });
         }
         catch (error) {

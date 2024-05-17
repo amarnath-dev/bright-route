@@ -1,11 +1,11 @@
 import "react-toastify/dist/ReactToastify.css";
 import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../../app/firebase";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import { storage } from "../../config/firebase";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import "react-image-crop/dist/ReactCrop.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MenteeProfileDetails } from "../../datatypes/PropsTypes";
+import { MenteeProfileDetails } from "../../interfaces/mentee.interface";
 
 const MenteeProfile = () => {
   const axiosPrivate = useAxiosPrivate();

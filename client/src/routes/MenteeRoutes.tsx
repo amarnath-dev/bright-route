@@ -8,7 +8,7 @@ const SearchMentors = React.lazy(() => import("../pages/mentee/SearchMentors"));
 const MenteeProfile = React.lazy(() => import("../pages/mentee/MenteeProfile"));
 
 const ChangePassword = React.lazy(
-  () => import("../componets/mentee/ChangePassword")
+  () => import("../componets/ChangePassword")
 );
 
 const MentorshipApplyDetails = React.lazy(
@@ -34,7 +34,7 @@ const MenteeMessages = React.lazy(
 const MyMentors = React.lazy(() => import("../pages/mentee/MyMentors"));
 
 const MenteePaymentDetails = React.lazy(
-  () => import("../componets/PaymentDetails/MenteePaymentDetails")
+  () => import("../componets/PaymentDetails")
 );
 
 const MenteeHistory = React.lazy(() => import("../pages/mentee/MenteeHistory"));

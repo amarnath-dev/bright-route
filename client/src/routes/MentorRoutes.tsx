@@ -17,8 +17,6 @@ const MentorProfileEdit = React.lazy(
   () => import("../pages/mentor/MentorProfileEdit")
 );
 
-const ApplySuccess = React.lazy(() => import("../pages/mentor/ApplySuccess"));
-
 const MentorPlans = React.lazy(() => import("../pages/mentor/MentorPlans"));
 
 const CreatePlan = React.lazy(() => import("../pages/mentor/CreatePlan"));
@@ -30,11 +28,11 @@ const MentorshipApplyDetails = React.lazy(
 const MyMentees = React.lazy(() => import("../pages/mentor/MyMentees"));
 
 const MenteePaymentDetails = React.lazy(
-  () => import("../componets/PaymentDetails/MenteePaymentDetails")
+  () => import("../componets/PaymentDetails")
 );
 
 const ChangePassword = React.lazy(
-  () => import("../componets/mentee/ChangePassword")
+  () => import("../componets/ChangePassword")
 );
 
 const VisitMenteeProfile = React.lazy(
@@ -55,8 +53,6 @@ export const MentorRoutes = () => {
       <Route path="/mentor/profile" element={<MentorProfile />} />
 
       <Route path="/mentor/profile/update" element={<MentorProfileEdit />} />
-
-      <Route path="/mentor/apply-success" element={<ApplySuccess />} />
 
       <Route path="/mentor/plans" element={<MentorPlans />} />
 

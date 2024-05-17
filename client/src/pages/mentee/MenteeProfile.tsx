@@ -1,14 +1,14 @@
-import { MenteeProfileCard } from "../../componets/mentee/MenteeProfileCard";
+import { MenteeProfileCard } from "../../componets/MenteeProfileCard";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../hooks/useAppSelector";
 import "react-toastify/dist/ReactToastify.css";
 import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../../app/firebase";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
-import NavBar from "../../componets/navbar/Navbar";
-import NoImage from "../../assets/no-profile-image.png";
-import Crop from "../../componets/ImageCrop/Croper";
+import { storage } from "../../config/firebase";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import NavBar from "../../componets/Navbar";
+import NoImage from "../../assets/images/no-profile-image.png";
+import Crop from "../../componets/Crop/Croper";
 import "react-image-crop/dist/ReactCrop.css";
 import Swal from "sweetalert2";
 
@@ -61,7 +61,6 @@ const MenteeProfile = () => {
   if (formData.profile_img) {
     const fetchImg = async () => {
       const imageId = formData.profile_img;
-      //if check for avoiding root error
       if (imageId) {
         const imageRef = ref(storage, imageId);
         getDownloadURL(imageRef)
@@ -79,8 +78,7 @@ const MenteeProfile = () => {
     fetchImg();
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     Swal.fire({
       title: "Do you want to save the changes?",
       showDenyButton: true,
@@ -91,6 +89,18 @@ const MenteeProfile = () => {
       if (result.isConfirmed) {
         formData.goal = goal;
         try {
+          formData.first_name = formData.first_name.replace(/\s/g, "");
+          formData.last_name = formData.last_name.replace(/\s/g, "");
+          formData.job_title = formData.job_title.replace(/\s/g, "");
+          formData.goal = formData.goal.replace(/\s/g, "");
+          if (!formData.first_name || !formData.last_name || !formData.goal) {
+            Swal.fire({
+              title: "Fields are Required",
+              text: "Firstname Lastname Job Title and Goal fields are required",
+              icon: "error",
+            });
+            return;
+          }
           const response = await axiosPrivate.post(
             "/managment/profie-update",
             formData,
@@ -139,9 +149,7 @@ const MenteeProfile = () => {
             ""
           ) : (
             <div className="flex flex-col ml-6">
-              <h1 className="font-bold text-white">
-                Please Add a profile Image
-              </h1>
+              <h1 className="font-bold text-white">Add a profile Image</h1>
             </div>
           )}
           <div className="px-2 md:px-5 md:py-2 flex items-center py-3">
@@ -160,7 +168,7 @@ const MenteeProfile = () => {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full px-3 md:px-0">
+          <div className="w-full px-3 md:px-0">
             <div className="flex flex-col w-full md:flex-row justify-center text-gray-400">
               <label>
                 <span className="text-gray-400">First Name</span>
@@ -169,6 +177,7 @@ const MenteeProfile = () => {
                   className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
                   type="text"
                   name="first_name"
+                  required
                   onChange={onchange}
                   value={formData.first_name}
                 />
@@ -180,6 +189,7 @@ const MenteeProfile = () => {
                   className="placeholder:text-black text-white field mt-1 block bg-gray-800 border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
                   type="text"
                   name="last_name"
+                  required
                   value={formData?.last_name}
                   onChange={onchange}
                 />
@@ -223,7 +233,7 @@ const MenteeProfile = () => {
                 />
               </label>
               <label className="mt-2">
-                <span className="text-gray-400">Twitter</span>
+                <span className="text-gray-400">Twitter(Optional)</span>
                 <input
                   id="twitter"
                   className="placeholder:text-black field mt-1 block bg-gray-800 border-gray-800 text-white rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
@@ -259,11 +269,12 @@ const MenteeProfile = () => {
                 type="submit"
                 id="saveBtn"
                 className="px-2 py-2 md:px-2 md:py-2 rounded-md bg-color-five text-white mb-4"
+                onClick={handleSubmit}
               >
                 Save Changes
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </>

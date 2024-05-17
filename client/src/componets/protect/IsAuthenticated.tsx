@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Link } from "react-router-dom";
 
 export const IsAuthenticated: React.FC = () => {
@@ -48,7 +48,6 @@ export const IsAuthenticated: React.FC = () => {
               >
                 Sign Up
               </Link>
-              {/* <Navigate to={"/signup"} /> */}
             </div>
           </div>
         </>

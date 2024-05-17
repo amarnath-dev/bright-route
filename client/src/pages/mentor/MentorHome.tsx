@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../../componets/navbar/Navbar";
+import NavBar from "../../componets/Navbar";
 import { motion } from "framer-motion";
-import AnimatedText from "../../componets/AnimatedText/AnimatedText";
-import { AnimatedMotionTwo } from "../../componets/AnimatedText/AnimatedMotionTwo";
-import Person from "../../assets/home_person.png";
+import AnimatedText from "../../componets/AnimatedTextOne/AnimatedText";
+import { AnimatedMotionTwo } from "../../componets/AnimatedTextOne/AnimatedMotionTwo";
+import Person from "../../assets/images/home-person.png"
 import { Link } from "react-router-dom";
 
 const MentorHome: React.FC = () => {

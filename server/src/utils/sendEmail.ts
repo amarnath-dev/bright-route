@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import Otp from "../models/otpModel";
+import Otp from "../models/Otp";
 import cryptojs from "crypto-js";
 
 function generateOTP(): number {
@@ -53,10 +53,8 @@ const sendEmailOtp = async (
       }
     });
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.message);
-      return error;
-    }
+    console.log(error);
+    return error;
   }
 };
 

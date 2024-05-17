@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { mentorProfileObj } from "../../datatypes/Datatypes";
+import { MentorProfileObj } from "../../interfaces/mentor.interface";
 import { ref, getDownloadURL } from "firebase/storage";
-import { storage } from "../../app/firebase";
+import { storage } from "../../config/firebase";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
-import NavBar from "../../componets/navbar/Navbar";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import NavBar from "../../componets/Navbar";
 import "react-image-crop/dist/ReactCrop.css";
 import "react-toastify/dist/ReactToastify.css";
-import Croper from "../../componets/ImageCrop/Croper";
-import NoImage from "../../assets/no-profile-image.png";
+import Croper from "../../componets/Crop/Croper";
+import NoImage from "../../assets/images/no-profile-image.png";
 
 const MentorProfileEdit: React.FC = () => {
   const navigate = useNavigate();
-  const [mentor, setMentor] = useState<mentorProfileObj>();
+  const [mentor, setMentor] = useState<MentorProfileObj>();
   const [defaultSkills, setDefaultSkills] = useState<{ title: string }[]>([]);
   const axiosPrivate = useAxiosPrivate();
 

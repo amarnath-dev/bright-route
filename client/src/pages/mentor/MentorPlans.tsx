@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import MentorPaymentCard from "../../componets/mentor/PaymentDetailsCard/MentorPaymentCard";
-import { MentorPlanDetails } from "../../datatypes/PropsTypes";
-import NavBar from "../../componets/navbar/Navbar";
-import { useAppSelector } from "../../app/hooks";
+import { MentorPlanDetails } from "../../interfaces/mentor.interface";
+import NavBar from "../../componets/Navbar";
+import { useAppSelector } from "../../hooks/useAppSelector";
 
 const MentorPlans = () => {
   const [mentorPlans, setMentorPlans] = useState<MentorPlanDetails[] | null>(

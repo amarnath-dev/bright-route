@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import XIcon from "@mui/icons-material/X";
@@ -9,11 +9,11 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../../app/firebase";
-import { PaymentDetails } from "../../datatypes/PropsTypes";
-import NavBar from "../../componets/navbar/Navbar";
-import NoImage from "../../assets/no-profile-image.png";
-import RateMentor from "../../componets/RateMentor/RateMentor";
+import { storage } from "../../config/firebase";
+import { PaymentDetails } from "../../interfaces/mentee.interface";
+import NavBar from "../../componets/Navbar";
+import NoImage from "../../assets/images/no-profile-image.png";
+import RateMentor from "../../componets/RateMentor";
 
 const MyMentors = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -180,7 +180,7 @@ const MyMentors = () => {
                                     Days Left
                                   </h1>
                                   <button
-                                    className="text-yellow-500 underline"
+                                    className="text-blue-500"
                                     onClick={() =>
                                       handleRating(mentor?.mentor_id)
                                     }

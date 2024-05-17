@@ -1,36 +1,9 @@
-import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
+import { AdminSidebar } from "../../componets/AdminSidebar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { format } from "timeago.js";
-
-interface MentorProfile {
-  _id: string;
-  mentor_id: string;
-  profile_img: string;
-  first_name: string;
-  last_name: string;
-  job_title: string;
-  company: string;
-  state: string;
-  category: string;
-  bio: string;
-  linkedIn: string;
-  twitter: string;
-  web_url: string;
-  why_mentor: string;
-  achievement: string;
-  profile_state: string;
-  skills: string[];
-  reports: [];
-  isPaymentDetails: boolean;
-  isBlocked: boolean;
-  mentorPlans: [];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  mentorEmail: string;
-}
+import { MentorProfile } from "../../interfaces/admin.interface";
 
 const MentorApplication = () => {
   const axiosPrivate = useAxiosPrivate();

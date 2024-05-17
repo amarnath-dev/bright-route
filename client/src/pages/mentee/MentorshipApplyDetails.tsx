@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
-import { Form, submitForm } from "../../redux/applyForm/applySlice";
+import { Form, submitForm } from "../../redux/slices/applySlice";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import { useAppSelector } from "../../hooks/useAppSelector";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 

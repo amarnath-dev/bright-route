@@ -3,13 +3,12 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import menteeRouter from "./routes/menteeRoutes";
-import mentorRouter from "./routes/mentorRoutes";
-import adminRouter from "./routes/adminRoutes";
-import chatRouter from "./routes/chatRoutes";
-import notificationRouter from "./routes/notificationRoutes";
-import forgotPassControl from "./routes/globalRoutes";
-
+import menteeRouter from "./routes/mentee.routes";
+import mentorRouter from "./routes/mentor.routes";
+import adminRouter from "./routes/admin.routes";
+import chatRouter from "./routes/chat.routes";
+import notificationRouter from "./routes/notification.routes";
+import forgotPassControl from "./routes/common.routes";
 
 const app = express();
 dotenv.config();
@@ -24,8 +23,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsConfig));
 
-
-//routes
 app.use("/api", menteeRouter);
 app.use("/api/mentor", mentorRouter);
 app.use("/api/admin", adminRouter);

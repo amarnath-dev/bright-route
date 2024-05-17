@@ -14,12 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.job = void 0;
 const node_schedule_1 = __importDefault(require("node-schedule"));
-const paymentModel_1 = __importDefault(require("../models/paymentModel"));
+const Payment_1 = __importDefault(require("../models/Payment"));
 const job = node_schedule_1.default.scheduleJob("0 0 * * *", () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("Cron Job Exicuted");
         const thresholdDuration = 30 * 24 * 60 * 60 * 1000;
-        yield paymentModel_1.default.updateMany({
+        yield Payment_1.default.updateMany({
             isExpired: false,
             createdAt: { $lt: new Date(Date.now() - thresholdDuration) },
         }, { $set: { isExpired: true } });

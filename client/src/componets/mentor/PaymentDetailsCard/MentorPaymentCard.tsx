@@ -9,10 +9,10 @@ import {
   submitPlanId,
   submitMentorId,
   submitPlanAmount,
-} from "../../../redux/applyForm/applySlice";
-import useAxiosPrivate from "../../../app/useAxiosPrivate";
-import { MentorPlanDetails } from "../../../datatypes/PropsTypes";
-import { PlanService } from "../../../datatypes/PropsTypes";
+} from "../../../redux/slices/applySlice";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { MentorPlanDetails } from "../../../interfaces/mentor.interface";
+import { PlanService } from "../../../interfaces/mentor.interface";
 import Swal from "sweetalert2";
 
 interface MentorPaymentCardProps {
@@ -82,13 +82,15 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
       const response = await axiosPrivate.get(`/check/${mentor_id}`, {
         withCredentials: true,
       });
-      console.log(response);
       if (response.data.status === "spots") {
-        Swal.fire("This Mentor has No Spots Left");
+        Swal.fire({ title: "This Mentor has No Spots Left", icon: "info" });
         return;
       }
       if (response.data.status === "exists") {
-        Swal.fire("You have Alredy Applied");
+        Swal.fire({
+          title: "You have already applied to a mentor",
+          text: "You can only apply to one plan in a month",
+        });
         return;
       }
     } catch (error) {

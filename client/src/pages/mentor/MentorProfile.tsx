@@ -1,19 +1,12 @@
 import { useEffect, useState } from "react";
-import { mentorProfileObj } from "../../datatypes/Datatypes";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
-import NavBar from "../../componets/navbar/Navbar";
-import MentorProfileCard from "../../componets/mentor/ProfileCard/MentorProfileCard";
-import MentorAboutSkill from "../../componets/mentor/ProfileAboutndSkill/MentorAboutSkill";
-
-// const MentorProfileCard = React.lazy(
-//   () => import("../../componets/mentor/ProfileCard/MentorProfileCard")
-// );
-// const MentorAboutSkill = React.lazy(
-//   () => import("../../componets/mentor/ProfileAboutndSkill/MentorAboutSkill")
-// );
+import { MentorProfileObj } from "../../interfaces/mentor.interface";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import NavBar from "../../componets/Navbar";
+import MentorProfileCard from "../../componets/mentor/ProfileCard";
+import MentorAboutSkill from "../../componets/mentor/AboutAndSkill";
 
 const MentorProfile = () => {
-  const [mentor, setMentor] = useState<mentorProfileObj>();
+  const [mentor, setMentor] = useState<MentorProfileObj>();
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {

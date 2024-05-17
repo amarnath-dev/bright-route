@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import API from "../api";
-import { FormData } from "../datatypes/Datatypes";
+import API from "../config/api";
+import { FormData } from "../interfaces/mentor.interface";
 import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "../app/firebase";
-import { Credentials } from "../componets/auth/Signup/Signup";
+import { storage } from "../config/firebase";
+import { Credentials } from "../componets/Authentication/Signup/Signup";
 
 //Mentee Services
 export type UserWithIdAndRoles = {
@@ -143,23 +143,20 @@ export const MultiFromApply = createAsyncThunk(
   "auth/mentor/apply",
   async (mentorData: FormData, thunkAPI) => {
     try {
-      const fileObj = mentorData.profile_img;
+      console.log("Mentor Data", mentorData);
+      const fileObj = mentorData?.profile_img;
       if (fileObj?.name) {
         const filename = new Date().getTime() + fileObj?.name;
         const reference = ref(storage, filename);
         const snapshot = await uploadBytes(reference, fileObj);
         if (snapshot.metadata) {
           const img_firebase_id: string = snapshot.metadata.fullPath;
-          const response = await API.post("/mentor/apply", {
+          console.log("Posting to database");
+          await API.post("/mentor/apply", {
             mentorData,
             firebase_img_id: img_firebase_id,
           });
-          if (response) {
-            if (response.data.status == "success") {
-              console.log(response.data);
-              return response.data;
-            }
-          }
+          return true;
         }
       }
     } catch (error) {
@@ -173,12 +170,11 @@ export const MultiFromApply = createAsyncThunk(
   }
 );
 
-//Admin Login
 export const adminLogin = createAsyncThunk(
   "auth/adminLogin",
   async (adminData: UserWithEmailAndPassword, thunkAPI) => {
     try {
-      const response = await API.post("/admin/admin-login", adminData, {
+      const response = await API.post("/admin/login", adminData, {
         withCredentials: true,
       });
       return response.data;

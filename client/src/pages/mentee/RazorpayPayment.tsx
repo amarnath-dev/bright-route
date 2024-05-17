@@ -1,4 +1,4 @@
-import { RazorPay } from "../../componets/Razorpay/RazorPay";
+import { RazorPay } from "../../componets/Razorpay";
 
 const RazorpayPayment = () => {
   return (

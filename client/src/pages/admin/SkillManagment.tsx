@@ -1,7 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
+import { AdminSidebar } from "../../componets/AdminSidebar";
 
 export const SkillManagment = () => {
   return (

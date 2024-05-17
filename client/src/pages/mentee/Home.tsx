@@ -1,5 +1,5 @@
-import NavBar from "../../componets/navbar/Navbar";
-import Header from "../../componets/header/Header";
+import NavBar from "../../componets/Navbar";
+import Header from "../../componets/Header";
 
 const Home = () => {
   return (

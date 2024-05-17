@@ -1,32 +1,14 @@
-import { AdminSidebar } from "../../componets/adminsidebar/AdminSidebar";
-import useAxiosPrivate from "../../app/useAxiosPrivate";
+import { AdminSidebar } from "../../componets/AdminSidebar";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
-interface Mentee {
-  _id: string;
-  email: string;
-  is_blocked: boolean;
-  role: string;
-  profileDetails: MenteeProfile;
-}
-
-interface MenteeProfile {
-  _id: string;
-  mentee_id: string;
-  first_name: string;
-  last_name: string;
-  job_title: string;
-  linkedIn: string;
-  twitter: string;
-  goal: string;
-}
+import { MenteeDetails } from "../../interfaces/admin.interface";
 
 const MenteeManagement = () => {
   const axiosPrivate = useAxiosPrivate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [mentee, setMentee] = useState<Mentee[]>([]);
+  const [mentee, setMentee] = useState<MenteeDetails[]>([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
@@ -170,7 +152,7 @@ const MenteeManagement = () => {
                       </th>
                     </tr>
                   </thead>
-                  {mentee.map((mentee: Mentee, index: number) => {
+                  {mentee.map((mentee: MenteeDetails, index: number) => {
                     return (
                       <>
                         <tbody key={index}>
