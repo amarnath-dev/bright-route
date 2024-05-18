@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { MenteeDetails } from "../../interfaces/admin.interface";
+import useDebounce from "../../hooks/useDebounce";
 
 const MenteeManagement = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -11,6 +12,8 @@ const MenteeManagement = () => {
   const [mentee, setMentee] = useState<MenteeDetails[]>([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+
+  const debouncedSearchTerm = useDebounce(search, 500);
 
   useEffect(() => {
     const fetchMentors = async () => {
@@ -68,9 +71,22 @@ const MenteeManagement = () => {
     }
   };
 
-  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setSearch(e.target.value);
-  // };
+  useEffect(() => {
+    if (search) {
+      (async () => {
+        try {
+          const reponse = await axiosPrivate.get(
+            `/admin/mentee/search?name=${search}`
+          );
+          console.log(reponse);
+        } catch (error) {
+          console.log(error);
+          toast.error("Search Failed");
+        }
+      })();
+      console.log("API call with:", debouncedSearchTerm);
+    }
+  }, [axiosPrivate, debouncedSearchTerm, search]);
 
   useEffect(() => {
     async () => {
@@ -116,19 +132,18 @@ const MenteeManagement = () => {
             </div>
           </div>
 
-          {/* <div className="mt-5 mb-2 w-full">
+          <div className="mt-5 mb-2 w-full">
             <div>
               <input
                 type="text"
                 id="simple-search"
                 value={search}
-                onChange={handleChange}
+                onChange={(e) => setSearch(e.target.value)}
                 className="border-gray-500 text-sm rounded block ps-5 p-2.5 bg-gray-800 text-gray-400"
                 placeholder="Search Users..."
               />
             </div>
-          </div> */}
-
+          </div>
           {mentee.length > 0 ? (
             <>
               <div className="relative overflow-x-auto py-10">
@@ -141,12 +156,6 @@ const MenteeManagement = () => {
                       <th scope="col" className="px-6 py-3">
                         Email
                       </th>
-                      {/* <th scope="col" className="px-6 py-3">
-                        Reports
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        View
-                      </th> */}
                       <th scope="col" className="px-6 py-3">
                         Block/Unblock
                       </th>
@@ -162,12 +171,6 @@ const MenteeManagement = () => {
                               {mentee.profileDetails?.last_name}
                             </th>
                             <td className="px-6 py-4">{mentee?.email}</td>
-                            {/* <td className="px-6 py-4">0</td>
-                            <td className="px-6 py-4">
-                              <button className="underline hover:text-blue-500">
-                                View
-                              </button>
-                            </td> */}
                             <td className="px-6 py-4">
                               {mentee.is_blocked ? (
                                 <button

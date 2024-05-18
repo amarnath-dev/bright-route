@@ -8,6 +8,7 @@ import {
   FormThree,
 } from "../../../redux/slices/mentorApplySlice";
 import { ExperienceFormSchema } from "../../../validations/experienceFromValidation";
+import Swal from "sweetalert2";
 
 function ExperianceDetails() {
   const dispatch = useDispatch();
@@ -26,6 +27,21 @@ function ExperianceDetails() {
     if (result.payload) {
       navigate("/mentor/apply/success");
     }
+  };
+
+  const handleCancel = () => {
+    Swal.fire({
+      title: "Cancel the form submission ?",
+      text: "Are you sure you want cancel the submission ?",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/signup");
+        return;
+      }
+    });
   };
 
   return (
@@ -81,7 +97,7 @@ function ExperianceDetails() {
                 <button
                   type="button"
                   className="border border-color-two bg-color-five text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
-                  onClick={() => navigate("/mentor/apply/2")}
+                  onClick={handleCancel}
                 >
                   Back
                 </button>

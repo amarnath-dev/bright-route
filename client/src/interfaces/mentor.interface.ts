@@ -297,3 +297,18 @@ export interface MentorServices {
   chatSessions: string;
   handsOnSupport: string;
 }
+
+export interface SkillOption {
+  title: string;
+}
+
+export const topSkills = [
+  { title: "Node js" },
+  { title: "React" },
+  { title: "HTML" },
+  { title: "Typescript" },
+  { title: "Mongodb" },
+  { title: "Python" },
+  { title: "Java" },
+  { title: "Javascript" },
+];

@@ -82,4 +82,10 @@ router.get(
   adminControls.getYearData
 );
 
+router.get(
+  "/mentee/search",
+  AdminAuthentication.ensureAuth(["admin"]),
+  adminControls.getMentee
+);
+
 export default router;
