@@ -6,6 +6,16 @@ import Payment from "../models/Payment";
 import { Plan } from "../interfaces/controller.interface";
 import { SinglePlan } from "../interfaces/controller.interface";
 
+interface PlanDetails {
+  planAmount: number;
+  planType: string;
+  planDescription: string;
+  planServices: { serviceName: string; serviceCount: number | null }[];
+  isDeleted: boolean;
+  mentor_id: string;
+  _id: string;
+}
+
 export class MentorController {
   async mentorprofileDetails(req: Request, res: Response): Promise<void> {
     try {
@@ -124,13 +134,19 @@ export class MentorController {
       const existingDocument = await Plans.findOne({
         mentor_id: new ObjectId(user?.id),
       });
-
-      if (existingDocument && existingDocument.planDetails.length >= 2) {
-        res.status(400).json({
-          status: "failed",
-          message: "User can only have up to two plans",
-        });
-        return;
+      console.log("Before filtering", existingDocument);
+      if (existingDocument) {
+        const activePlans = (
+          existingDocument.planDetails as unknown as PlanDetails[]
+        ).filter((plan) => !plan.isDeleted);
+        console.log("Active plans len", activePlans.length);
+        if (activePlans.length >= 2) {
+          res.status(200).json({
+            status: "exists",
+            message: "User can only have up to two plans",
+          });
+          return;
+        }
       }
       const newPlanDetails = {
         mentor_id: req.user?.id,

@@ -132,12 +132,17 @@ class MentorController {
                 const existingDocument = yield Plan_1.default.findOne({
                     mentor_id: new mongodb_1.ObjectId(user === null || user === void 0 ? void 0 : user.id),
                 });
-                if (existingDocument && existingDocument.planDetails.length >= 2) {
-                    res.status(400).json({
-                        status: "failed",
-                        message: "User can only have up to two plans",
-                    });
-                    return;
+                console.log("Before filtering", existingDocument);
+                if (existingDocument) {
+                    const activePlans = existingDocument.planDetails.filter((plan) => !plan.isDeleted);
+                    console.log("Active plans len", activePlans.length);
+                    if (activePlans.length >= 2) {
+                        res.status(200).json({
+                            status: "exists",
+                            message: "User can only have up to two plans",
+                        });
+                        return;
+                    }
                 }
                 const newPlanDetails = {
                     mentor_id: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,

@@ -137,8 +137,8 @@ const MentorPaymentCard: React.FC<MentorPaymentCardProps> = ({
                       </small>
                     </h1>
                   </div>
-                  <div className="flex-wrap px-3 mb-2 text-wrap">
-                    <h1 className="text-white text-lg">
+                  <div className="flex-wrap px-3 mb-2 text-wrap break-words">
+                    <h1 className="text-white text-lg text-wrap">
                       {plan?.planDescription}
                     </h1>
                   </div>
