@@ -367,5 +367,17 @@ class AdminControls {
             }
         });
     }
+    getMentee(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const name = req.query.name;
+                console.log(name);
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ error: "An internal server error occurred" });
+            }
+        });
+    }
 }
 exports.AdminControls = AdminControls;
