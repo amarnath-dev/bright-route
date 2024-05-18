@@ -17,7 +17,6 @@ function AboutYou() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    console.log(selectedFile);
     if (selectedFile) {
       // setFileUrl(URL.createObjectURL(selectedFile));
       setImage(URL.createObjectURL(selectedFile));
@@ -75,7 +74,7 @@ function AboutYou() {
             <div className="w-screen flex flex-col justify-start items-center md:w-full md:flex-row text-white">
               <label>
                 <input
-                  className="placeholder:text-gray-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="placeholder:text-gray-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="First name"
                   type="text"
                   {...register("first_name")}
@@ -88,7 +87,7 @@ function AboutYou() {
               </label>
               <label>
                 <input
-                  className="md:ml-2 placeholder:text-gray-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="md:ml-2 placeholder:text-gray-400 block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Last name"
                   type="text"
                   {...register("last_name")}
@@ -104,7 +103,7 @@ function AboutYou() {
             <div className="w-screen flex flex-col justify-start items-center md:w-full md:flex-row">
               <label>
                 <input
-                  className="placeholder:text-slate-400 text-white block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="placeholder:text-slate-400 text-white block bg-gray-800 mt-2 border border-gray-900 rounded-md py-2 pl-9 pr-3 focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Email"
                   type="text"
                   {...register("email")}
@@ -117,9 +116,9 @@ function AboutYou() {
               </label>
               <label>
                 <input
-                  className="md:ml-2 placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 text-white rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="md:ml-2 placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 text-white rounded-md py-2 pl-9 pr-3 focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Choose a Password"
-                  type="text"
+                  type="password"
                   {...register("password")}
                 />
                 {errors.password && (
@@ -132,7 +131,7 @@ function AboutYou() {
             <div className="w-screen flex flex-col justify-start items-center md:w-full md:flex-row">
               <label>
                 <input
-                  className="placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 text-white rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 text-white rounded-md py-2 pl-9 pr-3 focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Job title"
                   type="text"
                   {...register("job_title")}
@@ -145,7 +144,7 @@ function AboutYou() {
               </label>
               <label>
                 <input
-                  className="md:ml-2 placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 text-white rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
+                  className="md:ml-2 placeholder:text-slate-400 block bg-gray-800 mt-2 border border-gray-900 text-white rounded-md py-2 pl-9 pr-3 focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
                   placeholder="Company"
                   type="text"
                   {...register("company")}
@@ -160,7 +159,7 @@ function AboutYou() {
             <div className="w-full flex justify-center mt-5">
               <button
                 type="button"
-                className="border border-color-two bg-color-one text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
+                className="bg-color-one text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
                 onClick={handleSubmit(submitData)}
               >
                 Next

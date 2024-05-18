@@ -326,4 +326,14 @@ export class AdminControls {
       res.status(500).json({ error: "An internal server error occurred" });
     }
   }
+
+  async getMentee(req: Request, res: Response): Promise<void> {
+    try {
+      const name = req.query.name;
+      console.log(name);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "An internal server error occurred" });
+    }
+  }
 }

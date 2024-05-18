@@ -8,21 +8,9 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { submitFormTwo, FormTwo } from "../../../redux/slices/mentorApplySlice";
 import { MultiFormTwo } from "../../../validations/profileFormValidation";
-
-interface SkillOption {
-  title: string;
-}
-
-const topSkills = [
-  { title: "Node js" },
-  { title: "React" },
-  { title: "HTML" },
-  { title: "Typescript" },
-  { title: "Mongodb" },
-  { title: "Python" },
-  { title: "Java" },
-  { title: "Javascript" },
-];
+import { SkillOption } from "../../../interfaces/mentor.interface";
+import { topSkills } from "../../../interfaces/mentor.interface";
+import Swal from "sweetalert2";
 
 function ProfileDetails() {
   const [skillsOptions, setSkillsOptions] = useState<SkillOption[]>([]);
@@ -42,6 +30,14 @@ function ProfileDetails() {
     _event: React.SyntheticEvent,
     value: SkillOption[]
   ) => {
+    if (value.length > 4) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "You can select up to 4 skills only!",
+      });
+      return;
+    }
     setSkillsOptions(value);
     setValue(
       "skills",
@@ -56,9 +52,24 @@ function ProfileDetails() {
     }
   };
 
+  const handleCancel = () => {
+    Swal.fire({
+      title: "Cancel the form submission ?",
+      text: "Are you sure you want cancel the submission ?",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/signup");
+        return;
+      }
+    });
+  };
+
   return (
-    <div className="w-full h-screen bg-background-one">
-      <div className="w-full flex justify-center items-center">
+    <div className="w-screen h-screen bg-background-one">
+      <div className="w-full h-full flex justify-center items-center">
         <div className="flex justify-start items-center md:w-3/5 text-white">
           <form className="md:w-full">
             <span className="ml-16 md:ml-2">Choose your Job Category</span>
@@ -89,7 +100,7 @@ function ProfileDetails() {
               )}
             </div>
 
-            <div className="w-screen flex flex-col justify-start items-center mt-4 md:w-full md:flex-col">
+            <div className="w-screen flex flex-col justify-start items-center mt-2 md:w-full md:flex-col">
               <div className="md:w-full">
                 <h1>Select your Skills</h1>
                 <Stack spacing={3} sx={{ width: 280 }} className="py-2">
@@ -116,7 +127,7 @@ function ProfileDetails() {
                   </small>
                 )}
               </div>
-              <span className="w-72 mt-4 text-sm md:w-full sm:text-md">
+              <span className="w-72 mt-4 md:text-md md:w-full sm:text-md">
                 Describe your expertise to connect with mentees who have similar
                 interests. Mentees will use this to find you.
               </span>
@@ -125,7 +136,7 @@ function ProfileDetails() {
             <div className="w-screen flex flex-col justify-start items-center mt-1 md:w-full md:flex-col">
               <label className="md:w-full">
                 <textarea
-                  className="placeholder:text-gray-400 block bg-gray-800 border border-gray-400 rounded-md py-2 pl-2 pt-2 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 h-20 text-sm md:w-full sm:text-md"
+                  className="placeholder:text-gray-400 block bg-gray-800 border border-gray-400 rounded-md py-2 pl-2 pt-2 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 h-20 text-md md:w-full sm:text-md"
                   placeholder="Bio description..."
                   {...register("bio")}
                 ></textarea>
@@ -146,7 +157,7 @@ function ProfileDetails() {
               <label>
                 <input
                   className="placeholder:text-slate-400 block bg-gray-800 mt-5 border border-gray-800 rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
-                  placeholder="LinkedIn URL"
+                  placeholder="LinkedIn URl"
                   type="text"
                   {...register("linked_in")}
                 />
@@ -159,7 +170,7 @@ function ProfileDetails() {
               <label>
                 <input
                   className="md:ml-2 placeholder:text-slate-400 block bg-gray-800 border-gray-800 mt-5 border rounded-md py-2 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-72 md:w-96 sm:text-sm"
-                  placeholder="Twitter Handle"
+                  placeholder="Twitter URl"
                   type="text"
                   {...register("twitter")}
                 />
@@ -174,7 +185,7 @@ function ProfileDetails() {
               <button
                 type="button"
                 className="border border-color-two bg-color-five text-white px-1 py-1 rounded-md my-5 w-20 md:w-20 md:my-0 md:mr-0"
-                onClick={() => navigate("/mentor/apply/1")}
+                onClick={handleCancel}
               >
                 Back
               </button>
