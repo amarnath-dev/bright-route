@@ -4,6 +4,12 @@ import { useAppSelector } from "../../hooks/useAppSelector";
 import { useAppDispatch } from "../../hooks/useAppSelector";
 import { MultiFromApply } from "../../services/authServices";
 import { toast } from "react-toastify";
+import {
+  submitFormOne,
+  submitFormThree,
+  submitFormTwo,
+} from "../../redux/slices/mentorApplySlice";
+import { useDispatch } from "react-redux";
 
 const ApplySent = () => {
   const { formOne, formTwo, formThree } = useAppSelector(
@@ -12,6 +18,7 @@ const ApplySent = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const resetForm = useDispatch();
 
   useEffect(() => {
     // Check if all forms are completed
@@ -43,6 +50,9 @@ const ApplySent = () => {
         try {
           const response = await dispatch(MultiFromApply(mentorData));
           if (response.meta.requestStatus === "fulfilled") {
+            resetForm(submitFormOne(null));
+            resetForm(submitFormTwo(null));
+            resetForm(submitFormThree(null));
             navigate("/signin");
           } else {
             toast.error("Something went wrong!");
@@ -53,6 +63,7 @@ const ApplySent = () => {
         }
       })();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formOne, formTwo, formThree, dispatch, navigate]);
 
   return (

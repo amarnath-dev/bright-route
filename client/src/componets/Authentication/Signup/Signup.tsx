@@ -13,6 +13,7 @@ import { useAppSelector, useAppDispatch } from "../../../hooks/useAppSelector";
 import { signupOtpSend } from "../../../services/authServices";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../../Spinner";
 
 export interface Credentials {
   first_name: string;
@@ -94,7 +95,6 @@ const SignupForm: React.FC = () => {
           setServerResponse(serverRes);
           setOpenModal(true);
           setOpen(true);
-          // toast("Email Sent Successfull");
         }
       } else {
         toast.error(response.payload.message);
@@ -125,12 +125,15 @@ const SignupForm: React.FC = () => {
         onClose={handleClose}
         message="Email sent Successfully"
       />
-      {/* <ToastContainer className="w-40 md:w-80" /> */}
       {isLoading ? (
-        <h1 className="font-bold">Loading...</h1>
+        <div className="w-screen h-screen bg-background-one">
+          <div className="w-full h-full flex justify-center items-center">
+            <Spinner />
+          </div>
+        </div>
       ) : (
-        <div>
-          <div className="w-full h-screen flex justify-center items-center flex-col bg-background-two">
+        <div className="w-screen h-full bg-background-one">
+          <div className="w-full h-full flex justify-center items-center flex-col">
             <form
               onSubmit={handleSubmit(submitData)}
               className="flex items-center justify-center"
