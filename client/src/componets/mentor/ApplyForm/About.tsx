@@ -156,6 +156,15 @@ function AboutYou() {
                 )}
               </label>
             </div>
+            <div className="w-full text-white">
+              <p>
+                <strong>Password</strong> should have{" "}
+                <strong>one uppercase</strong> and letter and{" "}
+                <strong>one special character </strong>
+                and
+                <strong> one number</strong>
+              </p>
+            </div>
             <div className="w-full flex justify-center mt-5">
               <button
                 type="button"

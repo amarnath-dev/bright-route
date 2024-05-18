@@ -6,7 +6,6 @@ const passwordValidation = new RegExp(
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
 );
 const onlyString = new RegExp(/^[a-zA-Z]+$/);
-
 export const schema: ZodType<MenteeSignupShema> = z.object({
   first_name: z
     .string({

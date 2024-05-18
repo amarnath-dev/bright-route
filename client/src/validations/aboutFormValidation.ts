@@ -2,6 +2,9 @@ import { z, ZodType } from "zod";
 import { AboutSchema } from "../interfaces/validation.interface";
 
 const noNumbers = (value: string) => !/\d/.test(value);
+const passwordValidation = new RegExp(
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+);
 export const MultiFormOne: ZodType<AboutSchema> = z.object({
   first_name: z
     .string({
@@ -35,9 +38,16 @@ export const MultiFormOne: ZodType<AboutSchema> = z.object({
     .refine((value) => value.trim() !== "", {
       message: "Email should not be empty",
     }),
-  password: z.string().refine((value) => value.trim() !== "", {
-    message: "Password should not be empty",
-  }),
+  password: z
+    .string({ required_error: "Password is required" })
+    .min(3, { message: "Enter atleast 8 characters" })
+    .max(15, { message: "Password should belove 15 characters" })
+    .regex(passwordValidation, {
+      message: "Your password is not valid",
+    })
+    .refine((value) => value.trim() !== "", {
+      message: "Password should not be empty",
+    }),
   job_title: z
     .string({
       invalid_type_error: "Job Title should not contain numbers",
