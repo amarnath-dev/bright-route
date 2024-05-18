@@ -20,4 +20,5 @@ router.get("/mentor", verifyAdmin_1.AdminAuthentication.ensureAuth(["admin"]), a
 router.get("/monthly-users/:year", verifyAdmin_1.AdminAuthentication.ensureAuth(["admin"]), adminControls.getMonthlyUsers);
 router.get("/analytics", verifyAdmin_1.AdminAuthentication.ensureAuth(["admin"]), adminControls.getAnalytics);
 router.get("/yearSort", verifyAdmin_1.AdminAuthentication.ensureAuth(["admin"]), adminControls.getYearData);
+router.get("/mentee/search", verifyAdmin_1.AdminAuthentication.ensureAuth(["admin"]), adminControls.getMentee);
 exports.default = router;
