@@ -302,6 +302,20 @@ export interface SkillOption {
   title: string;
 }
 
+export interface MentorData {
+  first_name: string;
+  last_name: string;
+  mentorEmail: string;
+  company: string;
+  linkedIn: string;
+  twitter: string;
+  job_title: string;
+  bio: string;
+  category: string;
+  state: string;
+  skills: { title: string }[];
+}
+
 export const topSkills = [
   { title: "Node js" },
   { title: "React" },
@@ -311,4 +325,6 @@ export const topSkills = [
   { title: "Python" },
   { title: "Java" },
   { title: "Javascript" },
+  { title: "Ruby" },
+  { title: "Fortran" },
 ];
