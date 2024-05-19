@@ -89,7 +89,7 @@ export class MentorController {
     try {
       const user = req.user;
       if (user) {
-        const skills = req.body.defaultSkills;
+        const skills = req.body?.mentorData?.skills;
         const arrayOfStrings = skills.map(
           (obj: { title: string }) => obj.title
         );

@@ -86,11 +86,12 @@ class MentorController {
         });
     }
     updateProfile(req, res) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
                 if (user) {
-                    const skills = req.body.defaultSkills;
+                    const skills = (_b = (_a = req.body) === null || _a === void 0 ? void 0 : _a.mentorData) === null || _b === void 0 ? void 0 : _b.skills;
                     const arrayOfStrings = skills.map((obj) => obj.title);
                     const newDetails = req.body.mentorData;
                     const update = yield Mentor_1.default.findOneAndUpdate({
