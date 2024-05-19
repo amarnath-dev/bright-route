@@ -67,6 +67,11 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("messageDeleted", ({ messageId, conversationId }) => {
+    console.log(messageId, conversationId);
+    io.emit("getMessageDeleted", messageId);
+  });
+
   socket.on("disconnect", () => {
     removeUser(socket.id);
     console.log("User removed");

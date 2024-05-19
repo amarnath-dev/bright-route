@@ -56,6 +56,10 @@ io.on("connection", (socket) => {
             console.error(`User with ID ${receiverId} not found`);
         }
     });
+    socket.on("messageDeleted", ({ messageId, conversationId }) => {
+        console.log(messageId, conversationId);
+        io.emit("getMessageDeleted", messageId);
+    });
     socket.on("disconnect", () => {
         removeUser(socket.id);
         console.log("User removed");

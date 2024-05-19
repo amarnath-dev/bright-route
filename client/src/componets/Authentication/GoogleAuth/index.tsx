@@ -35,7 +35,7 @@ const GoogleAuth = () => {
         <GoogleLogin
           onSuccess={responseGoogle}
           onError={responseError}
-          width="380"
+          width="300"
         />
       </GoogleOAuthProvider>
     </>

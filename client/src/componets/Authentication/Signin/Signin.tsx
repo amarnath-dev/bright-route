@@ -102,8 +102,6 @@ const SigninForm: React.FC = () => {
     <>
       {userData ? (
         <>
-          {/* Mentee Login  */}
-          {/* <ToastContainer className="w-40 md:w-80" /> */}
           <div className="w-full h-screen bg-background-two">
             <div className="flex justify-center items-center h-full">
               <form
@@ -178,7 +176,6 @@ const SigninForm: React.FC = () => {
         </>
       ) : (
         <>
-          {/* Mentee Login  */}
           <div className="w-full h-screen bg-background-two">
             <div className="flex justify-center items-center h-full py-16">
               <form

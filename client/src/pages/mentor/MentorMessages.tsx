@@ -285,20 +285,6 @@ const MentorMessages = () => {
       });
   };
 
-  //Function for Getting the deleted message id form child
-  const handleDataFromChildMentor = (id: string) => {
-    console.log("my parent mentor, deletd id -> ", id);
-    const messageIndex = messages.findIndex((message) => message._id === id);
-    if (messageIndex >= 0) {
-      const updatedMessages = [...messages];
-      updatedMessages[messageIndex] = {
-        ...updatedMessages[messageIndex],
-        IsDeleted: true,
-      };
-      setMessages(updatedMessages);
-    }
-  };
-
   return (
     <>
       <div className="grid grid-cols-12 h-full md:h-screen px-3 py-15 bg-background-two">
@@ -343,8 +329,6 @@ const MentorMessages = () => {
                       return (
                         <div ref={scrollRef} key={index}>
                           <Messages
-                            paretnType={"mentor"}
-                            sendDataToParent={handleDataFromChildMentor}
                             message={m}
                             own={m?.senderId === user?._id}
                             index={index}
