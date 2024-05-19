@@ -52,27 +52,35 @@ const MenteeMessages = () => {
   }, [newMessage]);
 
   useEffect(() => {
-    if (!newMessage) {
-      socket?.current?.emit("notTyping", currentChat?.members);
-    }
+    const receiverId = currentChat?.members.find(
+      (userId: string) => userId !== user?._id
+    );
+    socket?.current?.emit("notTyping", receiverId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newMessage]);
 
   useEffect(() => {
-    console.log("Get typing is running...");
     socket?.current?.on("getTyping", () => {
-      console.log("TYPING...");
+      console.log("Typing...");
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     socket?.current?.on("getMessage", (data) => {
-      console.log("Arrival Message -> ", data);
       setArrivalMessage(data);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket?.current]);
+
+  useEffect(() => {
+    socket?.current?.on("getMessageDeleted", (messageId) => {
+      const updatedMessages = messages.map((msg) =>
+        msg._id === messageId ? { ...msg, IsDeleted: true } : msg
+      );
+      setMessages(updatedMessages);
+    });
+  }, [messages, socket]);
 
   // Creating a new Conversation
   useEffect(() => {
@@ -91,7 +99,6 @@ const MenteeMessages = () => {
                 withCredentials: true,
               }
             );
-            console.log("-->", conversations.data);
             if (conversations.data) {
               setConversation(conversations.data.conversation);
               setCurrentChat(conversations.data.conversation?.[0]);
@@ -318,21 +325,6 @@ const MenteeMessages = () => {
     setOpenImg(false);
   }, []);
 
-  //Function for Getting the deleted message id form child
-  const handleDataFromChildMentee = (id: string) => {
-    console.log("Menteee ");
-    console.log("My parent mentee, deletd id -> ", id);
-    const messageIndex = messages.findIndex((message) => message._id === id);
-    if (messageIndex >= 0) {
-      const updatedMessages = [...messages];
-      updatedMessages[messageIndex] = {
-        ...updatedMessages[messageIndex],
-        IsDeleted: true,
-      };
-      setMessages(updatedMessages);
-    }
-  };
-
   //To Scroll Down to the Bottom
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -391,8 +383,6 @@ const MenteeMessages = () => {
                   return (
                     <div ref={scrollRef} key={index}>
                       <Messages
-                        paretnType={"mentee"}
-                        sendDataToParent={handleDataFromChildMentee}
                         message={m}
                         own={m?.senderId === user?._id}
                         index={index}
@@ -472,8 +462,3 @@ const MenteeMessages = () => {
 };
 
 export default MenteeMessages;
-
-//Changing hello
-//Hyyy
-//Helklloooooooooo
-//ehehesdfhksdflskjdfhskjdfgskdlj

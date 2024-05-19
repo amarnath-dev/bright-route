@@ -35,8 +35,6 @@ export interface CurrentChat {
 }
 
 export interface MessagesProps {
-  paretnType: string;
-  sendDataToParent: (messageId: string) => void;
   message: Message;
   own: boolean;
   index: number;

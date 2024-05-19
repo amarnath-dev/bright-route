@@ -6,10 +6,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { format } from "timeago.js";
 import { MessagesProps } from "../../interfaces/common.interface";
+import NoProfile from "../../assets/images/no-profile-image.png";
+import SocketContext from "../../context/socketContext";
+import { useContext } from "react";
 
 export const Messages: React.FC<MessagesProps> = ({
-  paretnType,
-  sendDataToParent,
   message,
   own,
   index,
@@ -20,12 +21,13 @@ export const Messages: React.FC<MessagesProps> = ({
   const [profileImg, setProfileImg] = useState("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [isHovered, setIsHovered] = useState(false);
+  const socket = useContext(SocketContext);
 
-  useEffect(() => {
-    if (paretnType) {
-      console.log(paretnType);
-    }
-  }, [paretnType]);
+  // useEffect(() => {
+  //   if (paretnType) {
+  //     console.log("Parent type -> ", paretnType);
+  //   }
+  // }, [paretnType]);
 
   useEffect(() => {
     const frndId = currentChat?.members?.find(
@@ -91,10 +93,10 @@ export const Messages: React.FC<MessagesProps> = ({
           { withCredentials: true }
         );
         if (response.data) {
-          const sendData = () => {
-            sendDataToParent(messageId);
-          };
-          sendData();
+          socket?.current?.emit("messageDeleted", {
+            messageId,
+            conversationId: currentChat?._id,
+          });
         }
       } else {
         return;
@@ -165,11 +167,7 @@ export const Messages: React.FC<MessagesProps> = ({
           <div key={index} className="flex w-full mt-2 space-x-3 max-w-xs">
             <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
               <img
-                src={
-                  profileImg
-                    ? profileImg
-                    : "https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?size=338&ext=jpg&ga=GA1.1.1395880969.1709424000&semt=ais"
-                }
+                src={profileImg ? profileImg : NoProfile}
                 alt="img"
                 className="rounded-full"
               />
