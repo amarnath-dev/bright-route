@@ -23,12 +23,6 @@ export const Messages: React.FC<MessagesProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const socket = useContext(SocketContext);
 
-  // useEffect(() => {
-  //   if (paretnType) {
-  //     console.log("Parent type -> ", paretnType);
-  //   }
-  // }, [paretnType]);
-
   useEffect(() => {
     const frndId = currentChat?.members?.find(
       (user: string) => user !== userId
@@ -103,7 +97,7 @@ export const Messages: React.FC<MessagesProps> = ({
       }
     });
   };
-
+  
   return (
     <>
       {own ? (
@@ -147,14 +141,39 @@ export const Messages: React.FC<MessagesProps> = ({
                   )}
                 </>
               ) : (
-                <div>
-                  <img
-                    id="chat_img"
-                    src={imageUrls[index]}
-                    alt="img"
-                    className="rounded-md px-1 py-1 bg-gray-300"
-                  />
-                </div>
+                <>
+                  {message.IsDeleted ? (
+                    <>
+                      <div className="bg-blue-400 text-white p-1 rounded-l-lg rounded-br-lg">
+                        <h1>You deleted this message</h1>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                      >
+                        <img
+                          id="chat_img"
+                          src={imageUrls[index]}
+                          alt="img"
+                          className="rounded-md px-1 py-1 bg-gray-300"
+                        />
+                        <>
+                          {isHovered && (
+                            <span
+                              className="flex cursor-pointer"
+                              onClick={() => handleDelete(message?._id)}
+                            >
+                              <DeleteIcon className="bg-blue-500 rounded text-lg" />
+                            </span>
+                          )}
+                        </>
+                      </div>
+                    </>
+                  )}
+                </>
               )}
               <span className="text-xs text-gray-500 leading-none">
                 {format(message?.createdAt)}
@@ -191,12 +210,22 @@ export const Messages: React.FC<MessagesProps> = ({
                 </>
               ) : (
                 <>
-                  <img
-                    id="chat_img"
-                    src={imageUrls[index]}
-                    alt="img"
-                    className="border-2 px-1 py-1 bg-blue-300 rounded-md"
-                  />
+                  {message.IsDeleted ? (
+                    <>
+                      <div className="bg-gray-400 text-white p-1 rounded-l-lg rounded-br-lg">
+                        <h1>This messages has been deleted</h1>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        id="chat_img"
+                        src={imageUrls[index]}
+                        alt="img"
+                        className="border-2 px-1 py-1 bg-blue-300 rounded-md"
+                      />
+                    </>
+                  )}
                 </>
               )}
               <span className="text-xs text-gray-500 leading-none">
