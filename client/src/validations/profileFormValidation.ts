@@ -29,11 +29,21 @@ export const MultiFormTwo = z.object({
   linked_in: z
     .string()
     .url({ message: "LinkedIn URL should be a valid URL" })
-    .optional(),
+    .refine((value) => value.trim() !== "", {
+      message: "Link should not be empty",
+    })
+    .refine(noNumbers, {
+      message: "Numbers are not allowed",
+    }),
   twitter: z
     .string()
     .url({ message: "Twitter URL should be a valid URL" })
-    .optional(),
+    .refine((value) => value.trim() !== "", {
+      message: "Link should not be empty",
+    })
+    .refine(noNumbers, {
+      message: "Numbers are not allowed",
+    }),
 });
 
 export type FormTwo = z.infer<typeof MultiFormTwo>;

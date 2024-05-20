@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 
 const ChangePassword = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -69,6 +70,14 @@ const ChangePassword = () => {
           return;
         }
       }
+    }
+
+    if (formData.oldPassword === formData.newPassword) {
+      Swal.fire({
+        title: "Choose a different password",
+        text: "New password must be different from old password",
+      });
+      return;
     }
     const passwordValidation = new RegExp(
       /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/

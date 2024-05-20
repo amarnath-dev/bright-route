@@ -11,34 +11,26 @@ import NoImage from "../../assets/images/no-profile-image.png";
 import Crop from "../../componets/Crop/Croper";
 import "react-image-crop/dist/ReactCrop.css";
 import Swal from "sweetalert2";
+import { MenteeProfileSchema } from "../../validations/menteeProfileValidation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MenteeProfileTypes } from "../../interfaces/mentee.interface";
 
 const MenteeProfile = () => {
   const { user } = useAppSelector((state) => state.userAuth);
   const axiosPrivate = useAxiosPrivate();
   const [goal, setGoal] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_profileImg, setProfileImg] = useState("");
+  const [menteeEmail, setMenteeEmail] = useState<string>();
+  const [profileImg, setProfileImg] = useState<string>();
 
-  const [menteeEmail, setMenteeEmail] = useState<string>("");
-  const [formData, setFormdata] = useState({
-    profile_img: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    country: "",
-    job_title: "",
-    linkedIn: "",
-    twitter: "",
-    goal: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<MenteeProfileTypes>({
+    resolver: zodResolver(MenteeProfileSchema),
   });
-
-  const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormdata({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -46,21 +38,29 @@ const MenteeProfile = () => {
         const response = await axiosPrivate.get(`/managment/${user?._id}`, {
           withCredentials: true,
         });
-        const details = response.data.menteeDetails[0];
-        setGoal(details.menteeProfile?.goal);
-        setProfileImg(details.menteeProfile?.profile_img);
-        setFormdata(details.menteeProfile);
+        const details = response.data?.menteeDetails[0];
+        const profileDetails = details?.menteeProfile;
+        setGoal(profileDetails?.goal);
+        setProfileImg(profileDetails?.profile_img);
+        setValue("profile_img", profileDetails?.profile_img);
+        setValue("goal", details.menteeProfile?.goal);
+        setValue("first_name", details.menteeProfile?.first_name);
+        setValue("last_name", details.menteeProfile?.last_name);
+        setValue("email", details?.email);
+        setValue("job_title", details.menteeProfile?.job_title);
+        setValue("linkedIn", details.menteeProfile?.linkedIn);
+        setValue("twitter", details.menteeProfile?.twitter);
         setMenteeEmail(details?.email);
       } catch (error) {
         console.log(error);
       }
     };
     fetchDetails();
-  }, [axiosPrivate, user?._id]);
+  }, [axiosPrivate, user?._id, setValue]);
 
-  if (formData.profile_img) {
+  if (profileImg) {
     const fetchImg = async () => {
-      const imageId = formData.profile_img;
+      const imageId = profileImg;
       if (imageId) {
         const imageRef = ref(storage, imageId);
         getDownloadURL(imageRef)
@@ -78,7 +78,7 @@ const MenteeProfile = () => {
     fetchImg();
   }
 
-  const handleSubmit = async () => {
+  const submitData = async (data: MenteeProfileTypes) => {
     Swal.fire({
       title: "Do you want to save the changes?",
       showDenyButton: true,
@@ -87,23 +87,10 @@ const MenteeProfile = () => {
       denyButtonText: `Don't save`,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        formData.goal = goal;
         try {
-          formData.first_name = formData.first_name.replace(/\s/g, "");
-          formData.last_name = formData.last_name.replace(/\s/g, "");
-          formData.job_title = formData.job_title.replace(/\s/g, "");
-          formData.goal = formData.goal.replace(/\s/g, "");
-          if (!formData.first_name || !formData.last_name || !formData.goal) {
-            Swal.fire({
-              title: "Fields are Required",
-              text: "Firstname Lastname Job Title and Goal fields are required",
-              icon: "error",
-            });
-            return;
-          }
           const response = await axiosPrivate.post(
             "/managment/profie-update",
-            formData,
+            data,
             {
               withCredentials: true,
             }
@@ -145,7 +132,7 @@ const MenteeProfile = () => {
               </Link>
             </div>
           </div>
-          {formData?.profile_img ? (
+          {goal ? (
             ""
           ) : (
             <div className="flex flex-col ml-6">
@@ -157,7 +144,6 @@ const MenteeProfile = () => {
               <span className="flex items-center h-36 w-36 rounded-full overflow-hidden md:ml-4">
                 <img
                   src={NoImage}
-                  alt="profile_img"
                   className="md:h-38 md:w-38 rounded-full object-cover"
                   id="profile-image"
                 />
@@ -169,111 +155,132 @@ const MenteeProfile = () => {
           </div>
 
           <div className="w-full px-3 md:px-0">
-            <div className="flex flex-col w-full md:flex-row justify-center text-gray-400">
-              <label>
-                <span className="text-gray-400">First Name</span>
-                <input
-                  id="first_name"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
-                  type="text"
-                  name="first_name"
-                  required
-                  onChange={onchange}
-                  value={formData.first_name}
-                />
-              </label>
-              <label className="mt-2 md:mt-0">
-                <span className="text-gray-400">Last name</span>
-                <input
-                  id="last_name"
-                  className="placeholder:text-black text-white field mt-1 block bg-gray-800 border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
-                  type="text"
-                  name="last_name"
-                  required
-                  value={formData?.last_name}
-                  onChange={onchange}
-                />
-              </label>
-            </div>
-            <div className="flex flex-col md:flex-row justify-center">
-              <label className="mt-2">
-                <span className="text-gray-400">Email</span>
-                <input
-                  id="email"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
-                  type="text"
-                  name="email"
-                  disabled
-                  value={menteeEmail}
-                  onChange={onchange}
-                />
-              </label>
-              <label className="mt-2">
-                <span className="text-gray-400">Job Title</span>
-                <input
-                  id="job_title"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm md:ml-3"
-                  type="text"
-                  name="job_title"
-                  value={formData.job_title}
-                  onChange={onchange}
-                />
-              </label>
-            </div>
-            <div className="flex flex-col md:flex-row justify-center">
-              <label className="mt-2">
-                <span className="text-gray-400">LinkedIn</span>
-                <input
-                  id="linkedIn"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
-                  type="text"
-                  name="linkedIn"
-                  onChange={onchange}
-                  value={formData.linkedIn}
-                />
-              </label>
-              <label className="mt-2">
-                <span className="text-gray-400">Twitter(Optional)</span>
-                <input
-                  id="twitter"
-                  className="placeholder:text-black field mt-1 block bg-gray-800 border-gray-800 text-white rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
-                  type="text"
-                  name="twitter"
-                  value={formData.twitter}
-                  onChange={onchange}
-                />
-              </label>
-            </div>
+            <form onSubmit={handleSubmit(submitData)}>
+              <div className="flex flex-col w-full md:flex-row justify-center text-gray-400">
+                <label>
+                  <span className="text-gray-400">First Name</span>
+                  <input
+                    id="first_name"
+                    className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                    type="text"
+                    {...register("first_name")}
+                  />
+                  {errors.first_name && (
+                    <small className="text-red-500 text-sm italic">
+                      *{errors.first_name.message}
+                    </small>
+                  )}
+                </label>
+                <label className="mt-2 md:mt-0">
+                  <span className="text-gray-400">Last name</span>
+                  <input
+                    id="last_name"
+                    className="placeholder:text-black text-white field mt-1 block bg-gray-800 border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
+                    type="text"
+                    {...register("last_name")}
+                  />
+                  {errors.last_name && (
+                    <small className="text-red-500 text-sm italic">
+                      *{errors.last_name.message}
+                    </small>
+                  )}
+                </label>
+              </div>
+              <div className="flex flex-col md:flex-row justify-center">
+                <label className="mt-2">
+                  <span className="text-gray-400">Email</span>
+                  <input
+                    id="email"
+                    className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                    type="text"
+                    disabled
+                    value={menteeEmail}
+                    {...register("email")}
+                  />
+                  {errors.email && (
+                    <small className="text-red-500 text-sm italic">
+                      *{errors.email.message}
+                    </small>
+                  )}
+                </label>
+                <label className="mt-2">
+                  <span className="text-gray-400">Job Title</span>
+                  <input
+                    id="job_title"
+                    className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm md:ml-3"
+                    type="text"
+                    {...register("job_title")}
+                  />
+                  {errors.job_title && (
+                    <small className="text-red-500 text-sm italic">
+                      *{errors.job_title.message}
+                    </small>
+                  )}
+                </label>
+              </div>
+              <div className="flex flex-col md:flex-row justify-center">
+                <label className="mt-2">
+                  <span className="text-gray-400">LinkedIn</span>
+                  <input
+                    id="linkedIn"
+                    className="placeholder:text-black field mt-1 block bg-gray-800 text-white border-gray-800 rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 sm:text-sm"
+                    type="text"
+                    {...register("linkedIn")}
+                  />
+                  {errors.linkedIn && (
+                    <small className="text-red-500 text-sm italic">
+                      *{errors.linkedIn.message}
+                    </small>
+                  )}
+                </label>
+                <label className="mt-2">
+                  <span className="text-gray-400">Twitter (Optional)</span>
+                  <input
+                    id="twitter"
+                    className="placeholder:text-black field mt-1 block bg-gray-800 border-gray-800 text-white rounded-md py-3 pl-9 pr-3 shadow-md focus:outline-none focus:border-dark-500 focus:ring-dark-500 focus:ring-1 w-full md:w-96 md:ml-2 sm:text-sm"
+                    type="text"
+                    {...register("twitter")}
+                  />
+                  {errors.twitter && (
+                    <small className="text-red-500 text-sm italic">
+                      *{errors.twitter.message}
+                    </small>
+                  )}
+                </label>
+              </div>
 
-            <div className="ml-1 md:ml-0 mr-2 md:mr-10 w-full md:px-9">
-              <label
-                htmlFor="message"
-                className="block mt-4 mb-2 text-sm font-medium"
-              ></label>
-              <span className="text-gray-400">Goal</span>
-              <textarea
-                id="goal"
-                rows={4}
-                name="goal"
-                value={goal}
-                onChange={(e) => setGoal(e.target.value)}
-                className="placeholder:text-black field block mt-1 p-3 w-full text-sm bg-gray-800 text-white rounded-lg border border-gray-800 focus:outline-none focus:ring-dark-500 focus:ring-1"
-              ></textarea>
-              <h1 className="mt-2 text-sm text-white">
-                It's good practice to build mentorship around a long-term goal
-                of yours. This is shared with mentors.
-              </h1>
-            </div>
-            <div className="flex md:justify-end justify-center py-4 md:px-9">
-              <button
-                type="submit"
-                id="saveBtn"
-                className="px-2 py-2 md:px-2 md:py-2 rounded-md bg-color-five text-white mb-4"
-                onClick={handleSubmit}
-              >
-                Save Changes
-              </button>
-            </div>
+              <div className="ml-1 md:ml-0 mr-2 md:mr-10 w-full md:px-9">
+                <label
+                  htmlFor="message"
+                  className="block mt-4 mb-2 text-sm font-medium"
+                ></label>
+                <span className="text-gray-400">Goal</span>
+                <textarea
+                  id="goal"
+                  rows={4}
+                  className="placeholder:text-black field block mt-1 p-3 w-full text-sm bg-gray-800 text-white rounded-lg border border-gray-800 focus:outline-none focus:ring-dark-500 focus:ring-1"
+                  {...register("goal")}
+                ></textarea>
+                {errors.goal && (
+                  <small className="text-red-500 text-sm italic">
+                    *{errors.goal.message}
+                  </small>
+                )}
+                <h1 className="mt-2 text-sm text-white">
+                  It's good practice to build mentorship around a long-term goal
+                  of yours. This is shared with mentors.
+                </h1>
+              </div>
+              <div className="flex md:justify-end justify-center py-4 md:px-9">
+                <button
+                  type="submit"
+                  id="saveBtn"
+                  className="px-2 py-2 md:px-2 md:py-2 rounded-md bg-color-five text-white mb-4"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

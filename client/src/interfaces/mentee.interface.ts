@@ -125,3 +125,14 @@ export interface RateMentorProps {
   mentorId: string | null;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export interface MenteeProfileTypes {
+  profile_img: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  job_title: string;
+  linkedIn: string;
+  twitter: string;
+  goal: string;
+}
