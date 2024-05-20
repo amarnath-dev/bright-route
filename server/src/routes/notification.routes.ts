@@ -19,7 +19,7 @@ router.post(
 
 router.post(
   "/mentorNotification/:mentorId",
-  Authentication.ensureAuth(["mentor"]),
+  Authentication.ensureAuth(["mentor", "mentee"]),
   notificationController.mentorNotification
 );
 

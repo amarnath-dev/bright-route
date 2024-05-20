@@ -21,7 +21,7 @@ export const RazorPay = () => {
   const { form, planId, mentorId, planAmount } = useAppSelector(
     (state) => state.applySlice
   );
-  
+
   const axiosPrivate = useAxiosPrivate();
   const [Razorpay] = useRazorpay();
 
