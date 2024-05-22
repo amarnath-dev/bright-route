@@ -24,7 +24,7 @@ export const MultiFormOne: ZodType<AboutSchema> = z.object({
       invalid_type_error: "Name should not contain numbers",
       required_error: "Lasttname is required",
     })
-    .min(3, { message: "Enter atleast 3 characters" })
+    .min(2, { message: "Enter atleast 2 characters" })
     .max(20, { message: "Name should belove 20 characters" })
     .refine((value) => value.trim() !== "", {
       message: "Name should not be empty",

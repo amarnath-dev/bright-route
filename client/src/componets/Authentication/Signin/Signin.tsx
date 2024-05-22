@@ -170,6 +170,15 @@ const SigninForm: React.FC = () => {
                     </Link>
                   </h1>
                 </div>
+                <div className="text-white text-center p-2">
+                  <h6>Demo User</h6>
+                  <p>
+                    Email : <strong>amaranthas234@gmail.com</strong>
+                  </p>
+                  <p>
+                    Password : <strong>Amar@12344</strong>
+                  </p>
+                </div>
               </form>
             </div>
           </div>
