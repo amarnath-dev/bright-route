@@ -176,7 +176,7 @@ const SigninForm: React.FC = () => {
                     Email : <strong>amaranthas234@gmail.com</strong>
                   </p>
                   <p>
-                    Password : <strong>Amar@12344</strong>
+                    Password : <strong>Amarn@123</strong>
                   </p>
                 </div>
               </form>
