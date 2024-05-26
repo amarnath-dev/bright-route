@@ -41,9 +41,6 @@ export const MultiFormTwo = z.object({
     .refine((value) => value.trim() !== "", {
       message: "Link should not be empty",
     })
-    .refine(noNumbers, {
-      message: "Numbers are not allowed",
-    }),
 });
 
 export type FormTwo = z.infer<typeof MultiFormTwo>;
