@@ -52,9 +52,6 @@ export const MentorProfileSchema = z.object({
     .url({ message: "Invalid Twitter URL" })
     .refine((value) => value.trim() !== "", {
       message: "Field should not be empty",
-    })
-    .refine(noNumbers, {
-      message: "Numbers are not allowed",
     }),
   job_title: z
     .string()
