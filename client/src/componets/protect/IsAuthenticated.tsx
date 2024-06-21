@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Link } from "react-router-dom";
 
-export const IsAuthenticated: React.FC = () => {
+const IsAuthenticated: React.FC = () => {
   const axiosPrivate = useAxiosPrivate();
   const [refreshTokenExists, setRefreshTokenExists] = useState<boolean | null>(
     null
@@ -55,3 +55,6 @@ export const IsAuthenticated: React.FC = () => {
     </>
   );
 };
+
+
+export default IsAuthenticated;
