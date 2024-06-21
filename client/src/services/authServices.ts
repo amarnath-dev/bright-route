@@ -66,22 +66,28 @@ export type UserWithEmailAndPassword = {
   password: string;
 };
 
+
 export const signin = createAsyncThunk(
   "auth/signin",
+
   async (userData: UserWithEmailAndPassword, thunkAPI) => {
     try {
       const response = await API.post("/login", userData, {
         withCredentials: true,
       });
       return response.data;
+      
     } catch (error) {
+
       const err = error as AxiosError<{
         message?: string;
       }>;
+
       const payload = {
         message: err.response?.data?.message,
         status: err.response?.status,
       };
+
       return thunkAPI.rejectWithValue(payload);
     }
   }

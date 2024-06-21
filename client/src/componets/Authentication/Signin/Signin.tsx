@@ -14,7 +14,9 @@ import { useAppSelector } from "../../../hooks/useAppSelector";
 import { toast } from "react-toastify";
 
 const SigninForm: React.FC = () => {
+
   const [userData, setUser] = useState(false);
+
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -103,13 +105,14 @@ const SigninForm: React.FC = () => {
       {userData ? (
         <>
           <div className="w-full h-screen bg-background-two">
+            
             <div className="flex justify-center items-center h-full">
               <form
                 onSubmit={handleSubmit(submitDataMentor)}
                 className="border border-gray-500 py-12 px-5 rounded-md"
               >
                 <div className="flex">
-                  <h1 className="text-md px-4 py-1 md:py-0 md:px-0 md:text-2xl font-bold mb-5 text-gray-300">
+                  <h1 className="text-md px-4 py-1 md:py-0 md:px-0 md:text-2xl font-bold mb-5 text-white">
                     Log in as Mentor
                   </h1>
                   <button
@@ -143,6 +146,7 @@ const SigninForm: React.FC = () => {
                     {...register("password")}
                   />
                 </label>
+
                 <div className="flex flex-col">
                   {errors.password && (
                     <small className="text-red-600 text-sm italic">
@@ -152,12 +156,14 @@ const SigninForm: React.FC = () => {
                 </div>
                 <br />
                 <div className="flex justify-center">
+
                   <button
                     type="submit"
                     className="border-1 border-slate-300 mt-2 bg-color-five text-white rounded-md font-bold py-2 w-72 md:w-96 sm:text-lg"
                   >
                     Signin
                   </button>
+
                 </div>
                 <div className="flex justify-center">
                   <h1 className="mt-3 text-white">
