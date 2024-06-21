@@ -9,7 +9,7 @@ import XIcon from "@mui/icons-material/X";
 import VideoChatIcon from "@mui/icons-material/VideoChat";
 import MessageIcon from "@mui/icons-material/Message";
 import PaymentsIcon from "@mui/icons-material/Payments";
-import { format } from "timeago.js";
+// import { format } from "timeago.js";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { MyMenteePayment } from "../../interfaces/mentor.interface";
 import NavBar from "../../componets/Navbar";
@@ -78,7 +78,6 @@ const MyMentees = () => {
       });
     }
   }, [axiosPrivate, myMentees, user?._id]);
-
 
   return (
     <>
@@ -162,8 +161,8 @@ const MyMentees = () => {
                             </div>
                             <div className="px-3">
                               <h1 className="py-2 text-md font-bold text-blue-400">
-                                {30 - parseInt(format(plan?.createdAt))} Days
-                                Left
+                                {/* {30 - parseInt(format(plan?.createdAt))}  */}
+                                30 Days Left
                               </h1>
                             </div>
                           </figcaption>

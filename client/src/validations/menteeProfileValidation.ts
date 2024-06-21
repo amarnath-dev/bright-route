@@ -43,9 +43,10 @@ export const MenteeProfileSchema = z.object({
     .refine((value) => value.trim() !== "", {
       message: "Field should not be empty",
     })
-    .refine(noNumbers, {
-      message: "Numbers are not allowed",
-    }),
+    // .refine(noNumbers, {
+    //   message: "Numbers are not allowed",
+    // })
+    .optional(),
   job_title: z
     .string()
     .min(3, { message: "Enter atleast 3 characters" })

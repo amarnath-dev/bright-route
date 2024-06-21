@@ -225,8 +225,8 @@ const topTechnicalCompanies = [
 
 const topTechnicalJobPositions = [
   { id: 1, label: "Software Developer" },
-  { id: 2, label: "Machine Learning Engineer" },
-  { id: 3, label: "Frontend Developer" },
+  { id: 2, label: "Software Engineer" },
+  { id: 3, label: "ML Engineer" },
   { id: 4, label: "Backend Developer" },
   { id: 5, label: "Data Scientist" },
   { id: 6, label: "DevOps Engineer" },

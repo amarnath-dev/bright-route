@@ -6,7 +6,7 @@ import XIcon from "@mui/icons-material/X";
 import VideoChatIcon from "@mui/icons-material/VideoChat";
 import MessageIcon from "@mui/icons-material/Message";
 import PaymentsIcon from "@mui/icons-material/Payments";
-import { format } from "timeago.js";
+// import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../config/firebase";
@@ -176,8 +176,8 @@ const MyMentors = () => {
                                 </div>
                                 <div className="px-3 flex justify-between">
                                   <h1 className="py-2 font-bold text-blue-400">
-                                    {30 - parseInt(format(mentor?.createdAt))}{" "}
-                                    Days Left
+                                    {/* {30 - parseInt(format(mentor?.createdAt))}{" "} */}
+                                   30 Days Left
                                   </h1>
                                   <button
                                     className="text-blue-500"
