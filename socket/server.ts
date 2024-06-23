@@ -9,7 +9,7 @@ const io = new Server({
   cors: {
     // origin: "https://bright-route.online",
     // origin: "http://localhost:5173",
-    origin: "https://bright-route-git-dev-amarnath-a-ss-projects.vercel.app",
+    origin: "https://bright-route.vercel.app",
     credentials: true,
   },
 });
