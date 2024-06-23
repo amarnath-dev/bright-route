@@ -86,7 +86,6 @@ export class MenteeAuthController {
               role: userExists?.role,
             },
             accessToken,
-            refreshToken,
           });
         } else {
           res.status(401).json({ message: "Invalid Password" });
@@ -305,7 +304,7 @@ export class MenteeAuthController {
             role: existingUser?.role,
           },
           accessToken,
-          refreshToken
+          refreshToken,
         });
       } else {
         const menteeDetails: IUser = new User({
@@ -368,6 +367,7 @@ export class MenteeAuthController {
   async checkToken(req: Request, res: Response) {
     try {
       const cookies = req.cookies;
+      console.log("Cookies->", req?.cookies);
       if (cookies?.refreshToken) {
         res.json({ status: "exists" });
       } else {
@@ -497,7 +497,6 @@ export class MentorAuthController {
               role: userExists?.role,
             },
             accessToken,
-            refreshToken,
           });
         } else {
           res.status(401).json({ message: "Incorrect Password" });
