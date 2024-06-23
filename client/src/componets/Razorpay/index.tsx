@@ -24,12 +24,11 @@ export const RazorPay = () => {
 
   const axiosPrivate = useAxiosPrivate();
   const [Razorpay] = useRazorpay();
-  const purchaseAmount = parseInt(planAmount?.plan_amount || "0", 10) * 100;
 
   const handlePayment = useCallback(() => {
     const options: RazorpayOptions = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID as string,
-      amount: purchaseAmount.toString(),
+      amount: parseInt(planAmount?.plan_amount || "0", 10) * 100,
       currency: "INR",
       name: "Bright Route",
       description: "Amount Transaction",
