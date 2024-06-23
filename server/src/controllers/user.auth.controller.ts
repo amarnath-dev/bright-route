@@ -73,8 +73,8 @@ export class MenteeAuthController {
             mentee_id: userExists?._id,
           });
           res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
             secure: false,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
           res.status(200).json({
@@ -366,9 +366,9 @@ export class MenteeAuthController {
 
   async checkToken(req: Request, res: Response) {
     try {
-      const cookies = req.cookies;
-      console.log("Cookies->", req?.cookies);
-      if (cookies?._vercel_jwt) {
+      const token = req.headers?.authorization;
+      console.log("Headers", token);
+      if (token) {
         res.json({ status: "exists" });
       } else {
         res.json({ status: "not exists" });
