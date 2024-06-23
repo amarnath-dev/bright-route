@@ -31,7 +31,7 @@ export const RazorPay = () => {
       amount: parseInt(planAmount?.plan_amount || "0", 10) * 100,
       currency: "INR",
       name: "Bright Route",
-      description: "Test Transaction",
+      description: "Amount Transaction",
       order_id: "123456789",
       handler: (res) => {
         const sentDetails = async () => {
