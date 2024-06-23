@@ -48,6 +48,7 @@ export class AdminAuthControls {
               role: emailExists?.role,
             },
             accessToken,
+            refreshToken
           });
         } else {
           res.status(400).json({ message: "Incorrect Password" });
