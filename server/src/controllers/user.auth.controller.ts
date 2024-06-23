@@ -143,14 +143,11 @@ export class MenteeAuthController {
 
   async logout(req: Request, res: Response): Promise<void> {
     try {
-      const cookies = req.cookies;
-      if (!cookies?.refreshToken) {
+      const refreshToken = req.headers?.authorization;
+      if (!refreshToken) {
         res.sendStatus(204);
       }
-      res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: false,
-      });
+      res.clearCookie("refreshToken");
       res
         .status(200)
         .json({ status: "success", message: "Log out successfull" });
