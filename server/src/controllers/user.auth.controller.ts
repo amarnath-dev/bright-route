@@ -368,7 +368,7 @@ export class MenteeAuthController {
     try {
       const cookies = req.cookies;
       console.log("Cookies->", req?.cookies);
-      if (cookies?.refreshToken) {
+      if (cookies?._vercel_jwt) {
         res.json({ status: "exists" });
       } else {
         res.json({ status: "not exists" });
