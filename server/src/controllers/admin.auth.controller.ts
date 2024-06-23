@@ -37,6 +37,7 @@ export class AdminAuthControls {
           res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: false,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
           res.status(200).json({
