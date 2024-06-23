@@ -12,20 +12,22 @@ import { MentorLogin } from "../../../services/authServices";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useAppSelector } from "../../../hooks/useAppSelector";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const SigninForm: React.FC = () => {
-
   const [userData, setUser] = useState(false);
 
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.userAuth);
+  const refreshToken = Cookies.get("refreshToken");
 
   useEffect(() => {
     const checkToken = async () => {
       try {
         const response = await axiosPrivate.get("/checkToken", {
+          headers: { refreshToken },
           withCredentials: true,
         });
         if (response.data.status === "exists") {
@@ -105,7 +107,6 @@ const SigninForm: React.FC = () => {
       {userData ? (
         <>
           <div className="w-full h-screen bg-background-two">
-            
             <div className="flex justify-center items-center h-full">
               <form
                 onSubmit={handleSubmit(submitDataMentor)}
@@ -156,14 +157,12 @@ const SigninForm: React.FC = () => {
                 </div>
                 <br />
                 <div className="flex justify-center">
-
                   <button
                     type="submit"
                     className="border-1 border-slate-300 mt-2 bg-color-five text-white rounded-md font-bold py-2 w-72 md:w-96 sm:text-lg"
                   >
                     Signin
                   </button>
-
                 </div>
                 <div className="flex justify-center">
                   <h1 className="mt-3 text-white">
