@@ -65,7 +65,7 @@ export class MenteeAuthController {
             { expiresIn: "3d" }
           );
           const refreshToken = Jwt.sign(
-            { email: userExists.email },
+            { email: userExists?.email },
             process.env.REFRESH_TOKEN_SECRETE as string,
             { expiresIn: "7d" }
           );
@@ -86,6 +86,7 @@ export class MenteeAuthController {
               role: userExists?.role,
             },
             accessToken,
+            refreshToken,
           });
         } else {
           res.status(401).json({ message: "Invalid Password" });
@@ -304,6 +305,7 @@ export class MenteeAuthController {
             role: existingUser?.role,
           },
           accessToken,
+          refreshToken
         });
       } else {
         const menteeDetails: IUser = new User({
@@ -366,7 +368,7 @@ export class MenteeAuthController {
   async checkToken(req: Request, res: Response) {
     try {
       const cookies = req.cookies;
-      if (cookies.refreshToken) {
+      if (cookies?.refreshToken) {
         res.json({ status: "exists" });
       } else {
         res.json({ status: "not exists" });
@@ -495,6 +497,7 @@ export class MentorAuthController {
               role: userExists?.role,
             },
             accessToken,
+            refreshToken,
           });
         } else {
           res.status(401).json({ message: "Incorrect Password" });

@@ -46,6 +46,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.user;
         Cookies.set("accessToken", action.payload.accessToken);
+        Cookies.set("refreshToken", action.payload.refreshToken);
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
@@ -65,6 +66,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.user;
         Cookies.set("accessToken", action.payload.accessToken);
+        Cookies.set("refreshToken", action.payload.refreshToken);
       })
       .addCase(signin.rejected, (state, action) => {
         state.isLoading = false;
@@ -79,6 +81,7 @@ export const authSlice = createSlice({
       .addCase(googleAuth.fulfilled, (state, action) => {
         state.user = action.payload.user;
         Cookies.set("accessToken", action.payload.accessToken);
+        Cookies.set("refreshToken", action.payload.refreshToken);
       })
       //Mentor sign In
       .addCase(MentorLogin.pending, (state) => {
@@ -88,6 +91,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.user;
         Cookies.set("accessToken", action.payload.accessToken);
+        Cookies.set("refreshToken", action.payload.refreshToken);
       })
       .addCase(MentorLogin.rejected, (state, action) => {
         state.isLoading = false;
@@ -106,6 +110,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.user;
         Cookies.set("accessToken", action.payload.accessToken);
+        Cookies.set("refreshToken", action.payload.refreshToken);
       })
       .addCase(adminLogin.rejected, (state, action) => {
         state.isLoading = false;
