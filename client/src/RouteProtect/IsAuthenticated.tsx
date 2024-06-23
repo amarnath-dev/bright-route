@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Link } from "react-router-dom";
 
 const IsAuthenticated: React.FC = () => {

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useAppSelector } from "../../hooks/useAppSelector";
+import { useAppSelector } from "../hooks/useAppSelector";
 import { Navigate, Outlet } from "react-router-dom";
 
 interface RoleProps {
