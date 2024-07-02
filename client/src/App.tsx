@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import Spinner from "./componets/Spinner";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./componets/Protect/ProtectedRoute";
-import IsAuthenticated from "./componets/Protect/IsAuthenticated";
+import ProtectedRoute from "./RouteProtect/ProtectedRoute";
+import IsAuthenticated from "./RouteProtect/IsAuthenticated";
 import { MenteeRoutes } from "./routes/MenteeRoutes";
 import { MentorRoutes } from "./routes/MentorRoutes";
 import { AdminRoutes } from "./routes/AdminRoutes";

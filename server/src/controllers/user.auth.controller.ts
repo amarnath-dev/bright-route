@@ -65,7 +65,7 @@ export class MenteeAuthController {
             { expiresIn: "3d" }
           );
           const refreshToken = Jwt.sign(
-            { email: userExists.email },
+            { email: userExists?.email },
             process.env.REFRESH_TOKEN_SECRETE as string,
             { expiresIn: "7d" }
           );
@@ -73,8 +73,8 @@ export class MenteeAuthController {
             mentee_id: userExists?._id,
           });
           res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
             secure: false,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
           res.status(200).json({
@@ -143,14 +143,11 @@ export class MenteeAuthController {
 
   async logout(req: Request, res: Response): Promise<void> {
     try {
-      const cookies = req.cookies;
-      if (!cookies?.refreshToken) {
+      const refreshToken = req.headers?.authorization;
+      if (!refreshToken) {
         res.sendStatus(204);
       }
-      res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: false,
-      });
+      res.clearCookie("refreshToken");
       res
         .status(200)
         .json({ status: "success", message: "Log out successfull" });
@@ -304,6 +301,7 @@ export class MenteeAuthController {
             role: existingUser?.role,
           },
           accessToken,
+          refreshToken,
         });
       } else {
         const menteeDetails: IUser = new User({
@@ -365,8 +363,9 @@ export class MenteeAuthController {
 
   async checkToken(req: Request, res: Response) {
     try {
-      const cookies = req.cookies;
-      if (cookies.refreshToken) {
+      const token = req.headers?.authorization;
+      console.log("Headers", token);
+      if (token) {
         res.json({ status: "exists" });
       } else {
         res.json({ status: "not exists" });
